@@ -1,0 +1,11 @@
+.hero{
+    display:flex;
+
+}
+.hero > p{
+margin-right:10px;
+}
+
+.bob{
+    display:flex;
+}
