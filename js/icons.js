@@ -2,7 +2,6 @@ window.onload = function () {
   let button = document.getElementById("generate-btn");
   let main = document.getElementById("main");
   let newCharacter = new Character();
-  console.log(newCharacter);
   button.addEventListener("click", () => {
     location.reload();
   });
@@ -14,6 +13,7 @@ window.onload = function () {
   let displayExtrasBtn = document.getElementById("display-extras-btn");
   let displayLimitesBtn = document.getElementById("display-limites-btn");
   let displayCharacterBtn = document.getElementById("display-character-btn");
+  displayCharacter();
 
   displayExtrasBtn.addEventListener("click", () => {
     console.log("display extras");
@@ -24,19 +24,20 @@ window.onload = function () {
   });
   displayCharacterBtn.addEventListener("click", displayCharacter);
 
-
   function display(object, element, hide = true) {
     if (hide) {
       hideAllElements();
     }
     element.style.display = "block";
+    console.log(object);
     for (const [key, value] of Object.entries(object)) {
-        console.log(key, value);
+      console.log(key, value);
       if (typeof value === "object") {
-        //     display(value)
-        //    infos.innerHTML += `<p>${value.name}: ${value.level}</p>`
+        if (value.name && value.value) {
+          element.innerHTML += formatElement(value.name, value.value);
+        }
       } else if (typeof value === "string" || typeof value === "number") {
-        element.innerHTML += `<p>${key}: ${value}</p>`;
+        element.innerHTML += formatElement(key, value);
       }
 
       // console.log(`${key}: ${value}`);
@@ -67,5 +68,9 @@ window.onload = function () {
     newCharacter.specialities.forEach(
       (value) => (infos.innerHTML += `<p>${value}</p>`),
     );
+  }
+
+  function formatElement(title, descripion) {
+    return `<p><strong>${title}</strong>: ${descripion}</p>`;
   }
 };
