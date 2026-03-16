@@ -5,22 +5,33 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="icons.css">    <script src="js/icons.js"></script>
+    <link rel="stylesheet" href="icons.css">
     <script src="js/character.js"></script>
     <script src="js/data.js"></script>
+    <script src="js/extras.js"></script>
+    <script src="js/limites.js"></script>
+    <script src="js/icons.js"></script>
     <title>Icons Hero Generator</title>
 </head>
-
+<style>
+    body{
+        height: 100vh;
+    }
+</style>
 <body>
     <div id="header"><input type="button" width="200" value="generate!" id="generate-btn"> </div>
+    <div id="buttons">
+        <input type="button" value="display extras" id="display-extras-btn">
+        <input type="button" value="display limites" id="display-limites-btn">
+        <input type="button" value="display character" id="display-character-btn">
+    </div>
     <div id="main">
         <div id="infos"></div>
-      
+        <div id="extras"></div>
+        <div id="limites"></div>
+
 
     </div>
-    <footer>
-        <div><a href="https://github.com/NicolasDosSantos542/IconsHeroGenerator" >github</a></div>
-    </footer>
 
 </body>
 
