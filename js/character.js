@@ -129,6 +129,7 @@ class Character {
             if (object.first.includes(one) && object.second.includes(two)) {
                 response.name = object.name;
                 response.level = this.defineLevel();
+                response.page = object.page??null;
             }
         })
         this.powers.push(response);
