@@ -7,11 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="icons.css">
     <script src="js/character.js"></script>
-    <!-- <script src="js/data.js"></script> -->
-    <script src="js/data-great_powers.js"></script>
-    <script src="js/extras.js"></script>
-    <script src="js/limites.js"></script>
-    <script src="js/specialites.js"></script>
+    <!-- <script src="js/character_creation.js"></script> -->
+    <script src="js/data/character_creation-great_powers.js"></script>
+    <script src="js/data/extras.js"></script>
+    <script src="js/data/limites.js"></script>
+    <script src="js/data/specialites.js"></script>
     <!-- <script src="js/icons.js"></script> -->
     <script src="js/utils/vue3-sfc-loader.js"></script>
     <script src="js/utils/vue3.4.15.js"></script>
@@ -50,6 +50,8 @@
                 </div>
             </div>
             <div v-else-if="tabs.character">
+                <input type="button" value="generate!" @click="generateCharacter()">
+                <input type="button" value="save!" @click="saveCharacter()">
                 <h3>attributs</h3>
                 <div v-for="(value, key) in tabs.character.attributes" :key="key">
 
@@ -104,35 +106,24 @@
             }
         },
         mounted() {
-            this.tabs.character = new Character();
+            this.tabs.character = this.getSavedCharacter();
             console.log(this.tabs.character);
         },
         methods: {
             display(tab) {
                 this.currentTab = tab;
+            },
+            generateCharacter() {
+                this.tabs.character = new Character();
+            },
+            saveCharacter() {
+                localStorage.setItem('character', JSON.stringify(this.tabs.character));
+            },
+            getSavedCharacter() {
+                return JSON.parse(localStorage.getItem('character'));
             }
         }
     }).mount('#app');
 </script>
-<style>
-    body,
-    html {
-        font-family: 'Garamond', Garamond, 'Times New Roman', Times, serif;
-    }
-
-    .tabs {
-        display: flex;
-        gap: 10px;
-    }
-
-    .name {
-        font-weight: bold;
-        margin-right: 10px;
-    }
-
-    .value {
-        font-weight: normal;
-    }
-</style>
 
 </html>

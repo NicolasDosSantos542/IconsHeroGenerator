@@ -1,14 +1,18 @@
-.hero{
-    display:flex;
-
-}
-.hero > p{
-margin-right:10px;
+body,
+html {
+    font-family: 'Garamond', Garamond, 'Times New Roman', Times, serif;
 }
 
+.tabs {
+    display: flex;
+    gap: 10px;
+}
 
-footer{
-    position: fixed;
-    bottom: 0;
-    right:0;
+.name {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.value {
+    font-weight: normal;
 }
