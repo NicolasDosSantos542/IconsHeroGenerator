@@ -132,7 +132,10 @@ class Character {
                 response.page = object.page??null;
             }
         })
-        this.powers.push(response);
+        while(!this.addElementInTable(this.powers, response)) {
+            response = this.whatPower(data);
+        }
+
         return response;
     }
     howManySpecialities() {
@@ -145,6 +148,14 @@ class Character {
         // console.log("one = "+one , "two = "+ two)
         this.specialities.push(table.specialities[one][two])
 
+    }
+    addElementInTable(table, element) {
+        if(table.includes(element)) {
+            return false;
+        } else {
+            table.push(element);
+            return true;
+        }
     }
 }
 
