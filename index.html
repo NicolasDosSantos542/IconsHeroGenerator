@@ -7,33 +7,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="icons.css">
     <script src="js/character.js"></script>
-    <!-- <script src="js/data.js"></script> -->
-    <script src="js/data-great_powers.js"></script>
-    <script src="js/extras.js"></script>
-    <script src="js/limites.js"></script>
-    <script src="js/icons.js"></script>
+    <!-- <script src="js/character_creation.js"></script> -->
+    <script src="js/data/character_creation-great_powers.js"></script>
+    <script src="js/data/extras.js"></script>
+    <script src="js/data/limites.js"></script>
+    <script src="js/data/specialites.js"></script>
+    <!-- <script src="js/icons.js"></script> -->
+    <script src="js/utils/vue3-sfc-loader.js"></script>
+    <script src="js/utils/vue3.4.15.js"></script>
     <title>Icons Hero Generator</title>
 </head>
 <style>
-    body{
+    body {
         height: 100vh;
     }
 </style>
+
 <body>
-    <div id="header"><input type="button" width="200" value="generate!" id="generate-btn"> </div>
-    <div id="buttons">
-        <input type="button" value="display extras" id="display-extras-btn">
-        <input type="button" value="display limites" id="display-limites-btn">
-        <input type="button" value="display character" id="display-character-btn">
+
+    <div id="app">
+        <div class="tabs">
+            <div v-for="(tab, key) in tabs" :key="key">
+                <input type="button" :value="key" @click="display(key)">
+            </div>
+        </div>
+        <div id="main">
+            <div v-if="currentTab !=='character'">
+                <div v-for="(value, key) in currentTabContent" :key="key">
+                    <div v-if="typeof value === 'object'">
+                        <p>
+                            <span class="name">{{ value.name }}:</span>
+                            <span class="value">{{ value.value }}</span>
+                        </p>
+                    </div>
+                    <div v-else>
+                        <p>
+                            <span class="name">{{ key }}:</span>
+                            <span class="value">{{ value }}</span>
+                        </p>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div v-else-if="tabs.character">
+                <input type="button" value="generate!" @click="generateCharacter()">
+                <input type="button" value="save!" @click="saveCharacter()">
+                <h3>attributs</h3>
+                <div v-for="(value, key) in tabs.character.attributes" :key="key">
+
+                    <p>
+                        <span class="name">{{ value.name }}:</span>
+                        <span class="value">{{ value.level }}</span>
+                    </p>
+                </div>
+                <h3>Pouvoirs</h3>
+                <div v-for="(value, key) in tabs.character.powers" :key="key">
+                    <p>
+                        <span class="name">{{ value.name }}:</span>
+                        <span class="value">{{ value.level }}</span>
+                        <span class="page" v-if="value.page"> (p{{ value.page }})</span>
+                    </p>
+                </div>
+                <h3>origine:</h3>
+                    <p>
+                        <span class="name">{{ tabs.character.origin.name }}:</span>
+                        <span class="value">{{ tabs.character.origin.description }}:</span>
+                    </p>
+                <h3>Spécialités:</h3>
+                <div v-for="value in tabs.character.specialities" :key="value">
+                    <p>
+                        <span class="value">{{ value }}</span>
+                    
+                    </p>
+                </div>
+            </div>
+
+        </div>
     </div>
-    <div id="main">
-        <div id="infos"></div>
-        <div id="extras"></div>
-        <div id="limites"></div>
-
-
-    </div>
-
 </body>
+<script>
+    const { createApp } = Vue;
+
+    createApp({
+        data() {
+            return {
+                tabs: {
+                    'character': null,
+                    'extras': extras,
+                    'limites': limites,
+                    'specialites': specialites
+                },
+                currentTab: 'character',
+            }
+        },
+        computed: {
+            currentTabContent() {
+                return this.tabs[this.currentTab];
+            }
+        },
+        mounted() {
+            this.tabs.character = this.getSavedCharacter();
+            console.log(this.tabs.character);
+        },
+        methods: {
+            display(tab) {
+                this.currentTab = tab;
+            },
+            generateCharacter() {
+                this.tabs.character = new Character();
+            },
+            saveCharacter() {
+                localStorage.setItem('character', JSON.stringify(this.tabs.character));
+            },
+            getSavedCharacter() {
+                return JSON.parse(localStorage.getItem('character'));
+            }
+        }
+    }).mount('#app');
+</script>
 
 </html>
