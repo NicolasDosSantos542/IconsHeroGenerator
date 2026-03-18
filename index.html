@@ -103,8 +103,12 @@
             }
         },
         mounted() {
-            this.tabs.character = this.getSavedCharacter();
-            console.log(this.tabs.character);
+            let savedCharacter = this.getSavedCharacter();
+            if(savedCharacter) {
+                this.tabs.character = savedCharacter;
+            } else {
+                this.tabs.character = new Character();
+            }
         },
         methods: {
             display(tab) {
