@@ -9,10 +9,12 @@ window.onload = function () {
   let infos = document.getElementById("infos");
   let extrasElement = document.getElementById("extras");
   let limitesElement = document.getElementById("limites");
-
+  let specialitesElement = document.getElementById("specialites");
+  
   let displayExtrasBtn = document.getElementById("display-extras-btn");
   let displayLimitesBtn = document.getElementById("display-limites-btn");
   let displayCharacterBtn = document.getElementById("display-character-btn");
+  let displaySpecialitesBtn = document.getElementById("display-specialites-btn");
   displayCharacter();
 
   displayExtrasBtn.addEventListener("click", () => {
@@ -21,8 +23,10 @@ window.onload = function () {
   displayLimitesBtn.addEventListener("click", () => {
     display(limites, limitesElement);
   });
+  displaySpecialitesBtn.addEventListener("click", () => {
+    display(specialites, specialitesElement);
+  });
   displayCharacterBtn.addEventListener("click", displayCharacter);
-
   function display(object, element, hide = true) {
     if (hide) {
       hideAllElements();
