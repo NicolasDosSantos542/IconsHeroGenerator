@@ -33,7 +33,10 @@
         </div>
         <div id="main">
             <div v-if="currentTab !=='character'">
-                <div v-for="(value, key) in currentTabContent" :key="key">
+                <div v-if="currentTabContent.description">
+                    <p v-html="currentTabContent.description"></p>
+                </div>
+                <div v-for="(value, key) in currentTabContent.list" :key="key">
                     <div v-if="typeof value === 'object'">
                             <span class="name">{{ value.name }}:</span>
 
@@ -101,6 +104,7 @@
         },
         computed: {
             currentTabContent() {
+
                 return this.tabs[this.currentTab];
             }
         },

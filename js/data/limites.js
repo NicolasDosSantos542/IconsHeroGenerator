@@ -1,4 +1,28 @@
-let limites = [
+let limites = {
+  description:`Une limite rétrécit les effets de base
+      d’un pouvoir, en échange d’un niveau
+      augmenté, d’un impact moindre sur
+      la Ténacité ou de l’obtention d’extras
+      supplémentaires. Quand vous appliquez
+      une limite à votre pouvoir, vous
+      pouvez alors choisir l’un des bénéfices
+      suivants :
+      <ul>
+        <li>Soustraire 1 de la valeur de vos pouvoirs
+      pour déterminer la Ténacité de
+      votre personnage. Cela peut réduire
+      le coût en Ténacité de vos pouvoirs
+      à 0 (mais jamais en dessous de 0).
+      </li>
+      <li>Ajouter un extra à votre pouvoir sans
+      augmenter son coût en Ténacité.
+      </li>
+      <li>Augmenter le niveau du pouvoir de
+      +2, pour un maximum de 10.
+      </li>
+      </ul>
+      +2, pour un maximum de 10.`,
+  list:[
   {
     name: "Animaux seulement",
     value: `Votre pouvoir n’affecte que les animaux.`,
@@ -91,4 +115,5 @@ let limites = [
     name: "Temporaire",
     value: `Les effets de votre pouvoir ne durent que pendant un nombre de planches égal à son niveau.`,
   },
-];
+]
+};

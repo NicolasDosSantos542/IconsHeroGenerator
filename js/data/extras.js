@@ -1,4 +1,4 @@
-let extras = {
+let extras = {list:{
     "À distance":
         `Vous pouvez utiliser votre pouvoir, normalement limité à portée proche, à portée étendue.`,
 
@@ -55,4 +55,4 @@ let extras = {
         `Un pouvoir à distance, nécessitant un test, bénéficie de deux essais supplémentaires pour toucher sa cible si le premier rate, comme un missile à tête chercheuse.
         Chaque essai a lieu au début de votre case. 
         S’ils échouent tous deux, le pouvoir n’a aucun effet.`,
-};
+}};
