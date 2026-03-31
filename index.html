@@ -21,6 +21,12 @@
     body {
         height: 100vh;
     }
+
+    .character-actions {
+        flex-wrap: wrap;
+        display: flex;
+        gap: 10px;
+    }
 </style>
 
 <body>
@@ -38,51 +44,57 @@
                 </div>
                 <div v-for="(value, key) in currentTabContent.list" :key="key">
                     <div v-if="typeof value === 'object'">
-                            <span class="name">{{ value.name }}:</span>
+                        <span class="name">{{ value.name }}:</span>
 
-                            <span class="value">{{ value.value }}</span>
+                        <span class="value">{{ value.value }}</span>
                     </div>
                     <div v-else>
-                            <span class="name">{{ key }}:</span>
+                        <span class="name">{{ key }}:</span>
 
-                            <span class="value">{{ value }}</span>
+                        <span class="value">{{ value }}</span>
                     </div>
                 </div>
             </div>
-            <div v-else-if="tabs.character">
-                <input type="button" value="generate!" @click="generateCharacter()">
-                <input type="button" value="save!" @click="saveCharacter()">
-                <input type="button" value="load!" @click="loadCharacter()">
-                <h3>attributs</h3>
-                <div class="attributes">
-                    <div v-for="(value, key) in tabs.character.attributes" :key="key">
+            <div v-if="currentTab === 'character'">
+                <div class="character-actions">
+                    <input type="button" value="générer un nouveau personnage" @click="generateCharacter()">
+                    <input type="button" value="sauvegarder ce personnage" @click="saveCharacter()">
+                    <input type="button" value="charger le personnage sauvegardé" @click="loadCharacter()">
+                    <input type="button" value="effacer le personnage sauvegardé" @click="clearCharacter()">
+                </div>
+                <div v-if="tabs.character && tabs.character.attributes">
+                    <h3>attributs</h3>
+                    <div class="attributes" v-if="tabs.character.attributes">
+                        <div v-for="(value, key) in tabs.character.attributes" :key="key">
 
                             <span class="name">{{ value.name }}:</span>
 
                             <span class="value">{{ value.level }}</span>
+                        </div>
                     </div>
-                </div>
-                <h3>Pouvoirs</h3>
-                <div v-for="(value, key) in tabs.character.powers" :key="key">
+                    <h3>Pouvoirs</h3>
+                    <div v-for="(value, key) in tabs.character.powers" :key="key">
+                        <p>
+                            <span class="name">{{ value.name }}:</span>
+                            <span class="value">{{ value.level }}</span>
+                            <span class="page" v-if="value.page"> (p{{ value.page }})</span>
+                        </p>
+                    </div>
+                    <h3>origine:</h3>
                     <p>
-                        <span class="name">{{ value.name }}:</span>
-                        <span class="value">{{ value.level }}</span>
-                        <span class="page" v-if="value.page"> (p{{ value.page }})</span>
+                        <span class="name">{{ tabs.character.origin.name }}:</span>
+                        <span class="value">{{ tabs.character.origin.description }}:</span>
                     </p>
-                </div>
-                <h3>origine:</h3>
-                <p>
-                    <span class="name">{{ tabs.character.origin.name }}:</span>
-                    <span class="value">{{ tabs.character.origin.description }}:</span>
-                </p>
-                <h3>Spécialités:</h3>
-                <div v-for="value in tabs.character.specialities">
+                    <h3>Spécialités:</h3>
+                    <div v-for="value in tabs.character.specialities">
                         <div class="value">{{ value }}</div>
 
+                    </div>
                 </div>
             </div>
-
         </div>
+
+    </div>
     </div>
 </body>
 <script>
@@ -109,8 +121,9 @@
             }
         },
         mounted() {
+            app = this
             let savedCharacter = this.getSavedCharacter();
-            if(savedCharacter) {
+            if (savedCharacter) {
                 this.tabs.character = savedCharacter;
             } else {
                 this.tabs.character = new Character();
@@ -131,6 +144,10 @@
             },
             loadCharacter() {
                 this.tabs.character = this.getSavedCharacter();
+            },
+            clearCharacter() {
+                localStorage.removeItem('character');
+                this.tabs.character = null;
             }
         }
     }).mount('#app');
