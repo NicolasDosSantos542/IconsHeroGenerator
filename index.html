@@ -88,7 +88,97 @@
                     <h3>Spécialités:</h3>
                     <div v-for="value in tabs.character.specialities">
                         <div class="value">{{ value }}</div>
-
+                    </div>
+                    <h3>description:</h3>
+                    <div v-if="tabs.character.description">
+                        <p v-html="tabs.character.description"></p>
+                    </div>
+                    <h3>Aspects:</h3>
+                    <div >
+                        <div>Choisissez trois aspects pour votre héros. Vous activerez ces aspects en cours de jeu pour
+                            obtenir des avantages ou compliquer la vie de votre héros (ce qui permet de gagner des
+                            points de Ténacité). Reportez-vous à la section Aspects du chapitre « Les bases » pour
+                            savoir comment cela fonctionne. Les aspects de votre héros peuvent être de toute nature,
+                            mais souvenez-vous qu’ils doivent idéalement être source d’avantages comme de complications.
+                            Bref, s’avérer aussi positifs que négatifs, tout en étant suffisamment larges pour
+                            s’appliquer à de nombreuses situations. Trop vagues, ils ne signifient plus rien. « Choisi
+                            par les esprits » ou « Champion de Tuatha » sont de bons exemples d’aspects alors que «
+                            Puissant » ou « Héroïque » sont trop larges et trop fades. Les bons aspects sont souvent de
+                            courtes phrases ou des adjectifs.</div>
+                        <div>Les questions qui suivent peuvent
+                            vous être utiles pour décider de vos
+                            aspects :
+                            <ul>
+                                <li><strong>Qui êtes-vous ?</strong> Les aspects les
+                                    plus simples décrivent qui est le
+                                    personnage, souvent sous la forme
+                                    d’un titre, d’une épithète ou d’un
+                                    surnom comme « Sorcière Secrète
+                                    du Sixième Soleil », « Choisi par
+                                    la Déesse de la Vengeance »,
+                                    « Sombre Défenseur », « Maître des
+                                    Esprits » et ainsi de suite.
+                                </li>
+                                <li><strong>Qu’est-ce qui vous pousse en
+                                    avant ?</strong>  Votre héros est-il motivé
+                                    par la protection des innocents ou
+                                    par l’idée que la justice doit toujours
+                                    prévaloir ? Est-ce une vocation
+                                    comme « Ambassadeur de la Paix »
+                                    ou « Homme d’Action » ? Peut-être
+                                    votre héros est-il « Assoiffé de
+                                    savoir » ou croit-il que « La science
+                                    nous sauvera » ? Est-il à l’oeuvre
+                                    pour « Défaire une conspiration
+                                    de vilains » ou « Traîner un ennemi
+                                    devant la justice » ?
+                                </li>
+                                <li><strong>Qu’est-ce qui vous attire
+                                    des ennuis ?</strong>  Si tous les aspects
+                                    des ennuis ? Si tous les aspects
+                                    n’ont pas à être négatifs, certains
+                                    entraînent forcément des complications,
+                                    comme être un « Chasseur de
+                                    démons », le « Fléau de la pègre »,
+                                    « Ex Sombre Assassin » ou même
+                                    être « Le meilleur dans sa partie »,
+                                    si ce que vous faites n’est pas très
+                                    joli. Réfléchissez à des aspects qui
+                                    peuvent vous causer des problèmes.
+                                </li>
+                                <li><strong>Que faites-vous ?</strong>  Les aspects
+                                    peuvent décrire ce que fait le héros,
+                                    qu’il s’agisse d’une profession
+                                    comme « Journaliste en croisade »
+                                    ou « Avocat pétri de principes »,
+                                    d’un style comme « Récite de la
+                                    poésie » ou « Surgit de l’ombre »,
+                                    une devise comme « Doux Jésus ! »
+                                    ou « Soyez Témoin ! », un trait de
+                                    caractère comme « Ne s’arrête
+                                    jamais de parler ».
+                                </li>
+                                <li><strong>Qu’est-ce qui vous rend
+                                    unique ?</strong>  Un aspect peut différencier
+                                    unique ? Un aspect peut différencier
+                                    le héros d’autres personnages
+                                    possédant les mêmes capacités
+                                    s’il est, par exemple, un « Expert
+                                    renommé dans l’étude des radiations
+                                    », un « Vétéran de l’Age
+                                    d’Or », un « Industriel milliardaire »
+                                    ou un « Jet-setter ».
+                                    Idéalement, certains aspects répondront
+                                    à plusieurs de ces questions.
+                                    Plus un aspect sera à même d’être
+                                    mise en avant et interprété et plus il
+                                    vous sera utile en cours de jeu. </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h3>Ténacité:</h3>
+                    <div v-if="tabs.character.tenacite">
+                        <p v-html="tabs.character.tenacite"></p>
                     </div>
                 </div>
             </div>
