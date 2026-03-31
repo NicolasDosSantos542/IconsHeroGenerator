@@ -58,9 +58,11 @@
             <div v-if="currentTab === 'character'">
                 <div class="character-actions">
                     <input type="button" value="générer un nouveau personnage" @click="generateCharacter()">
-                    <input type="button" value="sauvegarder ce personnage" @click="saveCharacter()">
-                    <input type="button" value="charger le personnage sauvegardé" @click="loadCharacter()">
-                    <input type="button" value="effacer le personnage sauvegardé" @click="clearCharacter()">
+                    <input type="button" value="sauvegarder slot 1" @click="saveCharacter(1)">
+                    <input type="button" value="sauvegarder slot 2" @click="saveCharacter(2)">
+                    <input type="button" value="charger slot 1" @click="loadCharacter(1)">
+                    <input type="button" value="charger slot 2" @click="loadCharacter(2)">
+                    <input type="button" value="effacer tout" @click="clearCharacter()">
                 </div>
                 <div v-if="tabs.character && tabs.character.attributes">
                     <h3>attributs</h3>
@@ -239,17 +241,18 @@
             generateCharacter() {
                 this.tabs.character = new Character();
             },
-            saveCharacter() {
-                localStorage.setItem('character', JSON.stringify(this.tabs.character));
+            saveCharacter(slot) {
+                localStorage.setItem('character_slot_'+slot, JSON.stringify(this.tabs.character));
             },
-            getSavedCharacter() {
-                return JSON.parse(localStorage.getItem('character'));
+            getSavedCharacter(slot) {
+                return JSON.parse(localStorage.getItem('character_slot_'+slot));
             },
-            loadCharacter() {
-                this.tabs.character = this.getSavedCharacter();
+            loadCharacter(slot) {
+                this.tabs.character = this.getSavedCharacter(slot);
             },
             clearCharacter() {
-                localStorage.removeItem('character');
+                localStorage.removeItem('character_slot_1');
+                localStorage.removeItem('character_slot_2');
                 this.tabs.character = null;
             }
         }
