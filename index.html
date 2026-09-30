@@ -74,7 +74,20 @@
                         <span v-else> — non enregistrée dans la bibliothèque</span>
                     </div>
 
-                    <div class="library-grid">
+                    <div class="library-toggle-row">
+                        <p class="library-summary">
+                            Bibliothèque :
+                            {{ brouillons.length }}/{{ maxPerType }} brouillon{{ brouillons.length > 1 ? 's' : '' }},
+                            {{ personnages.length }}/{{ maxPerType }} personnage{{ personnages.length > 1 ? 's' : '' }}
+                        </p>
+                        <input
+                            type="button"
+                            :value="libraryExpanded ? 'Réduire' : 'Étendre'"
+                            @click="libraryExpanded = !libraryExpanded"
+                        >
+                    </div>
+
+                    <div class="library-grid" v-show="libraryExpanded">
                         <section class="library-block">
                             <div class="saves-header">
                                 <h3 class="saves-title">Brouillons ({{ brouillons.length }}/{{ maxPerType }})</h3>
@@ -197,6 +210,23 @@
                         </div>
                     </div>
 
+                    <h3>Langues</h3>
+                    <div class="languages-block">
+                        <p>
+                            <span class="name">Langues maîtrisées :</span>
+                            <span class="value">{{ brouillonLanguages.display }}</span>
+                        </p>
+                        <p class="mods-hint">
+                            Intellect {{ brouillonLanguages.intellect }}
+                            <template v-if="brouillonLanguages.linguisticsRank">
+                                + Linguistique {{ specialityRankLabel(brouillonLanguages.linguisticsRank) }}
+                                (= {{ brouillonLanguages.effectiveIntellect }})
+                            </template>
+                            — langue natale + langues additionnelles à partir d’Intellect 4 (×2 par niveau).
+                            Nommez les langues après création du personnage.
+                        </p>
+                    </div>
+
                     <h3>Description</h3>
                     <div class="description-block">
                         Après avoir déterminé les capacités de votre héros, inventez-lui une histoire et une
@@ -228,6 +258,10 @@
                         <div class="tenacity-badge">
                             <span class="name">Ténacité</span>
                             <span class="value">{{ heroView.tenacity }}</span>
+                        </div>
+                        <div class="tenacity-badge languages-badge">
+                            <span class="name">Langues</span>
+                            <span class="value">{{ heroView.languages.total }}</span>
                         </div>
                         <div class="status-badge" :class="heroView.isFinished ? 'finished' : 'editable'">
                             {{ heroView.isFinished ? 'Terminé' : 'En cours' }}
@@ -540,6 +574,61 @@
                         </div>
                         <p class="mods-hint">Une même spécialité peut être prise jusqu’à 3 fois : spécialiste → expert → maître. Les groupes (Armes, Art, Spectacle, Pouvoir) exigent un focus.</p>
                     </div>
+
+                    <h3>Langues</h3>
+                    <div class="languages-block">
+                        <p>
+                            <span class="name">Langues maîtrisées :</span>
+                            <span class="value">{{ heroView.languages.display }}</span>
+                            <span class="mods-hint"> — {{ heroView.languages.known.length }}/{{ heroView.languages.total }} nommées</span>
+                        </p>
+                        <p class="mods-hint">
+                            Intellect {{ heroView.languages.intellect }}
+                            <template v-if="heroView.languages.linguisticsRank">
+                                + Linguistique {{ specialityRankLabel(heroView.languages.linguisticsRank) }}
+                                (= {{ heroView.languages.effectiveIntellect }})
+                            </template>
+                            — langue natale + langues additionnelles à partir d’Intellect 4 (×2 par niveau).
+                        </p>
+                        <div
+                            class="language-tags"
+                            :class="{ readonly: !heroView.isEditable }"
+                            @click="heroView.isEditable && $refs.personnageLangInput && $refs.personnageLangInput.focus()"
+                        >
+                            <span
+                                class="language-tag"
+                                v-for="lang in heroView.languages.known"
+                                :key="lang"
+                            >
+                                {{ lang }}
+                                <button
+                                    v-if="heroView.isEditable"
+                                    type="button"
+                                    class="language-tag-remove"
+                                    :aria-label="'Retirer ' + lang"
+                                    @click.stop="removePersonnageLanguage(lang)"
+                                >×</button>
+                            </span>
+                            <input
+                                v-if="heroView.isEditable && heroView.languages.remaining > 0"
+                                ref="personnageLangInput"
+                                class="language-tag-input"
+                                type="text"
+                                v-model="newLanguage"
+                                placeholder="Ajouter…"
+                                @keydown.enter.prevent="addPersonnageLanguage()"
+                                @keydown.backspace="onLanguageBackspace()"
+                            >
+                            <span
+                                class="mods-hint"
+                                v-else-if="heroView.isEditable"
+                            >Quota atteint</span>
+                            <span
+                                class="mods-hint"
+                                v-else-if="!heroView.languages.known.length"
+                            >Aucune langue nommée</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -573,12 +662,14 @@
                 newSpeciality: "",
                 newSpecialityFocus: "",
                 newSpecialityCustomFocus: "",
+                newLanguage: "",
                 focusDrafts: {},
                 focusCustoms: {},
                 sacrificePower: "",
                 originDecisions: {},
                 undoStack: [],
                 maxUndo: 40,
+                libraryExpanded: false,
             };
         },
         computed: {
@@ -633,6 +724,16 @@
             },
             newSpecialityIsGroup() {
                 return HeroSheet.isGroupSpecialityName(this.newSpeciality);
+            },
+            brouillonLanguages() {
+                if (!this.brouillonData) {
+                    return HeroSheet.computeLanguages(0, 0, []);
+                }
+                return HeroSheet.languagesFromParts(
+                    this.brouillonData.attributes,
+                    this.brouillonData.specialities,
+                    this.brouillonData.languages || []
+                );
             },
             heroView() {
                 if (!this.personnageData) {
@@ -771,6 +872,61 @@
             formatSpecialities(list) {
                 return HeroSheet.specializeEntries(list || []);
             },
+            specialityRankLabel(rank) {
+                return HeroSheet.specialityRankLabel(rank);
+            },
+            addPersonnageLanguage() {
+                const result = HeroSheet.addKnownLanguage(
+                    this.personnageData,
+                    this.newLanguage
+                );
+                if (!result.ok) {
+                    window.alert(
+                        result.reason === "quota"
+                            ? `Quota atteint (${this.heroView.languages.total} langues).`
+                            : result.reason === "duplicate"
+                              ? "Cette langue est déjà listée."
+                              : result.reason === "finished"
+                                ? "Personnage terminé : modifications verrouillées."
+                                : "Ajout impossible."
+                    );
+                    return;
+                }
+                this.persistPersonnage(result.data, {
+                    undoLabel: `Langue ${this.newLanguage.trim()}`,
+                });
+                this.newLanguage = "";
+            },
+            removePersonnageLanguage(name) {
+                const result = HeroSheet.removeKnownLanguage(
+                    this.personnageData,
+                    name
+                );
+                if (!result.ok) {
+                    window.alert(
+                        result.reason === "finished"
+                            ? "Personnage terminé : modifications verrouillées."
+                            : "Suppression impossible."
+                    );
+                    return;
+                }
+                this.persistPersonnage(result.data, {
+                    undoLabel: `Retrait langue ${name}`,
+                });
+            },
+            onLanguageBackspace() {
+                if ((this.newLanguage || "").length > 0) {
+                    return;
+                }
+                const known =
+                    this.heroView && this.heroView.languages
+                        ? this.heroView.languages.known
+                        : [];
+                if (!known.length) {
+                    return;
+                }
+                this.removePersonnageLanguage(known[known.length - 1]);
+            },
             focusOptionsFor(groupName, powers) {
                 const def = specialites.definitionOf(groupName);
                 if (!def) {
@@ -849,6 +1005,9 @@
             applyWorkingBrouillon(working) {
                 this.workingKind = "brouillon";
                 this.brouillonData = working.character;
+                if (this.brouillonData && !Array.isArray(this.brouillonData.languages)) {
+                    this.brouillonData.languages = [];
+                }
                 this.personnageData = null;
                 this.currentId = working.id || null;
                 this.workingUpdatedAt = working.updatedAt;

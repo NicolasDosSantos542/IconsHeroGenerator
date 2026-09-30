@@ -8,6 +8,7 @@ class Character {
     attributes = [];
     origin = "";
     specialities = [];
+    languages = [];
   
     constructor() {
         this.levelingAttributes();
