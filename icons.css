@@ -1,34 +1,286 @@
+@import url("https://fonts.googleapis.com/css2?family=Bangers&family=Oswald:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap");
+
+:root {
+  --icons-red: #bf1b2c;
+  --icons-red-hot: #e31c2e;
+  --icons-blue: #4045a3;
+  --icons-ink: #111111;
+  --icons-paper: #f7f4ec;
+  --icons-ray: #f3e6a8;
+  --icons-line: #1a1a1a;
+  --icons-muted: #4a4a4a;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body,
 html {
-    font-family: 'Garamond', Garamond, 'Times New Roman', Times, serif;
-    max-height:100vh;
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  font-family: "Source Sans 3", "Helvetica Neue", Arial, sans-serif;
+  color: var(--icons-ink);
+  background-color: var(--icons-paper);
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(191, 27, 44, 0.06) 1px, transparent 0),
+    repeating-conic-gradient(
+      from 0deg at 50% 0%,
+      var(--icons-ray) 0deg 3deg,
+      transparent 3deg 10deg
+    ),
+    linear-gradient(180deg, #fffdf6 0%, var(--icons-paper) 45%, #efe9da 100%);
+  background-size: 8px 8px, 100% 140%, 100% 100%;
+  background-attachment: fixed;
 }
-#app{
-    display: flex;
-    height: 100vh;
-        flex-direction: column;
-        gap: 10px;
+
+#app {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 100vh;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 1rem 1.25rem 2.5rem;
 }
+
+.sheet-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 4px solid var(--icons-ink);
+}
+
+.sheet-logo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.sheet-logo .brand {
+  font-family: "Bangers", Impact, sans-serif;
+  font-size: clamp(2.8rem, 8vw, 4.2rem);
+  line-height: 0.9;
+  letter-spacing: 0.04em;
+  color: #fff;
+  -webkit-text-stroke: 2px var(--icons-ink);
+  paint-order: stroke fill;
+  text-shadow:
+    3px 3px 0 var(--icons-blue),
+    5px 5px 0 var(--icons-ink);
+  transform: skewX(-8deg);
+}
+
+.sheet-logo .tagline {
+  display: inline-block;
+  align-self: flex-start;
+  font-family: "Oswald", Impact, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--icons-blue);
+  padding: 0.2rem 0.55rem;
+  transform: skewX(-8deg);
+}
+
+.sheet-header .rally {
+  font-family: "Bangers", Impact, sans-serif;
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  color: var(--icons-red);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  transform: skewX(-6deg);
+  text-shadow: 2px 2px 0 #fff, 3px 3px 0 var(--icons-ink);
+}
+
 .tabs {
-    display: flex;
-    gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.tabs input[type="button"],
+.character-actions input[type="button"] {
+  font-family: "Oswald", Impact, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--icons-red);
+  border: 2px solid var(--icons-ink);
+  border-radius: 0.35rem;
+  padding: 0.45rem 0.85rem;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--icons-ink);
+  transform: skewX(-4deg);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+.tabs input[type="button"]:hover,
+.character-actions input[type="button"]:hover {
+  background: var(--icons-red-hot);
+  transform: skewX(-4deg) translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--icons-ink);
+}
+
+.tabs input[type="button"]:active,
+.character-actions input[type="button"]:active {
+  transform: skewX(-4deg) translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--icons-ink);
+}
+
+.character-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-bottom: 1.25rem;
+}
+
+#main {
+  background: rgba(255, 253, 246, 0.88);
+  border: 3px solid var(--icons-ink);
+  border-radius: 0.4rem;
+  padding: 1.1rem 1.2rem 1.5rem;
+  box-shadow: 6px 6px 0 rgba(17, 17, 17, 0.18);
+}
+
+#main h3,
+.sheet-section-title {
+  font-family: "Bangers", Impact, sans-serif;
+  font-size: 1.55rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--icons-red);
+  margin: 1.35rem 0 0.55rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 3px solid var(--icons-ink);
+  transform: skewX(-4deg);
+}
+
+#main h3:first-child,
+.sheet-section-title:first-child {
+  margin-top: 0.25rem;
 }
 
 .name {
-    font-weight: bold;
-    margin-right: 10px;
+  font-family: "Oswald", Impact, sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin-right: 0.45rem;
 }
 
 .value {
-    font-weight: normal;
+  font-weight: 400;
+  color: var(--icons-ink);
+}
+
+.page {
+  color: var(--icons-muted);
+  font-size: 0.92em;
 }
 
 .attributes {
-    display: flex;
-    flex-direction: column;
-justify-content: space-between;
-flex-wrap: wrap;
-    gap: 10px;
-    height:100px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.65rem 1rem;
+  margin: 0.75rem 0 0.25rem;
 }
 
+.attributes > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-family: "Oswald", Impact, sans-serif;
+  font-size: 1rem;
+  border: 2px solid var(--icons-ink);
+  border-radius: 0.45rem;
+  background: #fff;
+  padding: 0.35rem 0.35rem 0.35rem 0.7rem;
+  min-height: 2.4rem;
+}
+
+.attributes .name {
+  margin-right: 0;
+  color: var(--icons-ink);
+}
+
+.attributes .value {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.4rem;
+  height: 2rem;
+  border-left: 2px solid var(--icons-ink);
+  border-radius: 0 0.25rem 0.25rem 0;
+  background: #fff8e8;
+  font-size: 1.15rem;
+  font-weight: 700;
+  padding: 0 0.55rem;
+}
+
+.powers-list > div,
+.specialities-list > div {
+  border-bottom: 1.5px solid var(--icons-line);
+  padding: 0.35rem 0.1rem;
+}
+
+.powers-list p {
+  margin: 0;
+}
+
+.origin-block,
+.description-block,
+.tenacity-block,
+.aspects-block {
+  line-height: 1.45;
+}
+
+.origin-block .name {
+  color: var(--icons-red);
+  font-size: 1.05rem;
+}
+
+.reference-list .name {
+  color: var(--icons-blue);
+}
+
+ul {
+  padding-left: 1.2rem;
+}
+
+li {
+  margin-bottom: 0.55rem;
+}
+
+strong {
+  color: var(--icons-red);
+}
+
+@media (max-width: 640px) {
+  #app {
+    padding: 0.75rem;
+  }
+
+  #main {
+    padding: 0.9rem;
+  }
+
+  .attributes {
+    grid-template-columns: 1fr;
+  }
+
+  .sheet-header .rally {
+    width: 100%;
+  }
+}
