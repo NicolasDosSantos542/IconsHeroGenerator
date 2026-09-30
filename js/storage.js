@@ -4,7 +4,7 @@
 const IconsStorage = (() => {
   const STORAGE_KEY = "icons_storage";
   const LEGACY_SLOTS = ["character_slot_1", "character_slot_2"];
-  const MAX_PER_TYPE = 5;
+  const MAX_PER_TYPE = 10;
   const VERSION = 2;
   const KIND_BROUILLON = "brouillon";
   const KIND_PERSONNAGE = "personnage";

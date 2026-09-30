@@ -334,6 +334,18 @@
                             <span class="name">{{ heroView.origin.name }}</span>
                         </p>
                         <p class="mods-hint" v-if="heroView.origin.description">{{ heroView.origin.description }}</p>
+                        <p
+                            class="mods-hint"
+                            v-if="originState && originState.substituteOrigins && originState.substituteOrigins.length"
+                        >
+                            Effets issus de :
+                            <strong
+                                v-for="(sub, idx) in originState.substituteOrigins"
+                                :key="(sub && sub.name) + '-' + idx"
+                            >
+                                {{ sub.name }}<template v-if="idx < originState.substituteOrigins.length - 1"> + </template>
+                            </strong>
+                        </p>
                     </div>
 
                     <div
@@ -403,10 +415,15 @@
 
                         <div v-if="originState.rerollOrigin" class="origin-step">
                             <p class="mods-hint">
-                                Option « Venu d’ailleurs » : double tirage d’origine non implémenté ici —
-                                les +2 sur capacités restent disponibles via l’autre choix.
+                                Tirer {{ originState.rerollOrigin.picks || 2 }} origines
+                                (ignore {{ (originState.rerollOrigin.ignore || []).join(", ") || "—" }}).
+                                Leurs effets remplacent ceux de « Venu d’ailleurs ».
                             </p>
-                            <input type="button" value="Ignorer ce choix" @click="dismissOriginReroll()">
+                            <div class="mods-row">
+                                <input type="button" value="Tirer les origines" @click="rollSubstituteOrigins()">
+                                <input type="button" value="Annuler ce choix" @click="undoRerollChoice()">
+                            </div>
+                            <p class="mods-hint">Tant que les origines ne sont pas tirées, vous pouvez revenir au choix d’origine.</p>
                         </div>
 
                         <p class="mods-hint" v-if="originState.flags && originState.flags.allPowersAreDevices">
@@ -908,12 +925,48 @@
                 }
             },
             dismissOriginReroll() {
-                const result = OriginEffects.dismissRerollOrigin(this.personnageData);
-                if (result.ok) {
-                    this.persistPersonnage(result.data, {
-                        undoLabel: "Ignorer double origine",
-                    });
+                this.undoRerollChoice();
+            },
+            rollSubstituteOrigins() {
+                const result = OriginEffects.rollSubstituteOrigins(
+                    this.personnageData
+                );
+                if (!result.ok) {
+                    window.alert("Tirage d’origines impossible.");
+                    return;
                 }
+                this.originDecisions = {
+                    ...((result.data.mods.origin &&
+                        result.data.mods.origin.decisions) ||
+                        {}),
+                };
+                this.persistPersonnage(result.data, {
+                    undoLabel: "Double tirage d’origine",
+                });
+                if (result.origins && result.origins.length) {
+                    window.alert(
+                        `Origines obtenues : ${result.origins
+                            .map((origin) => origin.name)
+                            .join(" + ")}`
+                    );
+                }
+            },
+            undoRerollChoice() {
+                const result = OriginEffects.undoPendingRerollChoice(
+                    this.personnageData
+                );
+                if (!result.ok) {
+                    window.alert("Impossible d’annuler ce choix.");
+                    return;
+                }
+                this.originDecisions = {
+                    ...((result.data.mods.origin &&
+                        result.data.mods.origin.decisions) ||
+                        {}),
+                };
+                this.persistPersonnage(result.data, {
+                    undoLabel: "Annulation double origine",
+                });
             },
             loadEntry(kind, id) {
                 if (

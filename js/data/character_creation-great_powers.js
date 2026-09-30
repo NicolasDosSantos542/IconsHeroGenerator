@@ -556,7 +556,7 @@ let table = {
     },
     {
       number: [10],
-      name: "Articifiel",
+      name: "Artificiel",
       description:
         "le personnage est un robot ou une autre chose construite, comme un golem. Sa Force est augmentée de +2 et vous pouvez prendre le pouvoir Vitalité gratuitement en plus des pouvoirs déjà tirés. Lancez sur la table de détermination pour connaitre le niveau de Vitalité ou renoncez à un pouvoir tiré et augmentez Vitalité à 10.",
       effects: [

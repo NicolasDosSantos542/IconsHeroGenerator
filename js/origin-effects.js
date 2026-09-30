@@ -55,6 +55,7 @@ const OriginEffects = (() => {
       freePowers: [],
       extraPowers: [],
       rerollOrigin: null,
+      substituteOrigins: null,
       unresolvedChoices: [],
     };
 
@@ -157,16 +158,65 @@ const OriginEffects = (() => {
           path,
         });
         break;
-      case "reroll_origin":
-        plan.rerollOrigin = {
-          picks: effect.picks || 2,
-          ignore: effect.ignore || [],
-          path,
-        };
+      case "reroll_origin": {
+        const picks = effect.picks || 2;
+        const rolledKey = `${path}.rolled`;
+        const rolled = decisions[rolledKey];
+        if (Array.isArray(rolled) && rolled.length >= picks) {
+          const chosen = rolled.slice(0, picks);
+          plan.substituteOrigins = chosen.map((sub) => ({
+            name: sub && sub.name,
+            description: sub && sub.description,
+          }));
+          // Les effets des origines tirées remplacent ceux de « Venu d'ailleurs ».
+          plan.flags = {};
+          chosen.forEach((subOrigin, i) => {
+            Object.assign(plan.flags, flagsOf(subOrigin));
+            effectsOf(subOrigin).forEach((subEffect, j) => {
+              applyEffectToPlan(
+                plan,
+                subEffect,
+                decisions,
+                `${path}.sub.${i}.${j}`
+              );
+            });
+          });
+        } else {
+          plan.rerollOrigin = {
+            picks,
+            ignore: effect.ignore || [],
+            path,
+          };
+        }
         break;
+      }
       default:
         break;
     }
+  }
+
+  function rollOriginIgnoring(ignore = []) {
+    const ignoreSet = new Set(ignore || []);
+    const origins = (typeof table !== "undefined" && table.origin) || [];
+    if (!origins.length) {
+      return null;
+    }
+    let origin = null;
+    let guard = 0;
+    while (!origin && guard < 200) {
+      guard += 1;
+      const dice =
+        Math.ceil(Math.random() * 6) + Math.ceil(Math.random() * 6);
+      if (ignoreSet.has(dice)) {
+        continue;
+      }
+      origin =
+        origins.find(
+          (entry) =>
+            Array.isArray(entry.number) && entry.number.includes(dice)
+        ) || null;
+    }
+    return origin ? clone(origin) : null;
   }
 
   function poolForTarget(target, characterLike) {
@@ -240,6 +290,7 @@ const OriginEffects = (() => {
       freePowerQueue: [],
       extraPowerQueue: [],
       rerollOrigin: null,
+      substituteOrigins: plan.substituteOrigins || null,
       needsSacrifice: null,
       seed: clone(character),
       unresolvedChoices: plan.unresolvedChoices,
@@ -324,6 +375,9 @@ const OriginEffects = (() => {
 
     if (plan.rerollOrigin) {
       data.mods.origin.rerollOrigin = plan.rerollOrigin;
+    }
+    if (plan.substituteOrigins) {
+      data.mods.origin.substituteOrigins = plan.substituteOrigins;
     }
 
     data.mods.origin.unresolved =
@@ -472,16 +526,65 @@ const OriginEffects = (() => {
     return { ok: true, data: next, power: rolled };
   }
 
-  function dismissRerollOrigin(data) {
+  function rollSubstituteOrigins(data) {
     const next = HeroSheet.normalizePersonnageData(data);
-    if (!next.mods.origin) {
-      return { ok: false, reason: "missing" };
+    const reroll = next.mods.origin && next.mods.origin.rerollOrigin;
+    if (!reroll || !reroll.path) {
+      return { ok: false, reason: "no_reroll" };
     }
-    next.mods.origin.rerollOrigin = null;
-    next.mods.origin.unresolved =
-      (next.mods.origin.freePowerQueue || []).length > 0 ||
-      (next.mods.origin.extraPowerQueue || []).length > 0;
-    return { ok: true, data: next };
+    const picks = reroll.picks || 2;
+    const rolled = [];
+    for (let i = 0; i < picks; i += 1) {
+      const origin = rollOriginIgnoring(reroll.ignore || []);
+      if (!origin) {
+        return { ok: false, reason: "roll_failed" };
+      }
+      rolled.push(origin);
+    }
+    const decisions = {
+      ...(next.mods.origin.decisions || {}),
+      [`${reroll.path}.rolled`]: rolled,
+    };
+    const result = rebootstrapFromSeed(next, decisions);
+    if (!result.ok) {
+      return result;
+    }
+    return {
+      ...result,
+      origins: rolled.map((origin) => ({
+        name: origin.name,
+        description: origin.description,
+      })),
+    };
+  }
+
+  /**
+   * Undo the origin choice that queued a double origin roll, before or after roll
+   * only while still on the pending reroll step (before substitutes are applied).
+   */
+  function undoPendingRerollChoice(data) {
+    const next = HeroSheet.normalizePersonnageData(data);
+    const reroll = next.mods.origin && next.mods.origin.rerollOrigin;
+    if (!reroll || !reroll.path) {
+      return { ok: false, reason: "empty" };
+    }
+    const path = reroll.path;
+    const decisionKey = path.includes(".options.")
+      ? path.split(".options.")[0]
+      : path;
+    if (!decisionKey) {
+      return { ok: false, reason: "missing_path" };
+    }
+    const decisions = {
+      ...(next.mods.origin.decisions || {}),
+    };
+    delete decisions[decisionKey];
+    delete decisions[`${path}.rolled`];
+    return rebootstrapFromSeed(next, decisions);
+  }
+
+  function dismissRerollOrigin(data) {
+    return undoPendingRerollChoice(data);
   }
 
   /**
@@ -522,7 +625,10 @@ const OriginEffects = (() => {
     resolveFreePower,
     resolveExtraPower,
     undoPendingExtraPowerChoice,
+    rollSubstituteOrigins,
+    undoPendingRerollChoice,
     dismissRerollOrigin,
     rollDeterminationLevel,
+    rollOriginIgnoring,
   };
 })();

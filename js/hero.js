@@ -34,6 +34,7 @@ const HeroSheet = (() => {
       freePowerQueue: [],
       extraPowerQueue: [],
       rerollOrigin: null,
+      substituteOrigins: null,
       needsSacrifice: null,
     };
   }
