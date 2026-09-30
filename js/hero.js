@@ -7,7 +7,13 @@
  * - history: reserved for later (historiques)
  */
 const HeroSheet = (() => {
-  const MAX_EXTRA_SPECIALITIES = 1;
+  const MAX_EXTRA_SPECIALITIES = 5;
+  const MAX_SPECIALITY_RANK = 3;
+  const SPECIALITY_RANK_LABELS = {
+    1: "spécialiste",
+    2: "expert",
+    3: "maître",
+  };
   const STATUS_EDITABLE = "editable";
   const STATUS_FINISHED = "finished";
   const SOURCE_REMOVAL = "removal";
@@ -100,7 +106,7 @@ const HeroSheet = (() => {
     );
     const maxSpecs = MAX_EXTRA_SPECIALITIES + base.originExtraSpecialitySlots;
     base.addedSpecialities = Array.isArray(mods.addedSpecialities)
-      ? mods.addedSpecialities.slice(0, maxSpecs)
+      ? normalizeSpecialityList(mods.addedSpecialities).slice(0, maxSpecs)
       : [];
 
     if (Array.isArray(mods.appliedBonuses)) {
@@ -164,7 +170,7 @@ const HeroSheet = (() => {
         attributes: clone(character.attributes || []),
         powers: clone(character.powers || []),
         origin: clone(character.origin || null),
-        specialities: clone(character.specialities || []),
+        specialities: normalizeSpecialityList(character.specialities || []),
       },
       mods: emptyMods(),
       status: STATUS_EDITABLE,
@@ -175,8 +181,10 @@ const HeroSheet = (() => {
     if (!data || !data.base) {
       return null;
     }
+    const base = clone(data.base);
+    base.specialities = normalizeSpecialityList(base.specialities);
     return {
-      base: clone(data.base),
+      base,
       mods: normalizeMods(data.mods),
       status: normalizeStatus(data.status),
     };
@@ -269,12 +277,194 @@ const HeroSheet = (() => {
       });
   }
 
-  function resolvedSpecialities(data) {
+  function specialityRankLabel(rank) {
+    return SPECIALITY_RANK_LABELS[rank] || SPECIALITY_RANK_LABELS[1];
+  }
+
+  function isGroupSpecialityName(name) {
+    const trimmed = (name || "").trim();
+    if (
+      typeof specialites !== "undefined" &&
+      specialites &&
+      typeof specialites.isGroup === "function"
+    ) {
+      return specialites.isGroup(trimmed);
+    }
+    return ["Armes", "Art", "Spectacle", "Pouvoir"].includes(trimmed);
+  }
+
+  function normalizeSpecialityEntry(raw) {
+    if (raw == null) {
+      return null;
+    }
+    if (typeof raw === "string") {
+      const name = raw.trim();
+      if (!name) {
+        return null;
+      }
+      if (isGroupSpecialityName(name)) {
+        return { name, focus: null };
+      }
+      return { name };
+    }
+    if (typeof raw === "object") {
+      const name = (raw.name || "").trim();
+      if (!name) {
+        return null;
+      }
+      if (isGroupSpecialityName(name)) {
+        const focus =
+          raw.focus == null || String(raw.focus).trim() === ""
+            ? null
+            : String(raw.focus).trim();
+        return { name, focus };
+      }
+      return { name };
+    }
+    return null;
+  }
+
+  function normalizeSpecialityList(list) {
+    return (list || []).map(normalizeSpecialityEntry).filter(Boolean);
+  }
+
+  function specialityKey(entry) {
+    const normalized = normalizeSpecialityEntry(entry);
+    if (!normalized) {
+      return null;
+    }
+    const focus =
+      normalized.focus == null ? "" : String(normalized.focus).trim().toLowerCase();
+    return `${normalized.name}|${focus}`;
+  }
+
+  function specializeEntries(list) {
+    const order = [];
+    const counts = {};
+    const samples = {};
+    normalizeSpecialityList(list).forEach((entry) => {
+      const key = specialityKey(entry);
+      if (!key) {
+        return;
+      }
+      if (!Object.prototype.hasOwnProperty.call(counts, key)) {
+        order.push(key);
+        samples[key] = entry;
+        counts[key] = 0;
+      }
+      counts[key] += 1;
+    });
+    return order.map((key) => {
+      const entry = samples[key];
+      const rank = Math.min(MAX_SPECIALITY_RANK, counts[key]);
+      const label = specialityRankLabel(rank);
+      const needsFocus =
+        isGroupSpecialityName(entry.name) && !entry.focus;
+      let display;
+      if (needsFocus) {
+        display = `${entry.name} — focus à choisir (${label})`;
+      } else if (entry.focus) {
+        display = `${entry.name} — ${entry.focus} (${label})`;
+      } else {
+        display = `${entry.name} (${label})`;
+      }
+      return {
+        name: entry.name,
+        focus: entry.focus || null,
+        key,
+        rank,
+        label,
+        needsFocus,
+        display,
+      };
+    });
+  }
+
+  function resolvedSpecialityNames(data) {
     const mods = normalizeMods(data.mods);
-    return [
+    return normalizeSpecialityList([
       ...(data.base.specialities || []),
       ...(mods.addedSpecialities || []),
-    ];
+    ]);
+  }
+
+  function resolvedSpecialities(data) {
+    return specializeEntries(resolvedSpecialityNames(data));
+  }
+
+  function specialityRankOf(data, name, focus) {
+    const target = normalizeSpecialityEntry({
+      name,
+      focus: focus == null || focus === "" ? null : focus,
+    });
+    if (!target) {
+      return 0;
+    }
+    const key = specialityKey(target);
+    const count = resolvedSpecialityNames(data).filter(
+      (entry) => specialityKey(entry) === key
+    ).length;
+    return Math.min(MAX_SPECIALITY_RANK, count);
+  }
+
+  function hasPendingSpecialityFocus(list) {
+    return normalizeSpecialityList(list).some(
+      (entry) => isGroupSpecialityName(entry.name) && !entry.focus
+    );
+  }
+
+  function pendingSpecialityFocusSlots(list) {
+    return normalizeSpecialityList(list)
+      .map((entry, index) => {
+        if (!isGroupSpecialityName(entry.name) || entry.focus) {
+          return null;
+        }
+        return { index, name: entry.name };
+      })
+      .filter(Boolean);
+  }
+
+  function applyFocusToSpecialityList(list, index, focus) {
+    const next = normalizeSpecialityList(list);
+    if (!next[index] || !isGroupSpecialityName(next[index].name)) {
+      return { ok: false, reason: "invalid" };
+    }
+    const trimmedFocus = (focus || "").trim();
+    if (!trimmedFocus) {
+      return { ok: false, reason: "need_focus" };
+    }
+    next[index] = { name: next[index].name, focus: trimmedFocus };
+    return { ok: true, list: next };
+  }
+
+  function setSpecialityFocus(data, source, index, focus) {
+    const locked = guardEditable(data);
+    if (locked) {
+      return locked;
+    }
+    const next = nextClone(data);
+    if (source === "added") {
+      const result = applyFocusToSpecialityList(
+        next.mods.addedSpecialities,
+        index,
+        focus
+      );
+      if (!result.ok) {
+        return result;
+      }
+      next.mods.addedSpecialities = result.list;
+      return { ok: true, data: next };
+    }
+    const result = applyFocusToSpecialityList(
+      next.base.specialities,
+      index,
+      focus
+    );
+    if (!result.ok) {
+      return result;
+    }
+    next.base.specialities = result.list;
+    return { ok: true, data: next };
   }
 
   function powerCostForTenacity(data) {
@@ -504,7 +694,7 @@ const HeroSheet = (() => {
     return { ok: true, data: next };
   }
 
-  function addSpeciality(data, specialityName) {
+  function addSpeciality(data, specialityName, focus) {
     const locked = guardEditable(data);
     if (locked) {
       return locked;
@@ -518,11 +708,21 @@ const HeroSheet = (() => {
     if (!trimmed) {
       return { ok: false, reason: "name" };
     }
-    const all = resolvedSpecialities(next);
-    if (all.includes(trimmed)) {
-      return { ok: false, reason: "duplicate" };
+    const isGroup = isGroupSpecialityName(trimmed);
+    const trimmedFocus = (focus || "").trim();
+    if (isGroup && !trimmedFocus) {
+      return { ok: false, reason: "need_focus" };
     }
-    next.mods.addedSpecialities.push(trimmed);
+    const entry = isGroup
+      ? { name: trimmed, focus: trimmedFocus }
+      : { name: trimmed };
+    if (
+      specialityRankOf(next, trimmed, isGroup ? trimmedFocus : null) >=
+      MAX_SPECIALITY_RANK
+    ) {
+      return { ok: false, reason: "max_rank" };
+    }
+    next.mods.addedSpecialities.push(entry);
     return { ok: true, data: next };
   }
 
@@ -533,6 +733,9 @@ const HeroSheet = (() => {
     }
     if (hasOpenOriginSteps(next.mods)) {
       return { ok: false, reason: "origin_pending" };
+    }
+    if (hasPendingSpecialityFocus(resolvedSpecialityNames(next))) {
+      return { ok: false, reason: "speciality_focus" };
     }
     next.status = STATUS_FINISHED;
     return { ok: true, data: next };
@@ -557,6 +760,8 @@ const HeroSheet = (() => {
 
   return {
     MAX_EXTRA_SPECIALITIES,
+    MAX_SPECIALITY_RANK,
+    SPECIALITY_RANK_LABELS,
     STATUS_EDITABLE,
     STATUS_FINISHED,
     SOURCE_REMOVAL,
@@ -576,12 +781,24 @@ const HeroSheet = (() => {
     restorePower,
     applyBonus,
     addSpeciality,
+    setSpecialityFocus,
     markFinished,
     reopen,
     grantHistoryBonus,
     resolvedAttributes,
     resolvedPowers,
     resolvedSpecialities,
+    resolvedSpecialityNames,
+    specializeEntries,
+    specialityRankLabel,
+    specialityRankOf,
+    normalizeSpecialityEntry,
+    normalizeSpecialityList,
+    specialityKey,
+    isGroupSpecialityName,
+    hasPendingSpecialityFocus,
+    pendingSpecialityFocusSlots,
+    applyFocusToSpecialityList,
     isOriginGrantedPower,
   };
 })();

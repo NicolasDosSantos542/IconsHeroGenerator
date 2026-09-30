@@ -143,11 +143,40 @@ class Character {
 
     }
     whatSpecialitie() {
-        let one = Math.ceil(Math.random() * 6) - 1;
-        let two = Math.ceil(Math.random() * 6) - 1;
-        // console.log("one = "+one , "two = "+ two)
-        this.specialities.push(table.specialities[one][two])
-
+        const maxRank = 3;
+        let guard = 0;
+        while (guard < 100) {
+            guard += 1;
+            const one = Math.ceil(Math.random() * 6) - 1;
+            const two = Math.ceil(Math.random() * 6) - 1;
+            const name = table.specialities[one][two];
+            const isGroup =
+                typeof HeroSheet !== "undefined" && HeroSheet.isGroupSpecialityName
+                    ? HeroSheet.isGroupSpecialityName(name)
+                    : ["Armes", "Art", "Spectacle", "Pouvoir"].includes(name);
+            // Pending group focuses share the same key (name|) until chosen.
+            const entry = isGroup ? { name, focus: null } : { name };
+            const key =
+                typeof HeroSheet !== "undefined" && HeroSheet.specialityKey
+                    ? HeroSheet.specialityKey(entry)
+                    : `${name}|`;
+            const count = this.specialities.filter((existing) => {
+                if (
+                    typeof HeroSheet !== "undefined" &&
+                    HeroSheet.specialityKey
+                ) {
+                    return HeroSheet.specialityKey(existing) === key;
+                }
+                const existingName =
+                    typeof existing === "string" ? existing : existing && existing.name;
+                return existingName === name;
+            }).length;
+            if (count < maxRank) {
+                this.specialities.push(entry);
+                return entry;
+            }
+        }
+        return null;
     }
     addElementInTable(table, element) {
         if(table.includes(element)) {
