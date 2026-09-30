@@ -279,8 +279,8 @@
                                 value="Supprimer (+2)"
                                 @click="doRemovePower(value.name)"
                             >
-                            <span class="mods-hint" v-else-if="value.innateFromOrigin">
-                                (pouvoir d’origine — non échangeable)
+                            <span class="mods-hint" v-else-if="value.fromOrigin">
+                                (pouvoir d’origine — non retirable)
                             </span>
                         </div>
                     </div>
@@ -379,12 +379,12 @@
                             </div>
                         </div>
 
-                        <div v-if="originState.needsSacrifice" class="origin-step">
+                            <div v-if="originState.needsSacrifice" class="origin-step">
                             <p class="mods-hint">Choisissez le pouvoir à abandonner pour l’échange :</p>
                             <div class="mods-row">
                                 <select v-model="sacrificePower">
                                     <option disabled value="">Pouvoir…</option>
-                                    <option v-for="p in heroView.powers" :key="p.name" :value="p.name">{{ p.name }}</option>
+                                    <option v-for="p in sacrificablePowers" :key="p.name" :value="p.name">{{ p.name }}</option>
                                 </select>
                                 <input type="button" value="Confirmer" @click="confirmOriginSacrifice()">
                             </div>
@@ -398,7 +398,7 @@
                                 <input type="button" value="Niveau tiré" @click="resolveFreePower('roll')">
                                 <select v-model="sacrificePower">
                                     <option disabled value="">…ou sacrifier un pouvoir pour niv. 10</option>
-                                    <option v-for="p in heroView.powers" :key="'sac-'+p.name" :value="p.name">{{ p.name }}</option>
+                                    <option v-for="p in sacrificablePowers" :key="'sac-'+p.name" :value="p.name">{{ p.name }}</option>
                                 </select>
                                 <input type="button" value="Sacrifier → 10" @click="resolveFreePower('sacrifice')">
                             </div>
@@ -522,6 +522,12 @@
                 return this.heroView && this.heroView.mods
                     ? this.heroView.mods.origin
                     : null;
+            },
+            sacrificablePowers() {
+                if (!this.heroView || !this.heroView.powers) {
+                    return [];
+                }
+                return this.heroView.powers.filter((power) => !power.fromOrigin);
             },
             originBonusTargetLabel() {
                 const next = this.heroView && this.heroView.originBonusNext;
@@ -899,7 +905,9 @@
                     window.alert(
                         result.reason === "need_sacrifice"
                             ? "Choisissez un pouvoir à sacrifier."
-                            : "Impossible de résoudre le pouvoir gratuit."
+                            : result.reason === "locked_origin_power"
+                              ? "Ce pouvoir d’origine ne peut pas être sacrifié."
+                              : "Impossible de résoudre le pouvoir gratuit."
                     );
                     return;
                 }
@@ -1044,7 +1052,7 @@
                         result.reason === "finished"
                             ? "Personnage terminé : modifications verrouillées."
                             : result.reason === "locked_origin_roll"
-                              ? "Ce pouvoir tiré via l’origine ne peut pas être échangé contre un +2."
+                              ? "Ce pouvoir d’origine ne peut pas être retiré."
                               : "Suppression impossible."
                     );
                     return;

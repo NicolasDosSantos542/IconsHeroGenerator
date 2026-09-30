@@ -243,6 +243,10 @@ const HeroSheet = (() => {
     return attributes;
   }
 
+  function isOriginGrantedPower(power) {
+    return !!(power && (power.innateFromOrigin || power.freeFromOrigin));
+  }
+
   function resolvedPowers(data) {
     const mods = normalizeMods(data.mods);
     const removedNames = new Set(
@@ -252,12 +256,15 @@ const HeroSheet = (() => {
       .filter((power) => !removedNames.has(power.name))
       .map((power) => {
         const bonus = bonusTotalFor(mods, "power", power.name);
+        const fromOrigin = isOriginGrantedPower(power);
         return {
           ...power,
           level: power.level + bonus,
           bonus,
           innateFromOrigin: !!power.innateFromOrigin,
-          canRemoveForBonus: !power.innateFromOrigin,
+          freeFromOrigin: !!power.freeFromOrigin,
+          fromOrigin,
+          canRemoveForBonus: !fromOrigin,
         };
       });
   }
@@ -373,7 +380,7 @@ const HeroSheet = (() => {
     if (!power) {
       return { ok: false, reason: "missing" };
     }
-    if (power.innateFromOrigin) {
+    if (isOriginGrantedPower(power)) {
       return { ok: false, reason: "locked_origin_roll" };
     }
     const removalId = createId();
@@ -575,5 +582,6 @@ const HeroSheet = (() => {
     resolvedAttributes,
     resolvedPowers,
     resolvedSpecialities,
+    isOriginGrantedPower,
   };
 })();
