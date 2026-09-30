@@ -307,6 +307,16 @@ html {
   transform: skewX(-4deg);
 }
 
+.personnage-status-row > input[type="button"]:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.undo-btn {
+  background: var(--icons-blue) !important;
+}
+
 .status-badge {
   font-family: "Oswald", Impact, sans-serif;
   font-size: 0.85rem;
@@ -326,6 +336,18 @@ html {
 .status-badge.finished {
   background: var(--icons-blue);
   color: #fff;
+}
+
+.origin-panel .origin-step {
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px dashed rgba(26, 26, 26, 0.25);
+}
+
+.origin-panel .origin-step:last-child {
+  border-bottom: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
 .removed-powers-list {

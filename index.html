@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="icons.css">
     <script src="js/character.js"></script>
     <script src="js/hero.js"></script>
+    <script src="js/origin-effects.js"></script>
     <script src="js/storage.js"></script>
     <script src="js/data/character_creation-great_powers.js"></script>
     <script src="js/data/extras.js"></script>
@@ -197,6 +198,14 @@
                             {{ heroView.isFinished ? 'Terminé' : 'En cours' }}
                         </div>
                         <input
+                            type="button"
+                            class="undo-btn"
+                            :disabled="!canUndo"
+                            :value="undoButtonLabel"
+                            :title="lastUndoLabel"
+                            @click="undoLastAction()"
+                        >
+                        <input
                             v-if="heroView.isEditable"
                             type="button"
                             value="Valider comme terminé"
@@ -265,11 +274,14 @@
                                 <span class="page" v-if="value.page"> (p. {{ value.page }})</span>
                             </p>
                             <input
-                                v-if="heroView.canRemovePower"
+                                v-if="heroView.canRemovePower && value.canRemoveForBonus"
                                 type="button"
                                 value="Supprimer (+2)"
                                 @click="doRemovePower(value.name)"
                             >
+                            <span class="mods-hint" v-else-if="value.innateFromOrigin">
+                                (pouvoir d’origine — non échangeable)
+                            </span>
                         </div>
                     </div>
 
@@ -286,14 +298,21 @@
 
                     <div class="mods-panel" v-if="heroView.isEditable && heroView.pendingBonuses > 0">
                         <h4>Bonus +2 à placer ({{ heroView.pendingBonuses }})</h4>
-                        <p class="mods-hint" v-if="heroView.pendingBySource.removal || heroView.pendingBySource.history">
+                        <p class="mods-hint">
                             Sources :
+                            <span v-if="heroView.pendingBySource.origin">origine {{ heroView.pendingBySource.origin }}</span>
+                            <span v-if="heroView.pendingBySource.origin && (heroView.pendingBySource.removal || heroView.pendingBySource.history)"> · </span>
                             <span v-if="heroView.pendingBySource.removal">suppression {{ heroView.pendingBySource.removal }}</span>
                             <span v-if="heroView.pendingBySource.removal && heroView.pendingBySource.history"> · </span>
                             <span v-if="heroView.pendingBySource.history">historique {{ heroView.pendingBySource.history }}</span>
                         </p>
+                        <p class="mods-hint" v-if="heroView.originBonusNext">
+                            Prochain bonus d’origine : cible
+                            <strong>{{ originBonusTargetLabel }}</strong>
+                            (max {{ heroView.originBonusNext.max }})
+                        </p>
                         <div class="mods-row">
-                            <select v-model="bonusKind">
+                            <select v-model="bonusKind" :disabled="!!heroView.originBonusNext">
                                 <option value="attribute">Attribut</option>
                                 <option value="power">Pouvoir</option>
                             </select>
@@ -301,19 +320,97 @@
                                 <option disabled value="">Cible</option>
                                 <option
                                     v-for="opt in bonusTargets"
-                                    :key="opt"
-                                    :value="opt"
-                                >{{ opt }}</option>
+                                    :key="opt.kind + ':' + opt.name"
+                                    :value="opt.kind + ':' + opt.name"
+                                >{{ opt.name }} ({{ opt.kind === 'power' ? 'pouvoir' : 'attribut' }})</option>
                             </select>
                             <input type="button" value="Appliquer +2" @click="doApplyBonus()">
                         </div>
-                        <p class="mods-hint">Pas de limite sur les +2 issus des suppressions de pouvoir.</p>
                     </div>
 
                     <h3>Origine</h3>
                     <div class="origin-block">
                         <p>
                             <span class="name">{{ heroView.origin.name }}</span>
+                        </p>
+                        <p class="mods-hint" v-if="heroView.origin.description">{{ heroView.origin.description }}</p>
+                    </div>
+
+                    <div
+                        class="mods-panel origin-panel"
+                        v-if="heroView.isEditable && originState && (
+                            (originState.unresolvedChoices && originState.unresolvedChoices.length) ||
+                            originState.needsSacrifice ||
+                            (originState.freePowerQueue && originState.freePowerQueue.length) ||
+                            (originState.extraPowerQueue && originState.extraPowerQueue.length) ||
+                            originState.rerollOrigin ||
+                            (originState.flags && originState.flags.allPowersAreDevices)
+                        )"
+                    >
+                        <h4>Effets d’origine</h4>
+
+                        <div v-for="choice in (originState.unresolvedChoices || [])" :key="choice.path" class="origin-step">
+                            <div v-if="choice.kind === 'choice'">
+                                <p class="mods-hint">Choix à résoudre :</p>
+                                <div class="mods-row" v-for="opt in choice.options" :key="choice.path + '-' + opt.index">
+                                    <input type="button" :value="opt.label" @click="chooseOriginOption(choice.path, opt.index)">
+                                </div>
+                            </div>
+                            <div v-else-if="choice.kind === 'optional_trade'">
+                                <p class="mods-hint">
+                                    Échange optionnel : abandonner un pouvoir contre +2 spécialités ?
+                                </p>
+                                <div class="mods-row">
+                                    <input type="button" value="Oui" @click="chooseOriginTrade(choice.path, true)">
+                                    <input type="button" value="Non" @click="chooseOriginTrade(choice.path, false)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div v-if="originState.needsSacrifice" class="origin-step">
+                            <p class="mods-hint">Choisissez le pouvoir à abandonner pour l’échange :</p>
+                            <div class="mods-row">
+                                <select v-model="sacrificePower">
+                                    <option disabled value="">Pouvoir…</option>
+                                    <option v-for="p in heroView.powers" :key="p.name" :value="p.name">{{ p.name }}</option>
+                                </select>
+                                <input type="button" value="Confirmer" @click="confirmOriginSacrifice()">
+                            </div>
+                        </div>
+
+                        <div v-if="originState.freePowerQueue && originState.freePowerQueue.length" class="origin-step">
+                            <p class="mods-hint">
+                                Pouvoir gratuit : {{ originState.freePowerQueue[0].name }}
+                            </p>
+                            <div class="mods-row">
+                                <input type="button" value="Niveau tiré" @click="resolveFreePower('roll')">
+                                <select v-model="sacrificePower">
+                                    <option disabled value="">…ou sacrifier un pouvoir pour niv. 10</option>
+                                    <option v-for="p in heroView.powers" :key="'sac-'+p.name" :value="p.name">{{ p.name }}</option>
+                                </select>
+                                <input type="button" value="Sacrifier → 10" @click="resolveFreePower('sacrifice')">
+                            </div>
+                        </div>
+
+                        <div v-if="originState.extraPowerQueue && originState.extraPowerQueue.length" class="origin-step">
+                            <p class="mods-hint">Pouvoir additionnel (inné) à tirer.</p>
+                            <div class="mods-row">
+                                <input type="button" value="Tirer le pouvoir" @click="resolveExtraPower()">
+                                <input type="button" value="Annuler ce choix" @click="undoExtraPowerChoice()">
+                            </div>
+                            <p class="mods-hint">Tant que le pouvoir n’est pas tiré, vous pouvez revenir au choix d’origine.</p>
+                        </div>
+
+                        <div v-if="originState.rerollOrigin" class="origin-step">
+                            <p class="mods-hint">
+                                Option « Venu d’ailleurs » : double tirage d’origine non implémenté ici —
+                                les +2 sur capacités restent disponibles via l’autre choix.
+                            </p>
+                            <input type="button" value="Ignorer ce choix" @click="dismissOriginReroll()">
+                        </div>
+
+                        <p class="mods-hint" v-if="originState.flags && originState.flags.allPowersAreDevices">
+                            Flag : tous les pouvoirs sont des Accessoires / appareils.
                         </p>
                     </div>
 
@@ -364,6 +461,10 @@
                 bonusKind: "attribute",
                 bonusTarget: "",
                 newSpeciality: "",
+                sacrificePower: "",
+                originDecisions: {},
+                undoStack: [],
+                maxUndo: 40,
             };
         },
         computed: {
@@ -379,20 +480,68 @@
                 const save = list.find((entry) => entry.id === this.currentId);
                 return save ? save.name : null;
             },
+            canUndo() {
+                return this.workingKind === "personnage" && this.undoStack.length > 0;
+            },
+            lastUndoLabel() {
+                if (!this.undoStack.length) {
+                    return "";
+                }
+                return this.undoStack[this.undoStack.length - 1].label || "Action";
+            },
+            undoButtonLabel() {
+                if (!this.canUndo) {
+                    return "Annuler";
+                }
+                return `Annuler (${this.undoStack.length})`;
+            },
             heroView() {
                 if (!this.personnageData) {
                     return null;
                 }
                 return HeroSheet.view(this.personnageData);
             },
+            originState() {
+                return this.heroView && this.heroView.mods
+                    ? this.heroView.mods.origin
+                    : null;
+            },
+            originBonusTargetLabel() {
+                const next = this.heroView && this.heroView.originBonusNext;
+                if (!next) {
+                    return "";
+                }
+                const labels = {
+                    any_capacity: "attribut ou pouvoir",
+                    power: "pouvoir",
+                    attribute: "attribut",
+                    mental_attribute: "attribut mental",
+                };
+                return labels[next.target] || next.target;
+            },
             bonusTargets() {
                 if (!this.heroView) {
                     return [];
                 }
-                if (this.bonusKind === "power") {
-                    return this.heroView.powers.map((power) => power.name);
+                if (this.heroView.originBonusNext) {
+                    return OriginEffects.poolForTarget(
+                        this.heroView.originBonusNext.target,
+                        {
+                            attributes: this.heroView.attributes,
+                            powers: this.heroView.powers,
+                        }
+                    );
                 }
-                return this.heroView.attributes.map((attr) => attr.name);
+                if (this.bonusKind === "power") {
+                    return this.heroView.powers.map((power) => ({
+                        kind: "power",
+                        name: power.name,
+                    }));
+                }
+                return this.heroView.attributes.map((attr) => ({
+                    kind: "attribute",
+                    name: attr.name,
+                }));
             },
             specialtyOptions() {
                 const current = new Set(
@@ -405,7 +554,19 @@
         },
         watch: {
             bonusKind() {
-                this.bonusTarget = "";
+                if (!this.heroView || !this.heroView.originBonusNext) {
+                    this.bonusTarget = "";
+                }
+            },
+            "heroView.originBonusNext": {
+                handler(next) {
+                    this.bonusTarget = "";
+                    if (next && next.target === "power") {
+                        this.bonusKind = "power";
+                    } else if (next) {
+                        this.bonusKind = "attribute";
+                    }
+                },
             },
         },
         mounted() {
@@ -414,7 +575,7 @@
             this.refreshLibrary();
             const working = IconsStorage.getWorking();
             if (working && working.kind === "personnage" && working.data) {
-                this.applyWorkingPersonnage(working);
+                this.applyWorkingPersonnage(working, { resetUndo: true });
             } else if (working && working.character) {
                 this.applyWorkingBrouillon(working);
             } else {
@@ -439,9 +600,10 @@
                 this.personnageData = null;
                 this.currentId = working.id || null;
                 this.workingUpdatedAt = working.updatedAt;
+                this.undoStack = [];
                 this.refreshLibrary();
             },
-            applyWorkingPersonnage(working) {
+            applyWorkingPersonnage(working, options = {}) {
                 this.workingKind = "personnage";
                 this.personnageData = working.data;
                 this.brouillonData = null;
@@ -451,15 +613,51 @@
                 this.swapB = "";
                 this.bonusTarget = "";
                 this.newSpeciality = "";
+                this.sacrificePower = "";
+                if (options.resetUndo) {
+                    this.undoStack = [];
+                }
                 this.refreshLibrary();
             },
             persistBrouillon(character, options = {}) {
                 const store = IconsStorage.writeWorkingBrouillon(character, options);
                 this.applyWorkingBrouillon(store.working);
             },
+            pushUndo(label) {
+                if (!this.personnageData) {
+                    return;
+                }
+                this.undoStack.push({
+                    label: label || "Action",
+                    data: JSON.parse(JSON.stringify(this.personnageData)),
+                });
+                if (this.undoStack.length > this.maxUndo) {
+                    this.undoStack.shift();
+                }
+            },
             persistPersonnage(data, options = {}) {
-                const store = IconsStorage.writeWorkingPersonnage(data, options);
+                if (options.recordUndo !== false) {
+                    this.pushUndo(options.undoLabel);
+                }
+                const writeOpts = {};
+                if (Object.prototype.hasOwnProperty.call(options, "id")) {
+                    writeOpts.id = options.id;
+                }
+                const store = IconsStorage.writeWorkingPersonnage(data, writeOpts);
                 this.applyWorkingPersonnage(store.working);
+            },
+            undoLastAction() {
+                if (!this.undoStack.length) {
+                    return;
+                }
+                const previous = this.undoStack.pop();
+                this.persistPersonnage(previous.data, { recordUndo: false });
+                this.originDecisions = {
+                    ...((previous.data.mods &&
+                        previous.data.mods.origin &&
+                        previous.data.mods.origin.decisions) ||
+                        {}),
+                };
             },
             confirmIfDirty(message) {
                 if (!IconsStorage.isDirty()) {
@@ -545,7 +743,7 @@
                     );
                     return;
                 }
-                this.applyWorkingPersonnage(IconsStorage.getWorking());
+                this.applyWorkingPersonnage(IconsStorage.getWorking(), { resetUndo: true });
             },
             saveCurrent() {
                 if (this.workingKind === "brouillon") {
@@ -599,7 +797,9 @@
                     this.saveAsPersonnage();
                     return;
                 }
-                this.applyWorkingPersonnage(IconsStorage.getWorking());
+                this.applyWorkingPersonnage(IconsStorage.getWorking(), {
+                    resetUndo: false,
+                });
             },
             promoteToPersonnage() {
                 if (this.workingKind !== "brouillon" || !this.brouillonData) {
@@ -617,12 +817,103 @@
                 if (!name) {
                     return;
                 }
-                const result = IconsStorage.createPersonnage(name, this.brouillonData);
+                this.originDecisions = {};
+                const result = IconsStorage.createPersonnage(
+                    name,
+                    this.brouillonData,
+                    { decisions: this.originDecisions }
+                );
                 if (!result.ok) {
                     window.alert("Impossible de créer le personnage.");
                     return;
                 }
-                this.applyWorkingPersonnage(IconsStorage.getWorking());
+                this.applyWorkingPersonnage(IconsStorage.getWorking(), { resetUndo: true });
+            },
+            rebuildOrigin(decisions, options = {}) {
+                const boot = OriginEffects.rebootstrapFromSeed(
+                    this.personnageData,
+                    decisions,
+                    options
+                );
+                if (!boot.ok) {
+                    window.alert("Impossible d’appliquer l’origine.");
+                    return;
+                }
+                this.originDecisions = { ...decisions };
+                this.persistPersonnage(boot.data, {
+                    undoLabel: "Choix d’origine",
+                });
+            },
+            chooseOriginOption(path, index) {
+                const decisions = {
+                    ...(this.personnageData.mods.origin.decisions || {}),
+                    [path]: index,
+                };
+                this.rebuildOrigin(decisions);
+            },
+            chooseOriginTrade(path, accepted) {
+                const decisions = {
+                    ...(this.personnageData.mods.origin.decisions || {}),
+                    [path]: accepted,
+                };
+                this.rebuildOrigin(decisions);
+            },
+            confirmOriginSacrifice() {
+                if (!this.sacrificePower) {
+                    window.alert("Choisissez un pouvoir à abandonner.");
+                    return;
+                }
+                const decisions =
+                    (this.personnageData.mods.origin &&
+                        this.personnageData.mods.origin.decisions) ||
+                    {};
+                this.rebuildOrigin(decisions, {
+                    sacrificedPowerName: this.sacrificePower,
+                });
+                this.sacrificePower = "";
+            },
+            resolveFreePower(mode) {
+                const result = OriginEffects.resolveFreePower(
+                    this.personnageData,
+                    mode,
+                    mode === "sacrifice" ? this.sacrificePower : null
+                );
+                if (!result.ok) {
+                    window.alert(
+                        result.reason === "need_sacrifice"
+                            ? "Choisissez un pouvoir à sacrifier."
+                            : "Impossible de résoudre le pouvoir gratuit."
+                    );
+                    return;
+                }
+                this.persistPersonnage(result.data, {
+                    undoLabel:
+                        mode === "sacrifice"
+                            ? "Vitalité (sacrifice)"
+                            : "Vitalité (tirage)",
+                });
+                this.sacrificePower = "";
+            },
+            resolveExtraPower() {
+                const result = OriginEffects.resolveExtraPower(this.personnageData);
+                if (!result.ok) {
+                    window.alert("Tirage de pouvoir impossible.");
+                    return;
+                }
+                this.persistPersonnage(result.data, {
+                    undoLabel: "Tirage pouvoir additionnel",
+                });
+                if (result.power) {
+                    window.alert(`Pouvoir obtenu : ${result.power.name} (${result.power.level})`);
+                }
+            },
+            dismissOriginReroll() {
+                const result = OriginEffects.dismissRerollOrigin(this.personnageData);
+                if (result.ok) {
+                    this.persistPersonnage(result.data, {
+                        undoLabel: "Ignorer double origine",
+                    });
+                }
             },
             loadEntry(kind, id) {
                 if (
@@ -639,7 +930,9 @@
                     return;
                 }
                 if (kind === "personnage") {
-                    this.applyWorkingPersonnage(IconsStorage.getWorking());
+                    this.applyWorkingPersonnage(IconsStorage.getWorking(), {
+                        resetUndo: true,
+                    });
                 } else {
                     this.applyWorkingBrouillon(IconsStorage.getWorking());
                 }
@@ -678,32 +971,51 @@
                     window.alert("Échange impossible (2 attributs distincts, une seule fois).");
                     return;
                 }
-                this.persistPersonnage(result.data);
+                this.persistPersonnage(result.data, {
+                    undoLabel: "Échange d’attributs",
+                });
             },
             undoSwap() {
                 const result = HeroSheet.clearSwap(this.personnageData);
                 if (result.ok) {
-                    this.persistPersonnage(result.data);
+                    this.persistPersonnage(result.data, {
+                        undoLabel: "Annulation d’échange",
+                    });
                 }
             },
             doRemovePower(name) {
-                if (
-                    !window.confirm(
-                        `Supprimer le pouvoir « ${name} » pour gagner un +2 à placer ?`
-                    )
-                ) {
-                    return;
-                }
+   
                 const result = HeroSheet.removePower(this.personnageData, name);
                 if (!result.ok) {
                     window.alert(
                         result.reason === "finished"
                             ? "Personnage terminé : modifications verrouillées."
-                            : "Suppression impossible."
+                            : result.reason === "locked_origin_roll"
+                              ? "Ce pouvoir tiré via l’origine ne peut pas être échangé contre un +2."
+                              : "Suppression impossible."
                     );
                     return;
                 }
-                this.persistPersonnage(result.data);
+                this.persistPersonnage(result.data, {
+                    undoLabel: `Suppression de ${name}`,
+                });
+            },
+            undoExtraPowerChoice() {
+                const result = OriginEffects.undoPendingExtraPowerChoice(
+                    this.personnageData
+                );
+                if (!result.ok) {
+                    window.alert("Impossible d’annuler ce choix.");
+                    return;
+                }
+                this.originDecisions = {
+                    ...((result.data.mods.origin &&
+                        result.data.mods.origin.decisions) ||
+                        {}),
+                };
+                this.persistPersonnage(result.data, {
+                    undoLabel: "Annulation pouvoir additionnel",
+                });
             },
             doRestorePower(removalId) {
                 const result = HeroSheet.restorePower(this.personnageData, removalId);
@@ -715,7 +1027,9 @@
                     );
                     return;
                 }
-                this.persistPersonnage(result.data);
+                this.persistPersonnage(result.data, {
+                    undoLabel: "Restauration de pouvoir",
+                });
             },
             doMarkFinished() {
                 if (
@@ -727,14 +1041,16 @@
                 }
                 const result = HeroSheet.markFinished(this.personnageData);
                 if (!result.ok) {
-                    window.alert(
-                        result.reason === "pending_bonuses"
-                            ? "Placez d’abord tous les bonus +2 en attente."
-                            : "Impossible de valider."
-                    );
+                    const messages = {
+                        pending_bonuses: "Placez d’abord tous les bonus +2 en attente.",
+                        origin_pending: "Terminez d’abord les effets d’origine.",
+                    };
+                    window.alert(messages[result.reason] || "Impossible de valider.");
                     return;
                 }
-                this.persistPersonnage(result.data);
+                this.persistPersonnage(result.data, {
+                    undoLabel: "Validation terminée",
+                });
             },
             doReopen() {
                 if (
@@ -746,7 +1062,9 @@
                 }
                 const result = HeroSheet.reopen(this.personnageData);
                 if (result.ok) {
-                    this.persistPersonnage(result.data);
+                    this.persistPersonnage(result.data, {
+                        undoLabel: "Réouverture",
+                    });
                 }
             },
             doApplyBonus() {
@@ -754,16 +1072,27 @@
                     window.alert("Choisissez une cible pour le +2.");
                     return;
                 }
+                const [kind, ...nameParts] = this.bonusTarget.split(":");
+                const name = nameParts.join(":");
                 const result = HeroSheet.applyBonus(
                     this.personnageData,
-                    this.bonusKind,
-                    this.bonusTarget
+                    kind,
+                    name
                 );
                 if (!result.ok) {
-                    window.alert("Impossible d’appliquer le bonus.");
+                    const messages = {
+                        invalid_target: "Cible invalide pour ce bonus d’origine.",
+                        max: "Maximum de niveau atteint (10).",
+                        no_pending: "Aucun bonus en attente.",
+                    };
+                    window.alert(
+                        messages[result.reason] || "Impossible d’appliquer le bonus."
+                    );
                     return;
                 }
-                this.persistPersonnage(result.data);
+                this.persistPersonnage(result.data, {
+                    undoLabel: `Bonus +2 sur ${name}`,
+                });
                 this.bonusTarget = "";
             },
             doAddSpeciality() {
@@ -778,12 +1107,14 @@
                 if (!result.ok) {
                     window.alert(
                         result.reason === "quota"
-                            ? "Une seule spécialité supplémentaire est autorisée."
+                            ? `Quota de spécialités supplémentaires atteint (${this.heroView.maxExtraSpecialities}).`
                             : "Ajout impossible."
                     );
                     return;
                 }
-                this.persistPersonnage(result.data);
+                this.persistPersonnage(result.data, {
+                    undoLabel: `Spécialité ${this.newSpeciality}`,
+                });
                 this.newSpeciality = "";
             },
             exportSaves() {
@@ -820,7 +1151,7 @@
                     }
                     const working = IconsStorage.getWorking();
                     if (working && working.kind === "personnage") {
-                        this.applyWorkingPersonnage(working);
+                        this.applyWorkingPersonnage(working, { resetUndo: true });
                     } else if (working && working.character) {
                         this.applyWorkingBrouillon(working);
                     } else {

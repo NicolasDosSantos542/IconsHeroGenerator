@@ -312,7 +312,7 @@ const IconsStorage = (() => {
     return { ok: true, entry };
   }
 
-  function createPersonnage(name, characterOrData) {
+  function createPersonnage(name, characterOrData, options = {}) {
     const store = getStore();
     if (store.personnages.length >= MAX_PER_TYPE) {
       return { ok: false, reason: "quota", max: MAX_PER_TYPE };
@@ -321,10 +321,17 @@ const IconsStorage = (() => {
     if (!trimmed) {
       return { ok: false, reason: "name" };
     }
-    const data =
-      characterOrData && characterOrData.base
-        ? HeroSheet.normalizePersonnageData(characterOrData)
-        : HeroSheet.createPersonnageData(characterOrData);
+    let data;
+    if (characterOrData && characterOrData.base) {
+      data = HeroSheet.normalizePersonnageData(characterOrData);
+    } else {
+      const boot = OriginEffects.bootstrapPersonnage(
+        characterOrData,
+        options.decisions || {},
+        options
+      );
+      data = boot.data;
+    }
     const stamp = nowIso();
     const entry = {
       id: createId(),

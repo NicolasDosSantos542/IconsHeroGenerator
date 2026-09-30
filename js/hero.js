@@ -3,13 +3,15 @@
  *
  * Bonus sources:
  * - removal: +2 granted by deleting a power (unlimited, undoable while editable)
- * - history: reserved for later (historiques) — pending pool already supported
+ * - origin: +2 from origin effects
+ * - history: reserved for later (historiques)
  */
 const HeroSheet = (() => {
   const MAX_EXTRA_SPECIALITIES = 1;
   const STATUS_EDITABLE = "editable";
   const STATUS_FINISHED = "finished";
   const SOURCE_REMOVAL = "removal";
+  const SOURCE_ORIGIN = "origin";
   const SOURCE_HISTORY = "history";
 
   function clone(value) {
@@ -23,29 +25,57 @@ const HeroSheet = (() => {
     return `mod_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
   }
 
+  function emptyOriginState() {
+    return {
+      decisions: {},
+      flags: {},
+      unresolved: false,
+      bonusQueue: [],
+      freePowerQueue: [],
+      extraPowerQueue: [],
+      rerollOrigin: null,
+      needsSacrifice: null,
+    };
+  }
+
   function emptyMods() {
     return {
       swap: null,
       removedPowers: [],
       pendingBySource: {
         [SOURCE_REMOVAL]: 0,
+        [SOURCE_ORIGIN]: 0,
         [SOURCE_HISTORY]: 0,
       },
       appliedBonuses: [],
       addedSpecialities: [],
+      originExtraSpecialitySlots: 0,
+      origin: emptyOriginState(),
     };
   }
 
   function normalizePendingBySource(raw) {
     const pending = {
       [SOURCE_REMOVAL]: 0,
+      [SOURCE_ORIGIN]: 0,
       [SOURCE_HISTORY]: 0,
     };
     if (raw && typeof raw === "object") {
       pending[SOURCE_REMOVAL] = Math.max(0, Number(raw[SOURCE_REMOVAL]) || 0);
+      pending[SOURCE_ORIGIN] = Math.max(0, Number(raw[SOURCE_ORIGIN]) || 0);
       pending[SOURCE_HISTORY] = Math.max(0, Number(raw[SOURCE_HISTORY]) || 0);
     }
     return pending;
+  }
+
+  function normalizeOriginSource(source) {
+    if (source === SOURCE_ORIGIN) {
+      return SOURCE_ORIGIN;
+    }
+    if (source === SOURCE_HISTORY) {
+      return SOURCE_HISTORY;
+    }
+    return SOURCE_REMOVAL;
   }
 
   function normalizeMods(mods) {
@@ -63,8 +93,13 @@ const HeroSheet = (() => {
           page: power.page ?? null,
         }))
       : [];
+    base.originExtraSpecialitySlots = Math.max(
+      0,
+      Number(mods.originExtraSpecialitySlots) || 0
+    );
+    const maxSpecs = MAX_EXTRA_SPECIALITIES + base.originExtraSpecialitySlots;
     base.addedSpecialities = Array.isArray(mods.addedSpecialities)
-      ? mods.addedSpecialities.slice(0, MAX_EXTRA_SPECIALITIES)
+      ? mods.addedSpecialities.slice(0, maxSpecs)
       : [];
 
     if (Array.isArray(mods.appliedBonuses)) {
@@ -72,15 +107,33 @@ const HeroSheet = (() => {
         kind: bonus.kind,
         name: bonus.name,
         amount: bonus.amount || 2,
-        source: bonus.source === SOURCE_HISTORY ? SOURCE_HISTORY : SOURCE_REMOVAL,
+        source: normalizeOriginSource(bonus.source),
         removalId: bonus.removalId || null,
+        max: bonus.max ?? null,
       }));
+    }
+
+    if (mods.origin && typeof mods.origin === "object") {
+      base.origin = {
+        ...emptyOriginState(),
+        ...mods.origin,
+        decisions: mods.origin.decisions || {},
+        flags: mods.origin.flags || {},
+        bonusQueue: Array.isArray(mods.origin.bonusQueue)
+          ? mods.origin.bonusQueue
+          : [],
+        freePowerQueue: Array.isArray(mods.origin.freePowerQueue)
+          ? mods.origin.freePowerQueue
+          : [],
+        extraPowerQueue: Array.isArray(mods.origin.extraPowerQueue)
+          ? mods.origin.extraPowerQueue
+          : [],
+      };
     }
 
     if (mods.pendingBySource) {
       base.pendingBySource = normalizePendingBySource(mods.pendingBySource);
     } else if (typeof mods.pendingBonuses === "number") {
-      // Legacy single pending counter → treat as removal pool
       base.pendingBySource[SOURCE_REMOVAL] = Math.max(0, mods.pendingBonuses);
     } else {
       const appliedRemoval = base.appliedBonuses.filter(
@@ -91,6 +144,11 @@ const HeroSheet = (() => {
         base.removedPowers.length - appliedRemoval
       );
     }
+
+    base.pendingBySource[SOURCE_ORIGIN] = Math.max(
+      base.pendingBySource[SOURCE_ORIGIN],
+      base.origin.bonusQueue.length
+    );
 
     return base;
   }
@@ -131,9 +189,32 @@ const HeroSheet = (() => {
     return !isFinished(data);
   }
 
+  function maxExtraSpecialities(mods) {
+    return (
+      MAX_EXTRA_SPECIALITIES +
+      Math.max(0, Number(mods.originExtraSpecialitySlots) || 0)
+    );
+  }
+
   function pendingTotal(mods) {
     const pending = normalizePendingBySource(mods.pendingBySource);
-    return pending[SOURCE_REMOVAL] + pending[SOURCE_HISTORY];
+    return (
+      pending[SOURCE_REMOVAL] +
+      pending[SOURCE_ORIGIN] +
+      pending[SOURCE_HISTORY]
+    );
+  }
+
+  function hasOpenOriginSteps(mods) {
+    const origin = mods.origin || emptyOriginState();
+    return !!(
+      origin.unresolved ||
+      (origin.bonusQueue && origin.bonusQueue.length) ||
+      (origin.freePowerQueue && origin.freePowerQueue.length) ||
+      (origin.extraPowerQueue && origin.extraPowerQueue.length) ||
+      origin.rerollOrigin ||
+      origin.needsSacrifice
+    );
   }
 
   function bonusTotalFor(mods, kind, name) {
@@ -174,6 +255,8 @@ const HeroSheet = (() => {
           ...power,
           level: power.level + bonus,
           bonus,
+          innateFromOrigin: !!power.innateFromOrigin,
+          canRemoveForBonus: !power.innateFromOrigin,
         };
       });
   }
@@ -213,6 +296,11 @@ const HeroSheet = (() => {
     const mods = normalized.mods;
     const finished = isFinished(normalized);
     const pending = pendingTotal(mods);
+    const maxSpecs = maxExtraSpecialities(mods);
+    const originBonus =
+      mods.origin && mods.origin.bonusQueue
+        ? mods.origin.bonusQueue[0]
+        : null;
     return {
       attributes: resolvedAttributes(normalized),
       powers: resolvedPowers(normalized),
@@ -229,9 +317,10 @@ const HeroSheet = (() => {
       removedPowers: mods.removedPowers,
       pendingBonuses: pending,
       pendingBySource: mods.pendingBySource,
-      canAddSpeciality:
-        !finished && mods.addedSpecialities.length < MAX_EXTRA_SPECIALITIES,
-      maxExtraSpecialities: MAX_EXTRA_SPECIALITIES,
+      originBonusNext: originBonus,
+      canAddSpeciality: !finished && mods.addedSpecialities.length < maxSpecs,
+      maxExtraSpecialities: maxSpecs,
+      hasOpenOriginSteps: hasOpenOriginSteps(mods),
     };
   }
 
@@ -283,6 +372,9 @@ const HeroSheet = (() => {
     if (!power) {
       return { ok: false, reason: "missing" };
     }
+    if (power.innateFromOrigin) {
+      return { ok: false, reason: "locked_origin_roll" };
+    }
     const removalId = createId();
     next.mods.removedPowers.push({
       id: removalId,
@@ -319,7 +411,6 @@ const HeroSheet = (() => {
     } else if (next.mods.pendingBySource[SOURCE_REMOVAL] > 0) {
       next.mods.pendingBySource[SOURCE_REMOVAL] -= 1;
     } else {
-      // Fallback: drop last removal-sourced applied bonus
       for (let i = next.mods.appliedBonuses.length - 1; i >= 0; i -= 1) {
         if (next.mods.appliedBonuses[i].source === SOURCE_REMOVAL) {
           next.mods.appliedBonuses.splice(i, 1);
@@ -332,11 +423,14 @@ const HeroSheet = (() => {
   }
 
   function pickPendingSource(mods) {
-    if (mods.pendingBySource[SOURCE_REMOVAL] > 0) {
-      return SOURCE_REMOVAL;
+    if (mods.pendingBySource[SOURCE_ORIGIN] > 0) {
+      return SOURCE_ORIGIN;
     }
     if (mods.pendingBySource[SOURCE_HISTORY] > 0) {
       return SOURCE_HISTORY;
+    }
+    if (mods.pendingBySource[SOURCE_REMOVAL] > 0) {
+      return SOURCE_REMOVAL;
     }
     return null;
   }
@@ -359,6 +453,14 @@ const HeroSheet = (() => {
       return locked;
     }
     const next = nextClone(data);
+    if (
+      next.mods.pendingBySource[SOURCE_ORIGIN] > 0 &&
+      next.mods.origin &&
+      next.mods.origin.bonusQueue &&
+      next.mods.origin.bonusQueue.length
+    ) {
+      return OriginEffects.applyOriginBonus(next, kind, name);
+    }
     const source = pickPendingSource(next.mods);
     if (!source) {
       return { ok: false, reason: "no_pending" };
@@ -400,7 +502,8 @@ const HeroSheet = (() => {
       return locked;
     }
     const next = nextClone(data);
-    if (next.mods.addedSpecialities.length >= MAX_EXTRA_SPECIALITIES) {
+    const maxSpecs = maxExtraSpecialities(next.mods);
+    if (next.mods.addedSpecialities.length >= maxSpecs) {
       return { ok: false, reason: "quota" };
     }
     const trimmed = (specialityName || "").trim();
@@ -420,6 +523,9 @@ const HeroSheet = (() => {
     if (pendingTotal(next.mods) > 0) {
       return { ok: false, reason: "pending_bonuses" };
     }
+    if (hasOpenOriginSteps(next.mods)) {
+      return { ok: false, reason: "origin_pending" };
+    }
     next.status = STATUS_FINISHED;
     return { ok: true, data: next };
   }
@@ -430,7 +536,6 @@ const HeroSheet = (() => {
     return { ok: true, data: next };
   }
 
-  /** Reserved for historiques — adds pending +2 from history source. */
   function grantHistoryBonus(data, count = 1) {
     const locked = guardEditable(data);
     if (locked) {
@@ -447,6 +552,7 @@ const HeroSheet = (() => {
     STATUS_EDITABLE,
     STATUS_FINISHED,
     SOURCE_REMOVAL,
+    SOURCE_ORIGIN,
     SOURCE_HISTORY,
     emptyMods,
     normalizeMods,
