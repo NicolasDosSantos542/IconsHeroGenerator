@@ -442,43 +442,113 @@ let table = {
       name: "Entrainé",
       description:
         "le héros est un humain très talentueux ; tous ses  'pouvoirs' proviennent en réalité d'un entraînement supérieur ou d’équipements spécialisés (voir Accessoires dans le chapitre Pouvoirs). Le personnage gagne deux spécialités supplémentaires et peut choisir d’échanger un pouvoir contre deux spécialités de plus.",
+      effects: [
+        { type: "extra_specialities", count: 2 },
+        {
+          type: "optional_trade",
+          give: { type: "power", count: 1 },
+          gain: { type: "extra_specialities", count: 2 },
+        },
+      ],
     },
-
     {
       number: [5, 6],
       name: "Transformé",
       description:
         "le héros était un humain normal mais il est devenu surhumain à cause d’une influence extérieure, généralement un accident ou une expérience scientifique. Une capacité de votre choix (attribut ou pouvoir) est augmentée de +2, pour un maximum de 10.",
+      effects: [
+        {
+          type: "bonus",
+          amount: 2,
+          max: 10,
+          target: "any_capacity",
+          count: 1,
+        },
+      ],
     },
-
     {
       number: [7],
       name: "Destiné",
       description:
         "le héros est né pour développer des pouvoirs surhumains. Il gagne, au choix, un pouvoir additionnel – qui doit être inné et pas un accessoire – ou un bonus de +2 au niveau de l’un des pouvoirs déjà tirés, pour un maximum de 10.",
+      effects: [
+        {
+          type: "choice",
+          options: [
+            { type: "extra_power", innate: true },
+            {
+              type: "bonus",
+              amount: 2,
+              max: 10,
+              target: "power",
+              count: 1,
+            },
+          ],
+        },
+      ],
     },
-    ,
     {
       number: [8, 9],
       name: "Amélioré",
       description:
         "tous les pouvoirs du personnage proviennent d’objets ou d’appareils (voir Accessoires dans le chapitre Pouvoirs). L’un de ses attributs mentaux, au choix, est augmenté de +2, pour un maximum de 10.",
+      effects: [
+        {
+          type: "bonus",
+          amount: 2,
+          max: 10,
+          target: "mental_attribute",
+          count: 1,
+        },
+      ],
+      flags: {
+        allPowersAreDevices: true,
+      },
     },
-
     {
       number: [10],
-      name: "Articifiel",
+      name: "Artificiel",
       description:
         "le personnage est un robot ou une autre chose construite, comme un golem. Sa Force est augmentée de +2 et vous pouvez prendre le pouvoir Vitalité gratuitement en plus des pouvoirs déjà tirés. Lancez sur la table de détermination pour connaitre le niveau de Vitalité ou renoncez à un pouvoir tiré et augmentez Vitalité à 10.",
+      effects: [
+        {
+          type: "bonus",
+          amount: 2,
+          target: "fixed",
+          targetName: "Force",
+        },
+        {
+          type: "free_power",
+          name: "Vitalité",
+          level: "roll_or_sacrifice_for_10",
+        },
+      ],
     },
-    ,
     {
       number: [11, 12],
       name: "Venu d'ailleurs",
       description:
         "le personnage est un être venu d’un autre monde, d’une autre dimension, comme un extra-terrestre, un élémentaire, un ange, un démon ou même un dieu. Augmentez deux capacités de votre choix (attribut ou pouvoir) de +2. Vous pouvez choisir à la place de tirer deux fois sur cette table, en ignorant tout nouveau 11 ou 12. Vous gagnez alors les effets des deux origines. Appliquez leurs modificateurs à la place de ceux de l’origine « Venu d’ailleurs ».",
+      effects: [
+        {
+          type: "choice",
+          options: [
+            {
+              type: "bonus",
+              amount: 2,
+              max: 10,
+              target: "any_capacity",
+              count: 2,
+            },
+            {
+              type: "reroll_origin",
+              picks: 2,
+              ignore: [11, 12],
+            },
+          ],
+        },
+      ],
     },
-    ,
   ],
 
   specialities: [

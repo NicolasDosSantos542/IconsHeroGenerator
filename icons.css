@@ -142,7 +142,348 @@ html {
   display: flex;
   flex-wrap: wrap;
   gap: 0.55rem;
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.save-panel {
+  margin-bottom: 1.35rem;
+  padding: 0.85rem 0.9rem 1rem;
+  border: 2px solid var(--icons-ink);
+  border-radius: 0.4rem;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 3px 3px 0 rgba(17, 17, 17, 0.12);
+}
+
+.draft-status {
+  font-size: 0.92rem;
+  color: var(--icons-muted);
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1.5px dashed rgba(26, 26, 26, 0.35);
+}
+
+.saves-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
+}
+
+.saves-title {
+  font-family: "Bangers", Impact, sans-serif;
+  font-size: 1.35rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--icons-red);
+  margin: 0 !important;
+  padding-bottom: 0.1rem;
+  border-bottom: 3px solid var(--icons-ink);
+  transform: skewX(-4deg);
+}
+
+.saves-empty {
+  color: var(--icons-muted);
+  font-style: italic;
+  padding: 0.35rem 0.1rem;
+}
+
+.saves-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.saves-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.55rem 0.85rem;
+  margin: 0;
+  padding: 0.55rem 0.65rem;
+  border: 2px solid var(--icons-ink);
+  border-radius: 0.35rem;
+  background: #fff;
+}
+
+.saves-list li.active {
+  border-color: var(--icons-blue);
+  box-shadow: inset 4px 0 0 var(--icons-blue);
+  background: #f3f4fb;
+}
+
+.save-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.save-name {
+  font-family: "Oswald", Impact, sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+}
+
+.save-date {
+  font-size: 0.85rem;
+  color: var(--icons-muted);
+}
+
+.save-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.save-actions input[type="button"],
+.saves-header input[type="button"] {
+  font-family: "Oswald", Impact, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--icons-blue);
+  border: 2px solid var(--icons-ink);
+  border-radius: 0.3rem;
+  padding: 0.3rem 0.55rem;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--icons-ink);
+  transform: skewX(-4deg);
+}
+
+.save-actions input[type="button"]:hover,
+.saves-header input[type="button"]:hover {
+  filter: brightness(1.08);
+}
+
+.danger-btn {
+  background: var(--icons-red) !important;
+}
+
+.import-input {
+  display: none;
+}
+
+.library-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 0.85rem;
+}
+
+.library-block {
+  min-width: 0;
+}
+
+.personnage-status-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0.25rem 0 0.85rem;
+}
+
+.personnage-status-row > input[type="button"] {
+  font-family: "Oswald", Impact, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--icons-red);
+  border: 2px solid var(--icons-ink);
+  border-radius: 0.3rem;
+  padding: 0.35rem 0.65rem;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--icons-ink);
+  transform: skewX(-4deg);
+}
+
+.personnage-status-row > input[type="button"]:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.undo-btn {
+  background: var(--icons-blue) !important;
+}
+
+.status-badge {
+  font-family: "Oswald", Impact, sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.55rem;
+  border: 2px solid var(--icons-ink);
+  border-radius: 0.3rem;
+  transform: skewX(-4deg);
+}
+
+.status-badge.editable {
+  background: #fff8e8;
+  color: var(--icons-blue);
+}
+
+.status-badge.finished {
+  background: var(--icons-blue);
+  color: #fff;
+}
+
+.origin-panel .origin-step {
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px dashed rgba(26, 26, 26, 0.25);
+}
+
+.origin-panel .origin-step:last-child {
+  border-bottom: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.removed-powers-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.removed-powers-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0.35rem 0.45rem;
+  border: 1.5px solid var(--icons-ink);
+  border-radius: 0.3rem;
+  background: #fff;
+}
+
+.tenacity-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0.45rem 0.85rem;
+  border: 3px solid var(--icons-ink);
+  border-radius: 0.4rem;
+  background: #fff8e8;
+  box-shadow: 3px 3px 0 var(--icons-ink);
+  transform: skewX(-4deg);
+}
+
+.tenacity-badge .name {
+  font-family: "Bangers", Impact, sans-serif;
+  font-size: 1.35rem;
+  color: var(--icons-red);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.tenacity-badge .value {
+  font-family: "Oswald", Impact, sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.mods-panel {
+  margin: 0.75rem 0 1rem;
+  padding: 0.7rem 0.8rem;
+  border: 2px dashed rgba(26, 26, 26, 0.45);
+  border-radius: 0.35rem;
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.mods-panel h4 {
+  font-family: "Oswald", Impact, sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--icons-blue);
+  margin: 0 0 0.45rem;
+}
+
+.mods-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.mods-row select {
+  font-family: "Source Sans 3", sans-serif;
+  font-size: 0.95rem;
+  border: 2px solid var(--icons-ink);
+  border-radius: 0.3rem;
+  padding: 0.35rem 0.5rem;
+  background: #fff;
+  min-width: 9rem;
+}
+
+.mods-row input[type="button"],
+.mods-panel input[type="button"],
+.power-row input[type="button"] {
+  font-family: "Oswald", Impact, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--icons-blue);
+  border: 2px solid var(--icons-ink);
+  border-radius: 0.3rem;
+  padding: 0.3rem 0.55rem;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--icons-ink);
+  transform: skewX(-4deg);
+}
+
+.mods-hint {
+  margin: 0.45rem 0 0;
+  font-size: 0.88rem;
+  color: var(--icons-muted);
+}
+
+.power-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem;
+  border-bottom: 1.5px solid var(--icons-line);
+  padding: 0.35rem 0.1rem;
+}
+
+.power-row p {
+  margin: 0;
+}
+
+.attributes .value small,
+.powers-list .value small {
+  font-size: 0.75rem;
+  color: var(--icons-blue);
+  margin-left: 0.15rem;
+}
+
+.character-actions input[type="button"]:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: skewX(-4deg);
 }
 
 #main {
