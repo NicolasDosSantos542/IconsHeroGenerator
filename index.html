@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
@@ -7,12 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="icons.css">
     <script src="js/character.js"></script>
-    <!-- <script src="js/character_creation.js"></script> -->
+    <script src="js/hero.js"></script>
+    <script src="js/storage.js"></script>
     <script src="js/data/character_creation-great_powers.js"></script>
     <script src="js/data/extras.js"></script>
     <script src="js/data/limites.js"></script>
     <script src="js/data/specialites.js"></script>
-    <!-- <script src="js/icons.js"></script> -->
     <script src="js/utils/vue3-sfc-loader.js"></script>
     <script src="js/utils/vue3.4.15.js"></script>
     <title>Icons Hero Generator</title>
@@ -49,19 +49,87 @@
                     </div>
                 </div>
             </div>
+
             <div v-if="currentTab === 'character'">
-                <div class="character-actions">
-                    <input type="button" value="générer un nouveau personnage" @click="generateCharacter()">
-                    <input type="button" value="sauvegarder slot 1" @click="saveCharacter(1)">
-                    <input type="button" value="charger slot 1" @click="loadCharacter(1)">
-                    <input type="button" value="sauvegarder slot 2" @click="saveCharacter(2)">
-                    <input type="button" value="charger slot 2" @click="loadCharacter(2)">
-                    <input type="button" value="effacer tout" @click="clearCharacter()">
+                <div class="save-panel">
+                    <div class="character-actions">
+                        <input type="button" value="Nouveau brouillon" @click="generateBrouillon()">
+                        <input type="button" value="Enregistrer" @click="saveCurrent()">
+                        <input type="button" value="Enregistrer sous…" @click="saveAsCurrentKind()">
+                        <input
+                            type="button"
+                            value="Créer personnage"
+                            @click="promoteToPersonnage()"
+                            :disabled="workingKind !== 'brouillon'"
+                        >
+                        <input type="button" value="Exporter" @click="exportSaves()">
+                        <input type="button" value="Importer" @click="triggerImport()">
+                        <input type="file" ref="importInput" class="import-input" accept="application/json,.json" @change="importSaves">
+                    </div>
+
+                    <div class="draft-status" v-if="workingUpdatedAt">
+                        Session {{ workingKind }} sauvegardée à {{ formatWorkingTime }}
+                        <span v-if="currentSaveName"> — fiche : {{ currentSaveName }}</span>
+                        <span v-else> — non enregistrée dans la bibliothèque</span>
+                    </div>
+
+                    <div class="library-grid">
+                        <section class="library-block">
+                            <div class="saves-header">
+                                <h3 class="saves-title">Brouillons ({{ brouillons.length }}/{{ maxPerType }})</h3>
+                            </div>
+                            <div v-if="!brouillons.length" class="saves-empty">Aucun brouillon nommé.</div>
+                            <ul v-else class="saves-list">
+                                <li
+                                    v-for="save in brouillons"
+                                    :key="save.id"
+                                    :class="{ active: workingKind === 'brouillon' && save.id === currentId }"
+                                >
+                                    <div class="save-meta">
+                                        <span class="save-name">{{ save.name }}</span>
+                                        <span class="save-date">{{ formatSaveTime(save.updatedAt) }}</span>
+                                    </div>
+                                    <div class="save-actions">
+                                        <input type="button" value="Charger" @click="loadEntry('brouillon', save.id)">
+                                        <input type="button" value="Renommer" @click="renameEntry('brouillon', save.id)">
+                                        <input type="button" value="Supprimer" @click="deleteEntry('brouillon', save.id)">
+                                    </div>
+                                </li>
+                            </ul>
+                        </section>
+
+                        <section class="library-block">
+                            <div class="saves-header">
+                                <h3 class="saves-title">Personnages ({{ personnages.length }}/{{ maxPerType }})</h3>
+                                <input type="button" class="danger-btn" value="Vider tout" @click="clearAllStorage()">
+                            </div>
+                            <div v-if="!personnages.length" class="saves-empty">Aucun personnage finalisé.</div>
+                            <ul v-else class="saves-list">
+                                <li
+                                    v-for="save in personnages"
+                                    :key="save.id"
+                                    :class="{ active: workingKind === 'personnage' && save.id === currentId }"
+                                >
+                                    <div class="save-meta">
+                                        <span class="save-name">{{ save.name }}</span>
+                                        <span class="save-date">{{ formatSaveTime(save.updatedAt) }}</span>
+                                    </div>
+                                    <div class="save-actions">
+                                        <input type="button" value="Charger" @click="loadEntry('personnage', save.id)">
+                                        <input type="button" value="Renommer" @click="renameEntry('personnage', save.id)">
+                                        <input type="button" value="Supprimer" @click="deleteEntry('personnage', save.id)">
+                                    </div>
+                                </li>
+                            </ul>
+                        </section>
+                    </div>
                 </div>
-                <div v-if="tabs.character && tabs.character.attributes">
+
+                <!-- BROUILLON VIEW -->
+                <div v-if="workingKind === 'brouillon' && brouillonData && brouillonData.attributes">
                     <h3>Attributs</h3>
-                    <div class="attributes" v-if="tabs.character.attributes">
-                        <div v-for="(value, key) in tabs.character.attributes" :key="key">
+                    <div class="attributes">
+                        <div v-for="(value, key) in brouillonData.attributes" :key="key">
                             <span class="name">{{ value.name }}</span>
                             <span class="value">{{ value.level }}</span>
                         </div>
@@ -69,7 +137,7 @@
 
                     <h3>Pouvoirs</h3>
                     <div class="powers-list">
-                        <div v-for="(value, key) in tabs.character.powers" :key="key">
+                        <div v-for="(value, key) in brouillonData.powers" :key="key">
                             <p>
                                 <span class="name">{{ value.name }}:</span>
                                 <span class="value">{{ value.level }}</span>
@@ -81,14 +149,14 @@
                     <h3>Origine</h3>
                     <div class="origin-block">
                         <p>
-                            <span class="name">{{ tabs.character.origin.name }}:</span>
-                            <span class="value">{{ tabs.character.origin.description }}</span>
+                            <span class="name">{{ brouillonData.origin.name }}:</span>
+                            <span class="value">{{ brouillonData.origin.description }}</span>
                         </p>
                     </div>
 
                     <h3>Spécialités</h3>
                     <div class="specialities-list">
-                        <div v-for="value in tabs.character.specialities">
+                        <div v-for="value in brouillonData.specialities" :key="value">
                             <div class="value">{{ value }}</div>
                         </div>
                     </div>
@@ -100,102 +168,169 @@
                         Comment a-t-il acquis ses pouvoirs surhumains ? Quels sont les éléments de son histoire qui sont
                         à l’origine des motivations et des gageures de sa vie actuelle ? À quoi ressemble votre héros ?
                         Imaginez son physique, son costume, sa taille, sa coiffure et son style, ses manières et tous
-                        les autres détails remarquables. Si vous vous sentez l’âme d’un artiste, vous pouvez dessiner
-                        votre héros pour aider les autres joueurs à mieux se le représenter. Vous pouvez aussi utiliser
-                        ou modifier une image existante pour lui donner son apparence.
+                        les autres détails remarquables.
                     </div>
 
                     <h3>Ténacité</h3>
-                    <div class="tenacity-block">Soustrayez le nombre total de pouvoirs de votre héros de 6 pour connaître son niveau de
+                    <div class="tenacity-block">
+                        Soustrayez le nombre total de pouvoirs de votre héros de 6 pour connaître son niveau de
                         Ténacité, avec un minimum de 1 – en gardant à l’esprit que chaque attribut au-dessus de 6 compte
-                        comme un pouvoir et que les extras comme les limites peuvent modifier le total de Ténacité que
-                        coûte un pouvoir. Le héros commence avec un nombre de points de Ténacité égal à son niveau de
-                        Ténacité et ce capital de points est rafraîchi au début de chaque nouveau numéro (mais si le
-                        joueur a acquis des points surnuméraires, ceux-ci ne sont pas perdus).
+                        comme un pouvoir.
                         <p><strong>Niveau de Ténacité = 6 – nombre total de Pouvoirs</strong></p>
                     </div>
 
                     <h3>Aspects</h3>
                     <div class="aspects-block">
-                        <div>Choisissez trois aspects pour votre héros. Vous activerez ces aspects en cours de jeu pour
-                            obtenir des avantages ou compliquer la vie de votre héros (ce qui permet de gagner des
-                            points de Ténacité). Reportez-vous à la section Aspects du chapitre « Les bases » pour
-                            savoir comment cela fonctionne. Les aspects de votre héros peuvent être de toute nature,
-                            mais souvenez-vous qu’ils doivent idéalement être source d’avantages comme de complications.
-                            Bref, s’avérer aussi positifs que négatifs, tout en étant suffisamment larges pour
-                            s’appliquer à de nombreuses situations. Trop vagues, ils ne signifient plus rien. « Choisi
-                            par les esprits » ou « Champion de Tuatha » sont de bons exemples d’aspects alors que «
-                            Puissant » ou « Héroïque » sont trop larges et trop fades. Les bons aspects sont souvent de
-                            courtes phrases ou des adjectifs.</div>
-                        <div>Les questions qui suivent peuvent
-                            vous être utiles pour décider de vos
-                            aspects :
-                            <ul>
-                                <li><strong>Qui êtes-vous ?</strong> Les aspects les
-                                    plus simples décrivent qui est le
-                                    personnage, souvent sous la forme
-                                    d’un titre, d’une épithète ou d’un
-                                    surnom comme « Sorcière Secrète
-                                    du Sixième Soleil », « Choisi par
-                                    la Déesse de la Vengeance »,
-                                    « Sombre Défenseur », « Maître des
-                                    Esprits » et ainsi de suite.
-                                </li>
-                                <li><strong>Qu’est-ce qui vous pousse en
-                                        avant ?</strong> Votre héros est-il motivé
-                                    par la protection des innocents ou
-                                    par l’idée que la justice doit toujours
-                                    prévaloir ? Est-ce une vocation
-                                    comme « Ambassadeur de la Paix »
-                                    ou « Homme d’Action » ? Peut-être
-                                    votre héros est-il « Assoiffé de
-                                    savoir » ou croit-il que « La science
-                                    nous sauvera » ? Est-il à l’oeuvre
-                                    pour « Défaire une conspiration
-                                    de vilains » ou « Traîner un ennemi
-                                    devant la justice » ?
-                                </li>
-                                <li><strong>Qu’est-ce qui vous attire
-                                        des ennuis ?</strong> Si tous les aspects
-                                    des ennuis ? Si tous les aspects
-                                    n’ont pas à être négatifs, certains
-                                    entraînent forcément des complications,
-                                    comme être un « Chasseur de
-                                    démons », le « Fléau de la pègre »,
-                                    « Ex Sombre Assassin » ou même
-                                    être « Le meilleur dans sa partie »,
-                                    si ce que vous faites n’est pas très
-                                    joli. Réfléchissez à des aspects qui
-                                    peuvent vous causer des problèmes.
-                                </li>
-                                <li><strong>Que faites-vous ?</strong> Les aspects
-                                    peuvent décrire ce que fait le héros,
-                                    qu’il s’agisse d’une profession
-                                    comme « Journaliste en croisade »
-                                    ou « Avocat pétri de principes »,
-                                    d’un style comme « Récite de la
-                                    poésie » ou « Surgit de l’ombre »,
-                                    une devise comme « Doux Jésus ! »
-                                    ou « Soyez Témoin ! », un trait de
-                                    caractère comme « Ne s’arrête
-                                    jamais de parler ».
-                                </li>
-                                <li><strong>Qu’est-ce qui vous rend
-                                        unique ?</strong> Un aspect peut différencier
-                                    unique ? Un aspect peut différencier
-                                    le héros d’autres personnages
-                                    possédant les mêmes capacités
-                                    s’il est, par exemple, un « Expert
-                                    renommé dans l’étude des radiations
-                                    », un « Vétéran de l’Age
-                                    d’Or », un « Industriel milliardaire »
-                                    ou un « Jet-setter ».
-                                    Idéalement, certains aspects répondront
-                                    à plusieurs de ces questions.
-                                    Plus un aspect sera à même d’être
-                                    mise en avant et interprété et plus il
-                                    vous sera utile en cours de jeu. </li>
-                            </ul>
+                        Choisissez trois aspects pour votre héros. Ils doivent idéalement être source d’avantages comme
+                        de complications. Exemples : « Choisi par les esprits », « Champion de Tuatha ».
+                    </div>
+                </div>
+
+                <!-- PERSONNAGE VIEW -->
+                <div v-if="workingKind === 'personnage' && heroView">
+                    <div class="personnage-status-row">
+                        <div class="tenacity-badge">
+                            <span class="name">Ténacité</span>
+                            <span class="value">{{ heroView.tenacity }}</span>
+                        </div>
+                        <div class="status-badge" :class="heroView.isFinished ? 'finished' : 'editable'">
+                            {{ heroView.isFinished ? 'Terminé' : 'En cours' }}
+                        </div>
+                        <input
+                            v-if="heroView.isEditable"
+                            type="button"
+                            value="Valider comme terminé"
+                            @click="doMarkFinished()"
+                        >
+                        <input
+                            v-else
+                            type="button"
+                            value="Rouvrir les modifications"
+                            @click="doReopen()"
+                        >
+                    </div>
+
+                    <h3>Attributs</h3>
+                    <div class="attributes">
+                        <div v-for="(value, key) in heroView.attributes" :key="key">
+                            <span class="name">{{ value.name }}</span>
+                            <span class="value">
+                                {{ value.level }}
+                                <small v-if="value.bonus">(+{{ value.bonus }})</small>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="mods-panel" v-if="heroView.isEditable && heroView.canSwap">
+                        <h4>Échanger 2 attributs</h4>
+                        <div class="mods-row">
+                            <select v-model="swapA">
+                                <option disabled value="">Attribut A</option>
+                                <option v-for="attr in heroView.attributes" :key="'a-'+attr.name" :value="attr.name">
+                                    {{ attr.name }}
+                                </option>
+                            </select>
+                            <select v-model="swapB">
+                                <option disabled value="">Attribut B</option>
+                                <option v-for="attr in heroView.attributes" :key="'b-'+attr.name" :value="attr.name">
+                                    {{ attr.name }}
+                                </option>
+                            </select>
+                            <input type="button" value="Échanger" @click="doSwapAttributes()">
+                        </div>
+                        <p class="mods-hint">Une seule fois : les niveaux des deux attributs sont intervertis.</p>
+                    </div>
+                    <div class="mods-panel" v-else-if="heroView.mods.swap">
+                        <h4>Échange d’attributs</h4>
+                        <p class="mods-hint">
+                            Effectué : {{ heroView.mods.swap.a }} ↔ {{ heroView.mods.swap.b }}
+                            <input
+                                v-if="heroView.isEditable"
+                                type="button"
+                                value="Annuler l’échange"
+                                @click="undoSwap()"
+                            >
+                        </p>
+                    </div>
+
+                    <h3>Pouvoirs</h3>
+                    <div class="powers-list">
+                        <div v-for="(value, key) in heroView.powers" :key="key" class="power-row">
+                            <p>
+                                <span class="name">{{ value.name }}:</span>
+                                <span class="value">
+                                    {{ value.level }}
+                                    <small v-if="value.bonus">(+{{ value.bonus }})</small>
+                                </span>
+                                <span class="page" v-if="value.page"> (p. {{ value.page }})</span>
+                            </p>
+                            <input
+                                v-if="heroView.canRemovePower"
+                                type="button"
+                                value="Supprimer (+2)"
+                                @click="doRemovePower(value.name)"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="mods-panel" v-if="heroView.canRestorePower">
+                        <h4>Pouvoirs supprimés (annulables)</h4>
+                        <ul class="removed-powers-list">
+                            <li v-for="power in heroView.removedPowers" :key="power.id">
+                                <span>{{ power.name }} ({{ power.level }})</span>
+                                <input type="button" value="Restaurer" @click="doRestorePower(power.id)">
+                            </li>
+                        </ul>
+                        <p class="mods-hint">Restaurer un pouvoir retire aussi le +2 associé (placé ou en attente).</p>
+                    </div>
+
+                    <div class="mods-panel" v-if="heroView.isEditable && heroView.pendingBonuses > 0">
+                        <h4>Bonus +2 à placer ({{ heroView.pendingBonuses }})</h4>
+                        <p class="mods-hint" v-if="heroView.pendingBySource.removal || heroView.pendingBySource.history">
+                            Sources :
+                            <span v-if="heroView.pendingBySource.removal">suppression {{ heroView.pendingBySource.removal }}</span>
+                            <span v-if="heroView.pendingBySource.removal && heroView.pendingBySource.history"> · </span>
+                            <span v-if="heroView.pendingBySource.history">historique {{ heroView.pendingBySource.history }}</span>
+                        </p>
+                        <div class="mods-row">
+                            <select v-model="bonusKind">
+                                <option value="attribute">Attribut</option>
+                                <option value="power">Pouvoir</option>
+                            </select>
+                            <select v-model="bonusTarget">
+                                <option disabled value="">Cible</option>
+                                <option
+                                    v-for="opt in bonusTargets"
+                                    :key="opt"
+                                    :value="opt"
+                                >{{ opt }}</option>
+                            </select>
+                            <input type="button" value="Appliquer +2" @click="doApplyBonus()">
+                        </div>
+                        <p class="mods-hint">Pas de limite sur les +2 issus des suppressions de pouvoir.</p>
+                    </div>
+
+                    <h3>Origine</h3>
+                    <div class="origin-block">
+                        <p>
+                            <span class="name">{{ heroView.origin.name }}</span>
+                        </p>
+                    </div>
+
+                    <h3>Spécialités</h3>
+                    <div class="specialities-list">
+                        <div v-for="value in heroView.specialities" :key="value">
+                            <div class="value">{{ value }}</div>
+                        </div>
+                    </div>
+                    <div class="mods-panel" v-if="heroView.canAddSpeciality">
+                        <h4>Ajouter une spécialité</h4>
+                        <div class="mods-row">
+                            <select v-model="newSpeciality">
+                                <option disabled value="">Choisir…</option>
+                                <option v-for="name in specialtyOptions" :key="name" :value="name">{{ name }}</option>
+                            </select>
+                            <input type="button" value="Ajouter" @click="doAddSpeciality()">
                         </div>
                     </div>
                 </div>
@@ -204,60 +339,515 @@
     </div>
 </body>
 <script>
-    // TODO: ajouter les règles de gestion des extras et des limites ()
-    // TODO ajouter le style "ICONS"
     const { createApp } = Vue;
 
     createApp({
         data() {
             return {
                 tabs: {
-                    'character': null,
-                    'extras': extras,
-                    'limites': limites,
-                    'specialites': specialites
+                    character: true,
+                    extras: extras,
+                    limites: limites,
+                    specialites: specialites,
                 },
-                currentTab: 'character',
-            }
+                currentTab: "character",
+                brouillons: [],
+                personnages: [],
+                currentId: null,
+                workingKind: "brouillon",
+                workingUpdatedAt: null,
+                brouillonData: null,
+                personnageData: null,
+                maxPerType: IconsStorage.MAX_PER_TYPE,
+                swapA: "",
+                swapB: "",
+                bonusKind: "attribute",
+                bonusTarget: "",
+                newSpeciality: "",
+            };
         },
         computed: {
             currentTabContent() {
-
                 return this.tabs[this.currentTab];
-            }
+            },
+            formatWorkingTime() {
+                return IconsStorage.formatTime(this.workingUpdatedAt);
+            },
+            currentSaveName() {
+                const list =
+                    this.workingKind === "personnage" ? this.personnages : this.brouillons;
+                const save = list.find((entry) => entry.id === this.currentId);
+                return save ? save.name : null;
+            },
+            heroView() {
+                if (!this.personnageData) {
+                    return null;
+                }
+                return HeroSheet.view(this.personnageData);
+            },
+            bonusTargets() {
+                if (!this.heroView) {
+                    return [];
+                }
+                if (this.bonusKind === "power") {
+                    return this.heroView.powers.map((power) => power.name);
+                }
+                return this.heroView.attributes.map((attr) => attr.name);
+            },
+            specialtyOptions() {
+                const current = new Set(
+                    (this.heroView && this.heroView.specialities) || []
+                );
+                return (specialites.list || [])
+                    .map((item) => item.name.trim())
+                    .filter((name) => name && !current.has(name));
+            },
+        },
+        watch: {
+            bonusKind() {
+                this.bonusTarget = "";
+            },
         },
         mounted() {
-            app = this
-            let savedCharacter = this.getSavedCharacter();
-            if (savedCharacter) {
-                this.tabs.character = savedCharacter;
+            app = this;
+            IconsStorage.load();
+            this.refreshLibrary();
+            const working = IconsStorage.getWorking();
+            if (working && working.kind === "personnage" && working.data) {
+                this.applyWorkingPersonnage(working);
+            } else if (working && working.character) {
+                this.applyWorkingBrouillon(working);
             } else {
-                this.tabs.character = new Character();
+                this.generateBrouillon(true);
             }
         },
         methods: {
             display(tab) {
                 this.currentTab = tab;
             },
-            generateCharacter() {
-                this.tabs.character = new Character();
+            refreshLibrary() {
+                this.brouillons = IconsStorage.list("brouillon");
+                this.personnages = IconsStorage.list("personnage");
+                const working = IconsStorage.getWorking();
+                this.currentId = working ? working.id : null;
+                this.workingKind = working ? working.kind : "brouillon";
+                this.workingUpdatedAt = working ? working.updatedAt : null;
             },
-            saveCharacter(slot) {
-                localStorage.setItem('character_slot_'+slot, JSON.stringify(this.tabs.character));
+            applyWorkingBrouillon(working) {
+                this.workingKind = "brouillon";
+                this.brouillonData = working.character;
+                this.personnageData = null;
+                this.currentId = working.id || null;
+                this.workingUpdatedAt = working.updatedAt;
+                this.refreshLibrary();
             },
-            getSavedCharacter(slot) {
-                return JSON.parse(localStorage.getItem('character_slot_'+slot));
+            applyWorkingPersonnage(working) {
+                this.workingKind = "personnage";
+                this.personnageData = working.data;
+                this.brouillonData = null;
+                this.currentId = working.id || null;
+                this.workingUpdatedAt = working.updatedAt;
+                this.swapA = "";
+                this.swapB = "";
+                this.bonusTarget = "";
+                this.newSpeciality = "";
+                this.refreshLibrary();
             },
-            loadCharacter(slot) {
-                this.tabs.character = this.getSavedCharacter(slot);
+            persistBrouillon(character, options = {}) {
+                const store = IconsStorage.writeWorkingBrouillon(character, options);
+                this.applyWorkingBrouillon(store.working);
             },
-            clearCharacter() {
-                localStorage.removeItem('character_slot_1');
-                localStorage.removeItem('character_slot_2');
-                this.tabs.character = null;
-            }
-        }
-    }).mount('#app');
+            persistPersonnage(data, options = {}) {
+                const store = IconsStorage.writeWorkingPersonnage(data, options);
+                this.applyWorkingPersonnage(store.working);
+            },
+            confirmIfDirty(message) {
+                if (!IconsStorage.isDirty()) {
+                    return true;
+                }
+                return window.confirm(message);
+            },
+            generateBrouillon(skipConfirm) {
+                if (
+                    !skipConfirm &&
+                    !this.confirmIfDirty(
+                        "La session actuelle n’est pas synchronisée avec une fiche enregistrée. Générer un nouveau brouillon ?"
+                    )
+                ) {
+                    return;
+                }
+                this.persistBrouillon(new Character(), { id: null });
+            },
+            promptName(defaultName) {
+                const name = window.prompt("Nom de la fiche :", defaultName || "");
+                if (name === null) {
+                    return null;
+                }
+                const trimmed = name.trim();
+                if (!trimmed) {
+                    window.alert("Le nom ne peut pas être vide.");
+                    return null;
+                }
+                return trimmed;
+            },
+            saveAsCurrentKind() {
+                if (this.workingKind === "personnage") {
+                    this.saveAsPersonnage();
+                } else {
+                    this.saveAsBrouillon();
+                }
+            },
+            saveAsBrouillon() {
+                if (!this.brouillonData) {
+                    return;
+                }
+                if (!IconsStorage.canCreate("brouillon")) {
+                    window.alert(
+                        `Quota atteint : maximum ${IconsStorage.MAX_PER_TYPE} brouillons.`
+                    );
+                    return;
+                }
+                const name = this.promptName("Nouveau brouillon");
+                if (!name) {
+                    return;
+                }
+                const result = IconsStorage.createBrouillon(name, this.brouillonData);
+                if (!result.ok) {
+                    window.alert(
+                        result.reason === "quota"
+                            ? `Quota atteint : maximum ${result.max} brouillons.`
+                            : "Impossible de créer le brouillon."
+                    );
+                    return;
+                }
+                this.applyWorkingBrouillon(IconsStorage.getWorking());
+            },
+            saveAsPersonnage() {
+                if (!this.personnageData) {
+                    return;
+                }
+                if (!IconsStorage.canCreate("personnage")) {
+                    window.alert(
+                        `Quota atteint : maximum ${IconsStorage.MAX_PER_TYPE} personnages.`
+                    );
+                    return;
+                }
+                const name = this.promptName("Nouveau personnage");
+                if (!name) {
+                    return;
+                }
+                const result = IconsStorage.createPersonnage(name, this.personnageData);
+                if (!result.ok) {
+                    window.alert(
+                        result.reason === "quota"
+                            ? `Quota atteint : maximum ${result.max} personnages.`
+                            : "Impossible de créer le personnage."
+                    );
+                    return;
+                }
+                this.applyWorkingPersonnage(IconsStorage.getWorking());
+            },
+            saveCurrent() {
+                if (this.workingKind === "brouillon") {
+                    if (!this.brouillonData) {
+                        return;
+                    }
+                    if (!this.currentId) {
+                        this.saveAsBrouillon();
+                        return;
+                    }
+                    if (
+                        !window.confirm(
+                            `Écraser le brouillon « ${this.currentSaveName || ""} » ?`
+                        )
+                    ) {
+                        return;
+                    }
+                    const result = IconsStorage.overwrite(
+                        "brouillon",
+                        this.currentId,
+                        this.brouillonData
+                    );
+                    if (!result.ok) {
+                        this.saveAsBrouillon();
+                        return;
+                    }
+                    this.applyWorkingBrouillon(IconsStorage.getWorking());
+                    return;
+                }
+
+                if (!this.personnageData) {
+                    return;
+                }
+                if (!this.currentId) {
+                    this.saveAsPersonnage();
+                    return;
+                }
+                if (
+                    !window.confirm(
+                        `Écraser le personnage « ${this.currentSaveName || ""} » ?`
+                    )
+                ) {
+                    return;
+                }
+                const result = IconsStorage.overwrite(
+                    "personnage",
+                    this.currentId,
+                    this.personnageData
+                );
+                if (!result.ok) {
+                    this.saveAsPersonnage();
+                    return;
+                }
+                this.applyWorkingPersonnage(IconsStorage.getWorking());
+            },
+            promoteToPersonnage() {
+                if (this.workingKind !== "brouillon" || !this.brouillonData) {
+                    return;
+                }
+                if (!IconsStorage.canCreate("personnage")) {
+                    window.alert(
+                        `Quota atteint : maximum ${IconsStorage.MAX_PER_TYPE} personnages.`
+                    );
+                    return;
+                }
+                const name = this.promptName(
+                    this.currentSaveName || "Nouveau personnage"
+                );
+                if (!name) {
+                    return;
+                }
+                const result = IconsStorage.createPersonnage(name, this.brouillonData);
+                if (!result.ok) {
+                    window.alert("Impossible de créer le personnage.");
+                    return;
+                }
+                this.applyWorkingPersonnage(IconsStorage.getWorking());
+            },
+            loadEntry(kind, id) {
+                if (
+                    !this.confirmIfDirty(
+                        "Charger cette fiche remplacera la session actuelle. Continuer ?"
+                    )
+                ) {
+                    return;
+                }
+                const result = IconsStorage.loadIntoWorking(kind, id);
+                if (!result.ok) {
+                    window.alert("Fiche introuvable.");
+                    this.refreshLibrary();
+                    return;
+                }
+                if (kind === "personnage") {
+                    this.applyWorkingPersonnage(IconsStorage.getWorking());
+                } else {
+                    this.applyWorkingBrouillon(IconsStorage.getWorking());
+                }
+            },
+            renameEntry(kind, id) {
+                const list = kind === "personnage" ? this.personnages : this.brouillons;
+                const save = list.find((entry) => entry.id === id);
+                const name = this.promptName(save ? save.name : "");
+                if (!name) {
+                    return;
+                }
+                const result = IconsStorage.rename(kind, id, name);
+                if (!result.ok) {
+                    window.alert("Impossible de renommer.");
+                    return;
+                }
+                this.refreshLibrary();
+            },
+            deleteEntry(kind, id) {
+                const list = kind === "personnage" ? this.personnages : this.brouillons;
+                const save = list.find((entry) => entry.id === id);
+                const label = save ? save.name : "cette fiche";
+                if (!window.confirm(`Supprimer définitivement « ${label} » ?`)) {
+                    return;
+                }
+                IconsStorage.remove(kind, id);
+                this.refreshLibrary();
+            },
+            doSwapAttributes() {
+                const result = HeroSheet.swapAttributes(
+                    this.personnageData,
+                    this.swapA,
+                    this.swapB
+                );
+                if (!result.ok) {
+                    window.alert("Échange impossible (2 attributs distincts, une seule fois).");
+                    return;
+                }
+                this.persistPersonnage(result.data);
+            },
+            undoSwap() {
+                const result = HeroSheet.clearSwap(this.personnageData);
+                if (result.ok) {
+                    this.persistPersonnage(result.data);
+                }
+            },
+            doRemovePower(name) {
+                if (
+                    !window.confirm(
+                        `Supprimer le pouvoir « ${name} » pour gagner un +2 à placer ?`
+                    )
+                ) {
+                    return;
+                }
+                const result = HeroSheet.removePower(this.personnageData, name);
+                if (!result.ok) {
+                    window.alert(
+                        result.reason === "finished"
+                            ? "Personnage terminé : modifications verrouillées."
+                            : "Suppression impossible."
+                    );
+                    return;
+                }
+                this.persistPersonnage(result.data);
+            },
+            doRestorePower(removalId) {
+                const result = HeroSheet.restorePower(this.personnageData, removalId);
+                if (!result.ok) {
+                    window.alert(
+                        result.reason === "finished"
+                            ? "Personnage terminé : modifications verrouillées."
+                            : "Restauration impossible."
+                    );
+                    return;
+                }
+                this.persistPersonnage(result.data);
+            },
+            doMarkFinished() {
+                if (
+                    !window.confirm(
+                        "Valider ce personnage comme terminé ? Les modifications (suppressions, +2, échanges) seront verrouillées."
+                    )
+                ) {
+                    return;
+                }
+                const result = HeroSheet.markFinished(this.personnageData);
+                if (!result.ok) {
+                    window.alert(
+                        result.reason === "pending_bonuses"
+                            ? "Placez d’abord tous les bonus +2 en attente."
+                            : "Impossible de valider."
+                    );
+                    return;
+                }
+                this.persistPersonnage(result.data);
+            },
+            doReopen() {
+                if (
+                    !window.confirm(
+                        "Rouvrir ce personnage pour modifier à nouveau les options ?"
+                    )
+                ) {
+                    return;
+                }
+                const result = HeroSheet.reopen(this.personnageData);
+                if (result.ok) {
+                    this.persistPersonnage(result.data);
+                }
+            },
+            doApplyBonus() {
+                if (!this.bonusTarget) {
+                    window.alert("Choisissez une cible pour le +2.");
+                    return;
+                }
+                const result = HeroSheet.applyBonus(
+                    this.personnageData,
+                    this.bonusKind,
+                    this.bonusTarget
+                );
+                if (!result.ok) {
+                    window.alert("Impossible d’appliquer le bonus.");
+                    return;
+                }
+                this.persistPersonnage(result.data);
+                this.bonusTarget = "";
+            },
+            doAddSpeciality() {
+                if (!this.newSpeciality) {
+                    window.alert("Choisissez une spécialité.");
+                    return;
+                }
+                const result = HeroSheet.addSpeciality(
+                    this.personnageData,
+                    this.newSpeciality
+                );
+                if (!result.ok) {
+                    window.alert(
+                        result.reason === "quota"
+                            ? "Une seule spécialité supplémentaire est autorisée."
+                            : "Ajout impossible."
+                    );
+                    return;
+                }
+                this.persistPersonnage(result.data);
+                this.newSpeciality = "";
+            },
+            exportSaves() {
+                IconsStorage.downloadExport();
+            },
+            triggerImport() {
+                this.$refs.importInput.click();
+            },
+            importSaves(event) {
+                const file = event.target.files && event.target.files[0];
+                event.target.value = "";
+                if (!file) {
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = () => {
+                    let payload;
+                    try {
+                        payload = JSON.parse(reader.result);
+                    } catch (err) {
+                        window.alert("Fichier JSON invalide.");
+                        return;
+                    }
+                    const replace = window.confirm(
+                        "OK = remplacer toute la bibliothèque locale.\nAnnuler = fusionner (max 5 par type)."
+                    );
+                    const result = IconsStorage.importPayload(
+                        payload,
+                        replace ? "replace" : "merge"
+                    );
+                    if (!result.ok) {
+                        window.alert("Import impossible (fichier vide ou invalide).");
+                        return;
+                    }
+                    const working = IconsStorage.getWorking();
+                    if (working && working.kind === "personnage") {
+                        this.applyWorkingPersonnage(working);
+                    } else if (working && working.character) {
+                        this.applyWorkingBrouillon(working);
+                    } else {
+                        this.refreshLibrary();
+                    }
+                    window.alert(
+                        `Import : ${result.imported} ajoutée(s), ${result.skipped} ignorée(s). Brouillons ${result.brouillons}/${result.max}, personnages ${result.personnages}/${result.max}.`
+                    );
+                };
+                reader.readAsText(file);
+            },
+            clearAllStorage() {
+                if (
+                    !window.confirm(
+                        "Supprimer TOUTES les fiches (brouillons + personnages) et la session ? Action irréversible."
+                    )
+                ) {
+                    return;
+                }
+                IconsStorage.clearAll();
+                this.generateBrouillon(true);
+            },
+            formatSaveTime(iso) {
+                return IconsStorage.formatTime(iso);
+            },
+        },
+    }).mount("#app");
 </script>
 
 </html>
