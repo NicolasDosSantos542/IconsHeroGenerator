@@ -170,7 +170,12 @@
 
                     <h3>Spécialités</h3>
                     <div class="specialities-list">
-                        <div v-for="value in formatSpecialities(brouillonData.specialities)" :key="value.key">
+                        <div
+                            v-for="value in formatSpecialities(brouillonData.specialities)"
+                            :key="value.key"
+                            class="specialty-item"
+                            @click="toggleSpecialtyPopover($event, value)"
+                        >
                             <div class="value">{{ value.display }}</div>
                         </div>
                     </div>
@@ -585,7 +590,12 @@
 
                     <h3>Spécialités</h3>
                     <div class="specialities-list">
-                        <div v-for="value in heroView.specialities" :key="value.key">
+                        <div
+                            v-for="value in heroView.specialities"
+                            :key="value.key"
+                            class="specialty-item"
+                            @click="toggleSpecialtyPopover($event, value)"
+                        >
                             <div class="value">{{ value.display }}</div>
                         </div>
                     </div>
@@ -715,6 +725,27 @@
                 </div>
             </div>
         </div>
+
+        <div
+            v-if="specialtyPopover"
+            class="specialty-popover-backdrop"
+            @click="closeSpecialtyPopover()"
+        ></div>
+        <div
+            v-if="specialtyPopover"
+            class="specialty-popover"
+            :style="{ top: specialtyPopover.top + 'px', left: specialtyPopover.left + 'px' }"
+            @click.stop
+        >
+            <div class="specialty-popover-header">
+                <strong>{{ specialtyPopover.title }}</strong>
+                <button type="button" class="specialty-popover-close" @click="closeSpecialtyPopover()">×</button>
+            </div>
+            <p class="specialty-popover-text">{{ specialtyPopover.text }}</p>
+            <p class="mods-hint" v-if="specialtyPopover.focus">
+                Focus : {{ specialtyPopover.focus }}
+            </p>
+        </div>
     </div>
 </body>
 <script>
@@ -753,6 +784,7 @@
                 undoStack: [],
                 maxUndo: 40,
                 libraryExpanded: false,
+                specialtyPopover: null,
             };
         },
         computed: {
@@ -940,6 +972,12 @@
         },
         mounted() {
             app = this;
+            this._onSpecialtyEscape = (event) => {
+                if (event.key === "Escape") {
+                    this.closeSpecialtyPopover();
+                }
+            };
+            window.addEventListener("keydown", this._onSpecialtyEscape);
             IconsStorage.load();
             this.refreshLibrary();
             const working = IconsStorage.getWorking();
@@ -951,12 +989,52 @@
                 this.generateBrouillon(true);
             }
         },
+        beforeUnmount() {
+            if (this._onSpecialtyEscape) {
+                window.removeEventListener("keydown", this._onSpecialtyEscape);
+            }
+        },
         methods: {
             formatSpecialities(list) {
                 return HeroSheet.specializeEntries(list || []);
             },
             specialityRankLabel(rank) {
                 return HeroSheet.specialityRankLabel(rank);
+            },
+            toggleSpecialtyPopover(event, entry) {
+                const name = entry && entry.name;
+                if (!name) {
+                    return;
+                }
+                if (
+                    this.specialtyPopover &&
+                    this.specialtyPopover.name === name &&
+                    this.specialtyPopover.focus === (entry.focus || null)
+                ) {
+                    this.closeSpecialtyPopover();
+                    return;
+                }
+                const def = specialites.definitionOf(name);
+                const rect = event.currentTarget.getBoundingClientRect();
+                const left = Math.min(rect.left, window.innerWidth - 320);
+                const top = Math.min(rect.bottom + 8, window.innerHeight - 160);
+                this.specialtyPopover = {
+                    name,
+                    focus: entry.focus || null,
+                    title: entry.display || name,
+                    text:
+                        (def && def.value) ||
+                        "Aucune description disponible pour cette spécialité.",
+                    top: Math.max(8, top),
+                    left: Math.max(8, left),
+                };
+            },
+            closeSpecialtyPopover() {
+                this.specialtyPopover = null;
+            },
+            display(tab) {
+                this.closeSpecialtyPopover();
+                this.currentTab = tab;
             },
             addPersonnageLanguage() {
                 const result = HeroSheet.addKnownLanguage(
@@ -1073,9 +1151,6 @@
                 });
                 delete this.focusDrafts[key];
                 delete this.focusCustoms[key];
-            },
-            display(tab) {
-                this.currentTab = tab;
             },
             refreshLibrary() {
                 this.brouillons = IconsStorage.list("brouillon");
