@@ -323,6 +323,15 @@ const OriginEffects = (() => {
           plan,
         };
       }
+      const sacrificeTarget = (data.base.powers || []).find(
+        (power) => power.name === sacrificed
+      );
+      if (!sacrificeTarget) {
+        return { ok: false, reason: "missing_power" };
+      }
+      if (HeroSheet.isOriginGrantedPower(sacrificeTarget)) {
+        return { ok: false, reason: "locked_origin_power" };
+      }
       data.base.powers = (data.base.powers || []).filter(
         (power) => power.name !== sacrificed
       );
@@ -475,6 +484,15 @@ const OriginEffects = (() => {
     if (mode === "sacrifice") {
       if (!sacrificedPowerName) {
         return { ok: false, reason: "need_sacrifice" };
+      }
+      const sacrificeTarget = (next.base.powers || []).find(
+        (power) => power.name === sacrificedPowerName
+      );
+      if (!sacrificeTarget) {
+        return { ok: false, reason: "missing_power" };
+      }
+      if (HeroSheet.isOriginGrantedPower(sacrificeTarget)) {
+        return { ok: false, reason: "locked_origin_power" };
       }
       const before = next.base.powers.length;
       next.base.powers = next.base.powers.filter(

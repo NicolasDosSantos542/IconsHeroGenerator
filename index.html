@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="icons.css">
+    <script src="js/data/specialites.js"></script>
     <script src="js/character.js"></script>
     <script src="js/hero.js"></script>
     <script src="js/origin-effects.js"></script>
@@ -13,7 +14,6 @@
     <script src="js/data/character_creation-great_powers.js"></script>
     <script src="js/data/extras.js"></script>
     <script src="js/data/limites.js"></script>
-    <script src="js/data/specialites.js"></script>
     <script src="js/utils/vue3-sfc-loader.js"></script>
     <script src="js/utils/vue3.4.15.js"></script>
     <title>Icons Hero Generator</title>
@@ -74,7 +74,20 @@
                         <span v-else> — non enregistrée dans la bibliothèque</span>
                     </div>
 
-                    <div class="library-grid">
+                    <div class="library-toggle-row">
+                        <p class="library-summary">
+                            Bibliothèque :
+                            {{ brouillons.length }}/{{ maxPerType }} brouillon{{ brouillons.length > 1 ? 's' : '' }},
+                            {{ personnages.length }}/{{ maxPerType }} personnage{{ personnages.length > 1 ? 's' : '' }}
+                        </p>
+                        <input
+                            type="button"
+                            :value="libraryExpanded ? 'Réduire' : 'Étendre'"
+                            @click="libraryExpanded = !libraryExpanded"
+                        >
+                    </div>
+
+                    <div class="library-grid" v-show="libraryExpanded">
                         <section class="library-block">
                             <div class="saves-header">
                                 <h3 class="saves-title">Brouillons ({{ brouillons.length }}/{{ maxPerType }})</h3>
@@ -157,9 +170,66 @@
 
                     <h3>Spécialités</h3>
                     <div class="specialities-list">
-                        <div v-for="value in brouillonData.specialities" :key="value">
-                            <div class="value">{{ value }}</div>
+                        <div
+                            v-for="value in formatSpecialities(brouillonData.specialities)"
+                            :key="value.key"
+                            class="specialty-item"
+                            @click="toggleSpecialtyPopover($event, value)"
+                        >
+                            <div class="value">{{ value.display }}</div>
                         </div>
+                    </div>
+                    <div
+                        class="mods-panel"
+                        v-if="brouillonPendingFocuses.length"
+                    >
+                        <h4>Focus de spécialité à choisir</h4>
+                        <div
+                            class="origin-step"
+                            v-for="slot in brouillonPendingFocuses"
+                            :key="'b-focus-' + slot.index"
+                        >
+                            <p class="mods-hint">{{ slot.name }} (emplacement {{ slot.index + 1 }})</p>
+                            <div class="mods-row">
+                                <select v-model="focusDrafts['brouillon:' + slot.index]">
+                                    <option disabled value="">Focus…</option>
+                                    <option
+                                        v-for="opt in focusOptionsFor(slot.name, brouillonData.powers)"
+                                        :key="opt"
+                                        :value="opt"
+                                    >{{ opt }}</option>
+                                    <option value="__custom__">Autre…</option>
+                                </select>
+                                <input
+                                    v-if="focusDrafts['brouillon:' + slot.index] === '__custom__'"
+                                    type="text"
+                                    v-model="focusCustoms['brouillon:' + slot.index]"
+                                    placeholder="Précisez…"
+                                >
+                                <input
+                                    type="button"
+                                    value="Valider"
+                                    @click="resolveBrouillonFocus(slot.index)"
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Langues</h3>
+                    <div class="languages-block">
+                        <p>
+                            <span class="name">Langues maîtrisées :</span>
+                            <span class="value">{{ brouillonLanguages.display }}</span>
+                        </p>
+                        <p class="mods-hint">
+                            Intellect {{ brouillonLanguages.intellect }}
+                            <template v-if="brouillonLanguages.linguisticsRank">
+                                + Linguistique {{ specialityRankLabel(brouillonLanguages.linguisticsRank) }}
+                                (= {{ brouillonLanguages.effectiveIntellect }})
+                            </template>
+                            — langue natale + langues additionnelles à partir d’Intellect 4 (×2 par niveau).
+                            Nommez les langues après création du personnage.
+                        </p>
                     </div>
 
                     <h3>Description</h3>
@@ -169,22 +239,105 @@
                         Comment a-t-il acquis ses pouvoirs surhumains ? Quels sont les éléments de son histoire qui sont
                         à l’origine des motivations et des gageures de sa vie actuelle ? À quoi ressemble votre héros ?
                         Imaginez son physique, son costume, sa taille, sa coiffure et son style, ses manières et tous
-                        les autres détails remarquables.
+                        les autres détails remarquables. Si vous vous sentez l’âme d’un artiste, vous pouvez dessiner
+                        votre héros pour aider les autres joueurs à mieux se le représenter. Vous pouvez aussi utiliser
+                        ou modifier une image existante pour lui donner son apparence.
                     </div>
 
                     <h3>Ténacité</h3>
                     <div class="tenacity-block">
                         Soustrayez le nombre total de pouvoirs de votre héros de 6 pour connaître son niveau de
                         Ténacité, avec un minimum de 1 – en gardant à l’esprit que chaque attribut au-dessus de 6 compte
-                        comme un pouvoir.
-                        <p><strong>Niveau de Ténacité = 6 – nombre total de Pouvoirs</strong></p>
+                        comme un pouvoir et que les extras comme les limites peuvent modifier le total de Ténacité que
+                        coûte un pouvoir. Le héros commence avec un nombre de points de Ténacité égal à son niveau de
+                        Ténacité et ce capital de points est rafraîchi au début de chaque nouveau numéro (mais si le
+                        joueur a acquis des points surnuméraires, ceux-ci ne sont pas perdus).                        <p><strong>Niveau de Ténacité = 6 – nombre total de Pouvoirs</strong></p>
                     </div>
 
                     <h3>Aspects</h3>
                     <div class="aspects-block">
-                        Choisissez trois aspects pour votre héros. Ils doivent idéalement être source d’avantages comme
-                        de complications. Exemples : « Choisi par les esprits », « Champion de Tuatha ».
+                        <div>Choisissez trois aspects pour votre héros. Vous activerez ces aspects en cours de jeu pour
+                            obtenir des avantages ou compliquer la vie de votre héros (ce qui permet de gagner des
+                            points de Ténacité). Reportez-vous à la section Aspects du chapitre « Les bases » pour
+                            savoir comment cela fonctionne. Les aspects de votre héros peuvent être de toute nature,
+                            mais souvenez-vous qu’ils doivent idéalement être source d’avantages comme de complications.
+                            Bref, s’avérer aussi positifs que négatifs, tout en étant suffisamment larges pour
+                            s’appliquer à de nombreuses situations. Trop vagues, ils ne signifient plus rien. « Choisi
+                            par les esprits » ou « Champion de Tuatha » sont de bons exemples d’aspects alors que «
+                            Puissant » ou « Héroïque » sont trop larges et trop fades. Les bons aspects sont souvent de
+                            courtes phrases ou des adjectifs.</div>
+                        <div>Les questions qui suivent peuvent
+                            vous être utiles pour décider de vos
+                            aspects :
+                            <ul>
+                                <li><strong>Qui êtes-vous ?</strong> Les aspects les
+                                    plus simples décrivent qui est le
+                                    personnage, souvent sous la forme
+                                    d’un titre, d’une épithète ou d’un
+                                    surnom comme « Sorcière Secrète
+                                    du Sixième Soleil », « Choisi par
+                                    la Déesse de la Vengeance »,
+                                    « Sombre Défenseur », « Maître des
+                                    Esprits » et ainsi de suite.
+                                </li>
+                                <li><strong>Qu’est-ce qui vous pousse en
+                                        avant ?</strong> Votre héros est-il motivé
+                                    par la protection des innocents ou
+                                    par l’idée que la justice doit toujours
+                                    prévaloir ? Est-ce une vocation
+                                    comme « Ambassadeur de la Paix »
+                                    ou « Homme d’Action » ? Peut-être
+                                    votre héros est-il « Assoiffé de
+                                    savoir » ou croit-il que « La science
+                                    nous sauvera » ? Est-il à l’oeuvre
+                                    pour « Défaire une conspiration
+                                    de vilains » ou « Traîner un ennemi
+                                    devant la justice » ?
+                                </li>
+                                <li><strong>Qu’est-ce qui vous attire
+                                        des ennuis ?</strong> Si tous les aspects
+                                    des ennuis ? Si tous les aspects
+                                    n’ont pas à être négatifs, certains
+                                    entraînent forcément des complications,
+                                    comme être un « Chasseur de
+                                    démons », le « Fléau de la pègre »,
+                                    « Ex Sombre Assassin » ou même
+                                    être « Le meilleur dans sa partie »,
+                                    si ce que vous faites n’est pas très
+                                    joli. Réfléchissez à des aspects qui
+                                    peuvent vous causer des problèmes.
+                                </li>
+                                <li><strong>Que faites-vous ?</strong> Les aspects
+                                    peuvent décrire ce que fait le héros,
+                                    qu’il s’agisse d’une profession
+                                    comme « Journaliste en croisade »
+                                    ou « Avocat pétri de principes »,
+                                    d’un style comme « Récite de la
+                                    poésie » ou « Surgit de l’ombre »,
+                                    une devise comme « Doux Jésus ! »
+                                    ou « Soyez Témoin ! », un trait de
+                                    caractère comme « Ne s’arrête
+                                    jamais de parler ».
+                                </li>
+                                <li><strong>Qu’est-ce qui vous rend
+                                        unique ?</strong> Un aspect peut différencier
+                                    unique ? Un aspect peut différencier
+                                    le héros d’autres personnages
+                                    possédant les mêmes capacités
+                                    s’il est, par exemple, un « Expert
+                                    renommé dans l’étude des radiations
+                                    », un « Vétéran de l’Age
+                                    d’Or », un « Industriel milliardaire »
+                                    ou un « Jet-setter ».
+                                    Idéalement, certains aspects répondront
+                                    à plusieurs de ces questions.
+                                    Plus un aspect sera à même d’être
+                                    mise en avant et interprété et plus il
+                                    vous sera utile en cours de jeu. </li>
+                            </ul>
+
                     </div>
+                </div>
                 </div>
 
                 <!-- PERSONNAGE VIEW -->
@@ -193,6 +346,10 @@
                         <div class="tenacity-badge">
                             <span class="name">Ténacité</span>
                             <span class="value">{{ heroView.tenacity }}</span>
+                        </div>
+                        <div class="tenacity-badge languages-badge">
+                            <span class="name">Langues</span>
+                            <span class="value">{{ heroView.languages.total }}</span>
                         </div>
                         <div class="status-badge" :class="heroView.isFinished ? 'finished' : 'editable'">
                             {{ heroView.isFinished ? 'Terminé' : 'En cours' }}
@@ -279,8 +436,8 @@
                                 value="Supprimer (+2)"
                                 @click="doRemovePower(value.name)"
                             >
-                            <span class="mods-hint" v-else-if="value.innateFromOrigin">
-                                (pouvoir d’origine — non échangeable)
+                            <span class="mods-hint" v-else-if="value.fromOrigin">
+                                (pouvoir d’origine — non retirable)
                             </span>
                         </div>
                     </div>
@@ -379,12 +536,12 @@
                             </div>
                         </div>
 
-                        <div v-if="originState.needsSacrifice" class="origin-step">
+                            <div v-if="originState.needsSacrifice" class="origin-step">
                             <p class="mods-hint">Choisissez le pouvoir à abandonner pour l’échange :</p>
                             <div class="mods-row">
                                 <select v-model="sacrificePower">
                                     <option disabled value="">Pouvoir…</option>
-                                    <option v-for="p in heroView.powers" :key="p.name" :value="p.name">{{ p.name }}</option>
+                                    <option v-for="p in sacrificablePowers" :key="p.name" :value="p.name">{{ p.name }}</option>
                                 </select>
                                 <input type="button" value="Confirmer" @click="confirmOriginSacrifice()">
                             </div>
@@ -398,7 +555,7 @@
                                 <input type="button" value="Niveau tiré" @click="resolveFreePower('roll')">
                                 <select v-model="sacrificePower">
                                     <option disabled value="">…ou sacrifier un pouvoir pour niv. 10</option>
-                                    <option v-for="p in heroView.powers" :key="'sac-'+p.name" :value="p.name">{{ p.name }}</option>
+                                    <option v-for="p in sacrificablePowers" :key="'sac-'+p.name" :value="p.name">{{ p.name }}</option>
                                 </select>
                                 <input type="button" value="Sacrifier → 10" @click="resolveFreePower('sacrifice')">
                             </div>
@@ -433,8 +590,48 @@
 
                     <h3>Spécialités</h3>
                     <div class="specialities-list">
-                        <div v-for="value in heroView.specialities" :key="value">
-                            <div class="value">{{ value }}</div>
+                        <div
+                            v-for="value in heroView.specialities"
+                            :key="value.key"
+                            class="specialty-item"
+                            @click="toggleSpecialtyPopover($event, value)"
+                        >
+                            <div class="value">{{ value.display }}</div>
+                        </div>
+                    </div>
+                    <div
+                        class="mods-panel"
+                        v-if="heroView.isEditable && personnagePendingFocuses.length"
+                    >
+                        <h4>Focus de spécialité à choisir</h4>
+                        <div
+                            class="origin-step"
+                            v-for="slot in personnagePendingFocuses"
+                            :key="'p-focus-' + slot.source + '-' + slot.index"
+                        >
+                            <p class="mods-hint">{{ slot.name }} (emplacement {{ slot.index + 1 }})</p>
+                            <div class="mods-row">
+                                <select v-model="focusDrafts[slot.source + ':' + slot.index]">
+                                    <option disabled value="">Focus…</option>
+                                    <option
+                                        v-for="opt in focusOptionsFor(slot.name, heroView.powers)"
+                                        :key="opt"
+                                        :value="opt"
+                                    >{{ opt }}</option>
+                                    <option value="__custom__">Autre…</option>
+                                </select>
+                                <input
+                                    v-if="focusDrafts[slot.source + ':' + slot.index] === '__custom__'"
+                                    type="text"
+                                    v-model="focusCustoms[slot.source + ':' + slot.index]"
+                                    placeholder="Précisez…"
+                                >
+                                <input
+                                    type="button"
+                                    value="Valider"
+                                    @click="resolvePersonnageFocus(slot.source, slot.index)"
+                                >
+                            </div>
                         </div>
                     </div>
                     <div class="mods-panel" v-if="heroView.canAddSpeciality">
@@ -442,13 +639,112 @@
                         <div class="mods-row">
                             <select v-model="newSpeciality">
                                 <option disabled value="">Choisir…</option>
-                                <option v-for="name in specialtyOptions" :key="name" :value="name">{{ name }}</option>
+                                <option
+                                    v-for="opt in specialtyOptions"
+                                    :key="opt.value"
+                                    :value="opt.value"
+                                >{{ opt.label }}</option>
                             </select>
+                            <select
+                                v-if="newSpecialityIsGroup"
+                                v-model="newSpecialityFocus"
+                            >
+                                <option disabled value="">Focus…</option>
+                                <option
+                                    v-for="opt in focusOptionsFor(newSpeciality, heroView.powers)"
+                                    :key="opt"
+                                    :value="opt"
+                                >{{ opt }}</option>
+                                <option value="__custom__">Autre…</option>
+                            </select>
+                            <input
+                                v-if="newSpecialityIsGroup && newSpecialityFocus === '__custom__'"
+                                type="text"
+                                v-model="newSpecialityCustomFocus"
+                                placeholder="Précisez…"
+                            >
                             <input type="button" value="Ajouter" @click="doAddSpeciality()">
+                        </div>
+                        <p class="mods-hint">Une même spécialité peut être prise jusqu’à 3 fois : spécialiste → expert → maître. Les groupes (Armes, Art, Spectacle, Pouvoir) exigent un focus.</p>
+                    </div>
+
+                    <h3>Langues</h3>
+                    <div class="languages-block">
+                        <p>
+                            <span class="name">Langues maîtrisées :</span>
+                            <span class="value">{{ heroView.languages.display }}</span>
+                            <span class="mods-hint"> — {{ heroView.languages.known.length }}/{{ heroView.languages.total }} nommées</span>
+                        </p>
+                        <p class="mods-hint">
+                            Intellect {{ heroView.languages.intellect }}
+                            <template v-if="heroView.languages.linguisticsRank">
+                                + Linguistique {{ specialityRankLabel(heroView.languages.linguisticsRank) }}
+                                (= {{ heroView.languages.effectiveIntellect }})
+                            </template>
+                            — langue natale + langues additionnelles à partir d’Intellect 4 (×2 par niveau).
+                        </p>
+                        <div
+                            class="language-tags"
+                            :class="{ readonly: !heroView.isEditable }"
+                            @click="heroView.isEditable && $refs.personnageLangInput && $refs.personnageLangInput.focus()"
+                        >
+                            <span
+                                class="language-tag"
+                                v-for="lang in heroView.languages.known"
+                                :key="lang"
+                            >
+                                {{ lang }}
+                                <button
+                                    v-if="heroView.isEditable"
+                                    type="button"
+                                    class="language-tag-remove"
+                                    :aria-label="'Retirer ' + lang"
+                                    @click.stop="removePersonnageLanguage(lang)"
+                                >×</button>
+                            </span>
+                            <input
+                                v-if="heroView.isEditable && heroView.languages.remaining > 0"
+                                ref="personnageLangInput"
+                                class="language-tag-input"
+                                type="text"
+                                v-model="newLanguage"
+                                placeholder="Ajouter…"
+                                @keydown.enter.prevent="addPersonnageLanguage()"
+                                @keydown.backspace="onLanguageBackspace()"
+                            >
+                            <span
+                                class="mods-hint"
+                                v-else-if="heroView.isEditable"
+                            >Quota atteint</span>
+                            <span
+                                class="mods-hint"
+                                v-else-if="!heroView.languages.known.length"
+                            >Aucune langue nommée</span>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div
+            v-if="specialtyPopover"
+            class="specialty-popover-backdrop"
+            @click="closeSpecialtyPopover()"
+        ></div>
+        <div
+            v-if="specialtyPopover"
+            class="specialty-popover"
+            :style="{ top: specialtyPopover.top + 'px', left: specialtyPopover.left + 'px' }"
+            @click.stop
+        >
+            <div class="specialty-popover-header">
+                <strong>{{ specialtyPopover.title }}</strong>
+                <button type="button" class="specialty-popover-close" @click="closeSpecialtyPopover()">×</button>
+            </div>
+            <p class="specialty-popover-text">{{ specialtyPopover.text }}</p>
+            <p class="mods-hint" v-if="specialtyPopover.focus">
+                Focus : {{ specialtyPopover.focus }}
+            </p>
         </div>
     </div>
 </body>
@@ -478,10 +774,17 @@
                 bonusKind: "attribute",
                 bonusTarget: "",
                 newSpeciality: "",
+                newSpecialityFocus: "",
+                newSpecialityCustomFocus: "",
+                newLanguage: "",
+                focusDrafts: {},
+                focusCustoms: {},
                 sacrificePower: "",
                 originDecisions: {},
                 undoStack: [],
                 maxUndo: 40,
+                libraryExpanded: false,
+                specialtyPopover: null,
             };
         },
         computed: {
@@ -512,6 +815,41 @@
                 }
                 return `Annuler (${this.undoStack.length})`;
             },
+            brouillonPendingFocuses() {
+                if (!this.brouillonData) {
+                    return [];
+                }
+                return HeroSheet.pendingSpecialityFocusSlots(
+                    this.brouillonData.specialities
+                );
+            },
+            personnagePendingFocuses() {
+                if (!this.personnageData) {
+                    return [];
+                }
+                const base = HeroSheet.pendingSpecialityFocusSlots(
+                    this.personnageData.base.specialities
+                ).map((slot) => ({ ...slot, source: "base" }));
+                const added = HeroSheet.pendingSpecialityFocusSlots(
+                    (this.personnageData.mods &&
+                        this.personnageData.mods.addedSpecialities) ||
+                        []
+                ).map((slot) => ({ ...slot, source: "added" }));
+                return [...base, ...added];
+            },
+            newSpecialityIsGroup() {
+                return HeroSheet.isGroupSpecialityName(this.newSpeciality);
+            },
+            brouillonLanguages() {
+                if (!this.brouillonData) {
+                    return HeroSheet.computeLanguages(0, 0, []);
+                }
+                return HeroSheet.languagesFromParts(
+                    this.brouillonData.attributes,
+                    this.brouillonData.specialities,
+                    this.brouillonData.languages || []
+                );
+            },
             heroView() {
                 if (!this.personnageData) {
                     return null;
@@ -522,6 +860,12 @@
                 return this.heroView && this.heroView.mods
                     ? this.heroView.mods.origin
                     : null;
+            },
+            sacrificablePowers() {
+                if (!this.heroView || !this.heroView.powers) {
+                    return [];
+                }
+                return this.heroView.powers.filter((power) => !power.fromOrigin);
             },
             originBonusTargetLabel() {
                 const next = this.heroView && this.heroView.originBonusNext;
@@ -561,15 +905,55 @@
                 }));
             },
             specialtyOptions() {
-                const current = new Set(
-                    (this.heroView && this.heroView.specialities) || []
-                );
+                if (!this.personnageData) {
+                    return [];
+                }
+                const maxRank = HeroSheet.MAX_SPECIALITY_RANK;
                 return (specialites.list || [])
                     .map((item) => item.name.trim())
-                    .filter((name) => name && !current.has(name));
+                    .filter((name) => {
+                        if (!name) {
+                            return false;
+                        }
+                        if (HeroSheet.isGroupSpecialityName(name)) {
+                            return true;
+                        }
+                        return (
+                            HeroSheet.specialityRankOf(
+                                this.personnageData,
+                                name
+                            ) < maxRank
+                        );
+                    })
+                    .map((name) => {
+                        const isGroup = HeroSheet.isGroupSpecialityName(name);
+                        if (isGroup) {
+                            return {
+                                value: name,
+                                label: `${name} (groupe)`,
+                            };
+                        }
+                        const rank = HeroSheet.specialityRankOf(
+                            this.personnageData,
+                            name
+                        );
+                        if (rank === 0) {
+                            return { value: name, label: name };
+                        }
+                        return {
+                            value: name,
+                            label: `${name} → ${HeroSheet.specialityRankLabel(
+                                rank + 1
+                            )}`,
+                        };
+                    });
             },
         },
         watch: {
+            newSpeciality() {
+                this.newSpecialityFocus = "";
+                this.newSpecialityCustomFocus = "";
+            },
             bonusKind() {
                 if (!this.heroView || !this.heroView.originBonusNext) {
                     this.bonusTarget = "";
@@ -588,6 +972,12 @@
         },
         mounted() {
             app = this;
+            this._onSpecialtyEscape = (event) => {
+                if (event.key === "Escape") {
+                    this.closeSpecialtyPopover();
+                }
+            };
+            window.addEventListener("keydown", this._onSpecialtyEscape);
             IconsStorage.load();
             this.refreshLibrary();
             const working = IconsStorage.getWorking();
@@ -599,9 +989,168 @@
                 this.generateBrouillon(true);
             }
         },
+        beforeUnmount() {
+            if (this._onSpecialtyEscape) {
+                window.removeEventListener("keydown", this._onSpecialtyEscape);
+            }
+        },
         methods: {
+            formatSpecialities(list) {
+                return HeroSheet.specializeEntries(list || []);
+            },
+            specialityRankLabel(rank) {
+                return HeroSheet.specialityRankLabel(rank);
+            },
+            toggleSpecialtyPopover(event, entry) {
+                const name = entry && entry.name;
+                if (!name) {
+                    return;
+                }
+                if (
+                    this.specialtyPopover &&
+                    this.specialtyPopover.name === name &&
+                    this.specialtyPopover.focus === (entry.focus || null)
+                ) {
+                    this.closeSpecialtyPopover();
+                    return;
+                }
+                const def = specialites.definitionOf(name);
+                const rect = event.currentTarget.getBoundingClientRect();
+                const left = Math.min(rect.left, window.innerWidth - 320);
+                const top = Math.min(rect.bottom + 8, window.innerHeight - 160);
+                this.specialtyPopover = {
+                    name,
+                    focus: entry.focus || null,
+                    title: entry.display || name,
+                    text:
+                        (def && def.value) ||
+                        "Aucune description disponible pour cette spécialité.",
+                    top: Math.max(8, top),
+                    left: Math.max(8, left),
+                };
+            },
+            closeSpecialtyPopover() {
+                this.specialtyPopover = null;
+            },
             display(tab) {
+                this.closeSpecialtyPopover();
                 this.currentTab = tab;
+            },
+            addPersonnageLanguage() {
+                const result = HeroSheet.addKnownLanguage(
+                    this.personnageData,
+                    this.newLanguage
+                );
+                if (!result.ok) {
+                    window.alert(
+                        result.reason === "quota"
+                            ? `Quota atteint (${this.heroView.languages.total} langues).`
+                            : result.reason === "duplicate"
+                              ? "Cette langue est déjà listée."
+                              : result.reason === "finished"
+                                ? "Personnage terminé : modifications verrouillées."
+                                : "Ajout impossible."
+                    );
+                    return;
+                }
+                this.persistPersonnage(result.data, {
+                    undoLabel: `Langue ${this.newLanguage.trim()}`,
+                });
+                this.newLanguage = "";
+            },
+            removePersonnageLanguage(name) {
+                const result = HeroSheet.removeKnownLanguage(
+                    this.personnageData,
+                    name
+                );
+                if (!result.ok) {
+                    window.alert(
+                        result.reason === "finished"
+                            ? "Personnage terminé : modifications verrouillées."
+                            : "Suppression impossible."
+                    );
+                    return;
+                }
+                this.persistPersonnage(result.data, {
+                    undoLabel: `Retrait langue ${name}`,
+                });
+            },
+            onLanguageBackspace() {
+                if ((this.newLanguage || "").length > 0) {
+                    return;
+                }
+                const known =
+                    this.heroView && this.heroView.languages
+                        ? this.heroView.languages.known
+                        : [];
+                if (!known.length) {
+                    return;
+                }
+                this.removePersonnageLanguage(known[known.length - 1]);
+            },
+            focusOptionsFor(groupName, powers) {
+                const def = specialites.definitionOf(groupName);
+                if (!def) {
+                    return [];
+                }
+                if (def.focusSource === "hero_powers") {
+                    return (powers || [])
+                        .map((power) => power.name)
+                        .filter(Boolean);
+                }
+                return Array.isArray(def.foci) ? def.foci.slice() : [];
+            },
+            resolveFocusValue(draftKey) {
+                const draft = this.focusDrafts[draftKey];
+                if (!draft) {
+                    return "";
+                }
+                if (draft === "__custom__") {
+                    return (this.focusCustoms[draftKey] || "").trim();
+                }
+                return draft;
+            },
+            resolveBrouillonFocus(index) {
+                const key = `brouillon:${index}`;
+                const focus = this.resolveFocusValue(key);
+                const result = HeroSheet.applyFocusToSpecialityList(
+                    this.brouillonData.specialities,
+                    index,
+                    focus
+                );
+                if (!result.ok) {
+                    window.alert("Choisissez un focus valide.");
+                    return;
+                }
+                this.brouillonData.specialities = result.list;
+                this.persistBrouillon(this.brouillonData, {
+                    id: this.currentId,
+                });
+                delete this.focusDrafts[key];
+                delete this.focusCustoms[key];
+            },
+            resolvePersonnageFocus(source, index) {
+                const key = `${source}:${index}`;
+                const focus = this.resolveFocusValue(key);
+                const result = HeroSheet.setSpecialityFocus(
+                    this.personnageData,
+                    source,
+                    index,
+                    focus
+                );
+                if (!result.ok) {
+                    window.alert(
+                        result.reason === "finished"
+                            ? "Personnage terminé : modifications verrouillées."
+                            : "Choisissez un focus valide."
+                    );
+                    return;
+                }
+                this.persistPersonnage(result.data, {
+                    undoLabel: "Focus de spécialité",
+                });
+                delete this.focusDrafts[key];
+                delete this.focusCustoms[key];
             },
             refreshLibrary() {
                 this.brouillons = IconsStorage.list("brouillon");
@@ -614,6 +1163,9 @@
             applyWorkingBrouillon(working) {
                 this.workingKind = "brouillon";
                 this.brouillonData = working.character;
+                if (this.brouillonData && !Array.isArray(this.brouillonData.languages)) {
+                    this.brouillonData.languages = [];
+                }
                 this.personnageData = null;
                 this.currentId = working.id || null;
                 this.workingUpdatedAt = working.updatedAt;
@@ -822,6 +1374,16 @@
                 if (this.workingKind !== "brouillon" || !this.brouillonData) {
                     return;
                 }
+                if (
+                    HeroSheet.hasPendingSpecialityFocus(
+                        this.brouillonData.specialities
+                    )
+                ) {
+                    window.alert(
+                        "Choisissez d’abord le focus de chaque spécialité de groupe (Armes, Art, Spectacle, Pouvoir)."
+                    );
+                    return;
+                }
                 if (!IconsStorage.canCreate("personnage")) {
                     window.alert(
                         `Quota atteint : maximum ${IconsStorage.MAX_PER_TYPE} personnages.`
@@ -899,7 +1461,9 @@
                     window.alert(
                         result.reason === "need_sacrifice"
                             ? "Choisissez un pouvoir à sacrifier."
-                            : "Impossible de résoudre le pouvoir gratuit."
+                            : result.reason === "locked_origin_power"
+                              ? "Ce pouvoir d’origine ne peut pas être sacrifié."
+                              : "Impossible de résoudre le pouvoir gratuit."
                     );
                     return;
                 }
@@ -1044,7 +1608,7 @@
                         result.reason === "finished"
                             ? "Personnage terminé : modifications verrouillées."
                             : result.reason === "locked_origin_roll"
-                              ? "Ce pouvoir tiré via l’origine ne peut pas être échangé contre un +2."
+                              ? "Ce pouvoir d’origine ne peut pas être retiré."
                               : "Suppression impossible."
                     );
                     return;
@@ -1097,6 +1661,8 @@
                     const messages = {
                         pending_bonuses: "Placez d’abord tous les bonus +2 en attente.",
                         origin_pending: "Terminez d’abord les effets d’origine.",
+                        speciality_focus:
+                            "Choisissez d’abord le focus de chaque spécialité de groupe.",
                     };
                     window.alert(messages[result.reason] || "Impossible de valider.");
                     return;
@@ -1153,22 +1719,43 @@
                     window.alert("Choisissez une spécialité.");
                     return;
                 }
+                let focus = null;
+                if (this.newSpecialityIsGroup) {
+                    focus =
+                        this.newSpecialityFocus === "__custom__"
+                            ? (this.newSpecialityCustomFocus || "").trim()
+                            : this.newSpecialityFocus;
+                    if (!focus) {
+                        window.alert("Choisissez un focus pour ce groupe.");
+                        return;
+                    }
+                }
                 const result = HeroSheet.addSpeciality(
                     this.personnageData,
-                    this.newSpeciality
+                    this.newSpeciality,
+                    focus
                 );
                 if (!result.ok) {
                     window.alert(
                         result.reason === "quota"
                             ? `Quota de spécialités supplémentaires atteint (${this.heroView.maxExtraSpecialities}).`
-                            : "Ajout impossible."
+                            : result.reason === "max_rank"
+                              ? "Cette spécialité (avec ce focus) est déjà au rang maître (3)."
+                              : result.reason === "need_focus"
+                                ? "Choisissez un focus pour ce groupe."
+                                : "Ajout impossible."
                     );
                     return;
                 }
+                const label = focus
+                    ? `${this.newSpeciality} — ${focus}`
+                    : this.newSpeciality;
                 this.persistPersonnage(result.data, {
-                    undoLabel: `Spécialité ${this.newSpeciality}`,
+                    undoLabel: `Spécialité ${label}`,
                 });
                 this.newSpeciality = "";
+                this.newSpecialityFocus = "";
+                this.newSpecialityCustomFocus = "";
             },
             exportSaves() {
                 IconsStorage.downloadExport();
