@@ -1555,8 +1555,17 @@ const HeroSheet = (() => {
     if (hasPendingSpecialityFocus(resolvedSpecialityNames(next))) {
       return { ok: false, reason: "speciality_focus" };
     }
+    if (hasPendingRemovalExtraChoices(next)) {
+      return { ok: false, reason: "removal_extra" };
+    }
     next.status = STATUS_FINISHED;
     return { ok: true, data: next };
+  }
+
+  function hasPendingRemovalExtraChoices(data) {
+    return (data.base.powers || []).some(
+      (power) => (power.pendingRemovalExtraIds || []).length > 0
+    );
   }
 
   function reopen(data) {

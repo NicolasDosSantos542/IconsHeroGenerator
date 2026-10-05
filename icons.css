@@ -340,6 +340,50 @@ html {
   box-shadow: none;
 }
 
+.todo-banner {
+  margin: 0 0 1rem;
+  padding: 0.7rem 0.85rem;
+  border: 2px solid var(--icons-ink);
+  border-radius: 0.35rem;
+  background: #fff8e8;
+  box-shadow: 3px 3px 0 rgba(26, 26, 26, 0.18);
+}
+
+.todo-banner h4 {
+  font-family: "Oswald", Impact, sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--icons-red);
+  margin: 0 0 0.4rem;
+}
+
+.todo-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.todo-link {
+  font-family: "Source Sans 3", sans-serif;
+  font-size: 0.95rem;
+  color: var(--icons-blue);
+  background: none;
+  border: 0;
+  padding: 0;
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  cursor: pointer;
+}
+
+.todo-link:hover {
+  color: var(--icons-red);
+}
+
 .undo-btn {
   background: var(--icons-blue) !important;
 }

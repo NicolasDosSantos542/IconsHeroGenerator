@@ -377,6 +377,8 @@
                             v-if="heroView.isEditable"
                             type="button"
                             value="Valider comme terminé"
+                            :disabled="personnageTodos.length > 0"
+                            :title="personnageTodos.length ? 'Il reste des étapes à résoudre' : ''"
                             @click="doMarkFinished()"
                         >
                         <input
@@ -387,7 +389,23 @@
                         >
                     </div>
 
-                    <h3>Attributs</h3>
+                    <div
+                        class="todo-banner"
+                        v-if="heroView.isEditable && personnageTodos.length"
+                    >
+                        <h4>À faire ({{ personnageTodos.length }})</h4>
+                        <ul class="todo-list">
+                            <li v-for="item in personnageTodos" :key="item.id">
+                                <button
+                                    type="button"
+                                    class="todo-link"
+                                    @click="scrollToSheetSection(item.target)"
+                                >{{ item.label }}</button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <h3 id="sheet-section-attributes">Attributs</h3>
                     <div class="attributes">
                         <div v-for="(value, key) in heroView.attributes" :key="key">
                             <span class="name">{{ value.name }}</span>
@@ -430,7 +448,7 @@
                         </p>
                     </div>
 
-                    <h3>Pouvoirs</h3>
+                    <h3 id="sheet-section-powers">Pouvoirs</h3>
                     <div class="powers-list">
                         <div v-for="(value, key) in heroView.powers" :key="key" class="power-row power-card">
                             <div class="power-main">
@@ -644,7 +662,11 @@
                         </div>
                     </div>
 
-                    <div class="mods-panel" v-if="heroView.hasPendingRemovalRewards">
+                    <div
+                        id="sheet-section-removal"
+                        class="mods-panel"
+                        v-if="heroView.hasPendingRemovalRewards"
+                    >
                         <h4>Récompense de suppression</h4>
                         <div
                             class="origin-step"
@@ -671,7 +693,11 @@
                         <p class="mods-hint">Restaurer annule aussi le +2 ou l’Extra obtenu via cette suppression.</p>
                     </div>
 
-                    <div class="mods-panel" v-if="heroView.isEditable && heroView.pendingBonuses > 0">
+                    <div
+                        id="sheet-section-bonuses"
+                        class="mods-panel"
+                        v-if="heroView.isEditable && heroView.pendingBonuses > 0"
+                    >
                         <h4>Bonus +2 à placer ({{ heroView.pendingBonuses }})</h4>
                         <p class="mods-hint">
                             Sources :
@@ -703,7 +729,7 @@
                         </div>
                     </div>
 
-                    <h3>Origine</h3>
+                    <h3 id="sheet-section-origin">Origine</h3>
                     <div class="origin-block">
                         <p>
                             <span class="name">{{ heroView.origin.name }}</span>
@@ -806,7 +832,7 @@
                         </p>
                     </div>
 
-                    <h3>Spécialités</h3>
+                    <h3 id="sheet-section-specialities">Spécialités</h3>
                     <div class="specialities-list">
                         <div
                             v-for="value in heroView.specialities"
@@ -1121,6 +1147,83 @@
                     return `Extra ← ${name} (+${rewards.length - 1})`;
                 }
                 return `Extra (suppression ×${rewards.length})`;
+            },
+            personnageTodos() {
+                if (!this.heroView || !this.heroView.isEditable) {
+                    return [];
+                }
+                const todos = [];
+                if (this.heroView.hasOpenOriginSteps) {
+                    const origin = this.originState || {};
+                    const hasOriginActions = !!(
+                        (origin.unresolvedChoices &&
+                            origin.unresolvedChoices.length) ||
+                        origin.needsSacrifice ||
+                        (origin.freePowerQueue &&
+                            origin.freePowerQueue.length) ||
+                        (origin.extraPowerQueue &&
+                            origin.extraPowerQueue.length) ||
+                        origin.rerollOrigin
+                    );
+                    if (hasOriginActions) {
+                        todos.push({
+                            id: "origin",
+                            label: "Terminer les effets d’origine",
+                            target: "sheet-section-origin",
+                        });
+                    }
+                }
+                const focusCount = this.personnagePendingFocuses.length;
+                if (focusCount) {
+                    todos.push({
+                        id: "focus",
+                        label:
+                            focusCount === 1
+                                ? "Choisir un focus de spécialité"
+                                : `Choisir ${focusCount} focuses de spécialité`,
+                        target: "sheet-section-specialities",
+                    });
+                }
+                const removalCount = (
+                    this.heroView.pendingRemovalRewards || []
+                ).length;
+                if (removalCount) {
+                    todos.push({
+                        id: "removal",
+                        label:
+                            removalCount === 1
+                                ? "Choisir la récompense de suppression (+2 ou Extra)"
+                                : `Choisir ${removalCount} récompenses de suppression`,
+                        target: "sheet-section-removal",
+                    });
+                }
+                const pendingExtras = (this.heroView.powers || []).reduce(
+                    (sum, power) =>
+                        sum + (power.availableRemovalExtraSlots || 0),
+                    0
+                );
+                if (pendingExtras) {
+                    todos.push({
+                        id: "removal-extra",
+                        label:
+                            pendingExtras === 1
+                                ? "Choisir le type d’extra de suppression"
+                                : `Choisir ${pendingExtras} extras de suppression`,
+                        target: "sheet-section-powers",
+                    });
+                }
+                const bonusCount = this.heroView.pendingBonuses || 0;
+                if (bonusCount) {
+                    todos.push({
+                        id: "bonus",
+                        label:
+                            bonusCount === 1
+                                ? "Placer le bonus +2"
+                                : `Placer ${bonusCount} bonus +2`,
+                        target: "sheet-section-bonuses",
+                    });
+                }
+                return todos;
             },
             brouillonPendingFocuses() {
                 if (!this.brouillonData) {
@@ -1888,6 +1991,16 @@
                 this.closeDetailPopover();
                 this.currentTab = tab;
             },
+            scrollToSheetSection(targetId) {
+                const el =
+                    typeof document !== "undefined" && targetId
+                        ? document.getElementById(targetId)
+                        : null;
+                if (!el || typeof el.scrollIntoView !== "function") {
+                    return;
+                }
+                el.scrollIntoView({ behavior: "smooth", block: "start" });
+            },
             addPersonnageLanguage() {
                 const result = HeroSheet.addKnownLanguage(
                     this.personnageData,
@@ -2517,6 +2630,8 @@
                         origin_pending: "Terminez d’abord les effets d’origine.",
                         speciality_focus:
                             "Choisissez d’abord le focus de chaque spécialité de groupe.",
+                        removal_extra:
+                            "Choisissez d’abord le type des extras de suppression placés sur les pouvoirs.",
                     };
                     window.alert(messages[result.reason] || "Impossible de valider.");
                     return;
