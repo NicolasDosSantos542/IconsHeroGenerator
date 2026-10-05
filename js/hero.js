@@ -1034,6 +1034,38 @@ const HeroSheet = (() => {
     return { ok: true, data: next };
   }
 
+  function spendNextRemovalAsExtra(data, powerName) {
+    const locked = guardEditable(data);
+    if (locked) {
+      return locked;
+    }
+    const rewards = (data.mods && data.mods.pendingRemovalRewards) || [];
+    if (!rewards.length) {
+      return { ok: false, reason: "missing_reward" };
+    }
+    return spendRemovalAsExtra(data, rewards[0].id, powerName);
+  }
+
+  function cancelPendingRemovalExtra(data, powerName) {
+    const locked = guardEditable(data);
+    if (locked) {
+      return locked;
+    }
+    const next = nextClone(data);
+    const power = findPower(next, powerName);
+    if (!power) {
+      return { ok: false, reason: "missing_power" };
+    }
+    const pending = power.pendingRemovalExtraIds || [];
+    if (!pending.length) {
+      return { ok: false, reason: "no_slot" };
+    }
+    const removalId = pending.pop();
+    power.pendingRemovalExtraIds = pending;
+    refundPendingRemovalExtraIds(next.mods, [removalId]);
+    return { ok: true, data: next };
+  }
+
   function addPowerExtraFromRemoval(data, powerName, extraName, detail) {
     const locked = guardEditable(data);
     if (locked) {
@@ -1573,6 +1605,8 @@ const HeroSheet = (() => {
     restorePower,
     spendRemovalAsBonus,
     spendRemovalAsExtra,
+    spendNextRemovalAsExtra,
+    cancelPendingRemovalExtra,
     addPowerLimit,
     addPowerExtra,
     addPowerExtraFromLimit,

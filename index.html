@@ -549,15 +549,23 @@
                                         >×</button>
                                     </span>
                                 </div>
-                                <p
-                                    class="mods-hint"
+                                <div
+                                    class="mods-row"
                                     v-if="value.availableRemovalExtraSlots"
                                 >
-                                    Extra de suppression à choisir
-                                    <template v-if="value.availableRemovalExtraSlots > 1">
-                                        (×{{ value.availableRemovalExtraSlots }})
-                                    </template>
-                                </p>
+                                    <span class="mods-hint">
+                                        Extra de suppression à choisir
+                                        <template v-if="value.availableRemovalExtraSlots > 1">
+                                            (×{{ value.availableRemovalExtraSlots }})
+                                        </template>
+                                    </span>
+                                    <input
+                                        v-if="heroView.isEditable"
+                                        type="button"
+                                        value="Annuler"
+                                        @click="cancelRemovalExtraCredit(value.name)"
+                                    >
+                                </div>
                             </div>
 
                             <div class="mods-panel power-mod-panel" v-if="heroView.isEditable">
@@ -585,6 +593,13 @@
                                         placeholder="Préciser X…"
                                     >
                                     <input type="button" value="Ajouter limite" @click="doAddPowerLimit(value.name)">
+                                </div>
+                                <div class="mods-row" v-if="heroView.hasPendingRemovalRewards">
+                                    <input
+                                        type="button"
+                                        :value="removalExtraClaimLabel"
+                                        @click="claimRemovalExtraOnPower(value.name)"
+                                    >
                                 </div>
                                 <div class="mods-row" v-if="value.canAddExtra">
                                     <select v-model="extraDrafts[value.name]">
@@ -637,21 +652,10 @@
                             :key="reward.id"
                         >
                             <p class="mods-hint">
-                                À la place de « {{ reward.removedName }} » : +2 sur une capacité, ou placer un Extra sur un pouvoir restant (le type se choisit sur la carte du pouvoir).
+                                À la place de « {{ reward.removedName }} » : +2 ici, ou Extra via le bouton sur un pouvoir restant.
                             </p>
                             <div class="mods-row">
                                 <input type="button" value="Prendre +2" @click="spendRemovalBonus(reward.id)">
-                            </div>
-                            <div class="mods-row">
-                                <select v-model="removalExtraPower[reward.id]">
-                                    <option disabled value="">Pouvoir…</option>
-                                    <option
-                                        v-for="power in heroView.powers"
-                                        :key="reward.id + '-' + power.name"
-                                        :value="power.name"
-                                    >{{ power.name }}</option>
-                                </select>
-                                <input type="button" value="Extras" @click="spendRemovalExtra(reward.id)">
                             </div>
                         </div>
                     </div>
@@ -1067,7 +1071,6 @@
                 extraDrafts: {},
                 extraCustomDrafts: {},
                 extraDetailDrafts: {},
-                removalExtraPower: {},
                 sacrificePower: "",
                 originDecisions: {},
                 undoStack: [],
@@ -1103,6 +1106,21 @@
                     return "Annuler";
                 }
                 return `Annuler (${this.undoStack.length})`;
+            },
+            removalExtraClaimLabel() {
+                const rewards =
+                    (this.heroView && this.heroView.pendingRemovalRewards) || [];
+                if (!rewards.length) {
+                    return "Extra (suppression)";
+                }
+                const name = rewards[0].removedName || "";
+                if (rewards.length === 1 && name) {
+                    return `Extra ← ${name}`;
+                }
+                if (name) {
+                    return `Extra ← ${name} (+${rewards.length - 1})`;
+                }
+                return `Extra (suppression ×${rewards.length})`;
             },
             brouillonPendingFocuses() {
                 if (!this.brouillonData) {
@@ -1840,15 +1858,9 @@
                     undoLabel: "Suppression → +2",
                 });
             },
-            spendRemovalExtra(rewardId) {
-                const powerName = this.removalExtraPower[rewardId];
-                if (!powerName) {
-                    window.alert("Choisissez un pouvoir.");
-                    return;
-                }
-                const result = HeroSheet.spendRemovalAsExtra(
+            claimRemovalExtraOnPower(powerName) {
+                const result = HeroSheet.spendNextRemovalAsExtra(
                     this.personnageData,
-                    rewardId,
                     powerName
                 );
                 if (!result.ok) {
@@ -1858,7 +1870,19 @@
                 this.persistPersonnage(result.data, {
                     undoLabel: `Suppression → Extra sur ${powerName}`,
                 });
-                this.removalExtraPower[rewardId] = "";
+            },
+            cancelRemovalExtraCredit(powerName) {
+                const result = HeroSheet.cancelPendingRemovalExtra(
+                    this.personnageData,
+                    powerName
+                );
+                if (!result.ok) {
+                    window.alert("Impossible d’annuler ce crédit d’extra.");
+                    return;
+                }
+                this.persistPersonnage(result.data, {
+                    undoLabel: `Annuler Extra suppression sur ${powerName}`,
+                });
             },
             display(tab) {
                 this.closeDetailPopover();
