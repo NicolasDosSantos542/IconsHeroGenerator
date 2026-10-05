@@ -439,8 +439,81 @@ const HeroSheet = (() => {
           groupOptions: groupOptionsFor(normalized.name),
           needsGroupChoice:
             isGroupPowerName(normalized.name) && !normalized.choice,
+          ...groupChoicePresentation(normalized),
         };
       });
+  }
+
+  function groupChoicePresentation(power) {
+    const empty = {
+      displayName: power.name,
+      viaGroup: null,
+      choicePower: null,
+      resolvesToPower: false,
+    };
+    if (!power || !power.choice || !isGroupPowerName(power.name)) {
+      return empty;
+    }
+    const choiceDef = resolveGroupChoicePower(power.name, power.choice);
+    if (!choiceDef) {
+      return {
+        displayName: power.name,
+        viaGroup: null,
+        choicePower: null,
+        resolvesToPower: false,
+      };
+    }
+    const groupLabel =
+      typeof pouvoirs !== "undefined" &&
+      pouvoirs &&
+      typeof pouvoirs.definitionOf === "function"
+        ? (pouvoirs.definitionOf(power.name) || {}).name || power.name
+        : power.name;
+    return {
+      displayName: choiceDef.name,
+      viaGroup: groupLabel,
+      choicePower: {
+        name: choiceDef.name,
+        page: choiceDef.page ?? null,
+        value: choiceDef.value || "",
+        extras: choiceDef.extras || [],
+        limites: choiceDef.limites || [],
+        kind: choiceDef.kind || "power",
+        category: choiceDef.category || null,
+      },
+      resolvesToPower: true,
+    };
+  }
+
+  function resolveGroupChoicePower(groupName, choice) {
+    if (
+      typeof pouvoirs === "undefined" ||
+      !pouvoirs ||
+      typeof pouvoirs.definitionOf !== "function"
+    ) {
+      return null;
+    }
+    const trimmed = (choice || "").trim();
+    if (!trimmed) {
+      return null;
+    }
+    const choiceDef = pouvoirs.definitionOf(trimmed);
+    if (!choiceDef) {
+      return null;
+    }
+    const groupDef = pouvoirs.definitionOf(groupName);
+    if (!groupDef || groupDef.kind !== "group") {
+      return null;
+    }
+    const same =
+      typeof pouvoirs.normalizeName === "function"
+        ? pouvoirs.normalizeName(choiceDef.name) ===
+          pouvoirs.normalizeName(groupDef.name)
+        : choiceDef.name === groupDef.name;
+    if (same) {
+      return null;
+    }
+    return choiceDef;
   }
 
   function specialityRankLabel(rank) {
@@ -1414,6 +1487,7 @@ const HeroSheet = (() => {
     rollPowerGroupChoice,
     isGroupPowerName,
     groupOptionsFor,
+    resolveGroupChoicePower,
     applyBonus,
     addSpeciality,
     setSpecialityFocus,

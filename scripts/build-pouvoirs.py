@@ -852,6 +852,8 @@ def write_js(powers):
             '    .replace(/\\s*\\(groupe\\)\\s*$/i, "")',
             "    .replace(/['’]/g, \"'\")",
             '    .replace(/\\s+/g, " ")',
+            '    .normalize("NFD")',
+            "    .replace(/[\\u0300-\\u036f]/g, \"\")",
             "    .toLowerCase();",
             "};",
             "",

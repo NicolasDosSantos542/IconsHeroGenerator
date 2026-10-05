@@ -438,12 +438,14 @@
                                     <span
                                         class="name catalog-clickable"
                                         @click="togglePowerPopover($event, value)"
-                                    >{{ value.name }}:</span>
+                                    >{{ value.displayName || value.name }}:</span>
                                     <span class="value">
                                         {{ value.level }}
                                         <small v-if="value.bonus">(+{{ value.bonus }})</small>
                                     </span>
-                                    <span class="page" v-if="value.page"> (p. {{ value.page }})</span>
+                                    <span class="page" v-if="(value.choicePower && value.choicePower.page) || value.page">
+                                        (p. {{ (value.choicePower && value.choicePower.page) || value.page }})
+                                    </span>
                                 </p>
                                 <input
                                     v-if="heroView.canRemovePower && value.canRemoveForBonus"
@@ -455,6 +457,11 @@
                                     (pouvoir d’origine — non retirable)
                                 </span>
                             </div>
+                            <p class="mods-hint power-via-group" v-if="value.resolvesToPower && value.viaGroup">
+                                via {{ value.viaGroup }}
+                                <small v-if="value.choiceSource === 'roll'">(tirage)</small>
+                                <small v-else-if="value.choiceSource === 'pick'">(choix)</small>
+                            </p>
 
                             <div class="power-group-choice" v-if="value.isGroup">
                                 <template v-if="heroView.isEditable">
@@ -476,16 +483,22 @@
                                             @click="doRollPowerGroupChoice(value.name)"
                                         >
                                     </div>
-                                    <p class="mods-hint" v-if="value.choice">
+                                    <p
+                                        class="mods-hint"
+                                        v-if="value.choice && !value.resolvesToPower"
+                                    >
                                         → {{ value.choice }}
                                         <small v-if="value.choiceSource === 'roll'">(tirage)</small>
                                         <small v-else-if="value.choiceSource === 'pick'">(choix)</small>
                                     </p>
                                 </template>
-                                <p class="mods-hint" v-else-if="value.choice">
+                                <p
+                                    class="mods-hint"
+                                    v-else-if="value.choice && !value.resolvesToPower"
+                                >
                                     → {{ value.choice }}
                                 </p>
-                                <p class="mods-hint warn-hint" v-else>
+                                <p class="mods-hint warn-hint" v-else-if="!value.choice">
                                     Pouvoir du groupe non choisi
                                 </p>
                             </div>
@@ -567,7 +580,26 @@
                                 <div class="mods-row" v-if="value.canAddLimitExtra">
                                     <select v-model="extraDrafts[value.name]">
                                         <option disabled value="">Extra (via limite)…</option>
-                                        <option v-for="opt in extraOptions" :key="opt" :value="opt">{{ opt }}</option>
+                                        <optgroup
+                                            v-if="powerExtraOptions(value).length"
+                                            label="Extras du pouvoir"
+                                        >
+                                            <option
+                                                v-for="opt in powerExtraOptions(value)"
+                                                :key="'p-' + opt"
+                                                :value="opt"
+                                            >{{ opt }}</option>
+                                        </optgroup>
+                                        <optgroup
+                                            v-if="extraOptions.length"
+                                            label="Extras standards"
+                                        >
+                                            <option
+                                                v-for="opt in extraOptions"
+                                                :key="'s-' + opt"
+                                                :value="opt"
+                                            >{{ opt }}</option>
+                                        </optgroup>
                                         <option value="__custom__">Autre…</option>
                                     </select>
                                     <input
@@ -936,6 +968,9 @@
             <p class="power-comment popover-comment" v-if="detailPopover.groupChoice">
                 <span class="mods-hint">Choix du groupe :</span> {{ detailPopover.groupChoice }}
             </p>
+            <p class="power-comment popover-comment" v-if="detailPopover.groupOrigin">
+                <span class="mods-hint">Groupe d’origine :</span> {{ detailPopover.groupOrigin.name }}
+            </p>
             <p class="power-comment popover-comment" v-if="detailPopover.comment">
                 <span class="mods-hint">Précision :</span> {{ detailPopover.comment }}
             </p>
@@ -1273,6 +1308,69 @@
             formatSpecialities(list) {
                 return HeroSheet.specializeEntries(list || []);
             },
+            expandCatalogExtraNames(catalogExtras) {
+                const names = [];
+                const list = Array.isArray(catalogExtras) ? catalogExtras : [];
+                list.forEach((entry) => {
+                    const name = (entry && entry.name ? entry.name : "").trim();
+                    const value = (entry && entry.value ? entry.value : "").trim();
+                    if (!name) {
+                        return;
+                    }
+                    if (/^(standard|pouvoirs?)$/i.test(name) && value) {
+                        value.split(/[,;]/).forEach((part) => {
+                            const cleaned = part
+                                .replace(/\([^)]*\)/g, "")
+                                .replace(/\.$/, "")
+                                .trim();
+                            if (
+                                cleaned &&
+                                !/^(tous|toutes)\b/i.test(cleaned)
+                            ) {
+                                names.push(cleaned);
+                            }
+                        });
+                        return;
+                    }
+                    names.push(name);
+                });
+                const seen = new Set();
+                return names.filter((item) => {
+                    const key = item.toLowerCase();
+                    if (seen.has(key)) {
+                        return false;
+                    }
+                    seen.add(key);
+                    return true;
+                });
+            },
+            powerExtraOptions(power) {
+                if (!power) {
+                    return [];
+                }
+                let catalogExtras = [];
+                if (power.resolvesToPower && power.choicePower) {
+                    catalogExtras = power.choicePower.extras;
+                } else if (
+                    typeof pouvoirs !== "undefined" &&
+                    pouvoirs &&
+                    typeof pouvoirs.definitionOf === "function"
+                ) {
+                    const def = pouvoirs.definitionOf(
+                        power.displayName && power.resolvesToPower
+                            ? power.displayName
+                            : power.name
+                    );
+                    catalogExtras = def && def.extras;
+                }
+                const powerNames = this.expandCatalogExtraNames(catalogExtras);
+                const standard = new Set(
+                    (this.extraOptions || []).map((name) => name.toLowerCase())
+                );
+                return powerNames.filter(
+                    (name) => !standard.has(name.toLowerCase())
+                );
+            },
             specialityRankLabel(rank) {
                 return HeroSheet.specialityRankLabel(rank);
             },
@@ -1431,28 +1529,41 @@
                 };
             },
             togglePowerPopover(event, power) {
-                const name = power && power.name;
-                if (!name) {
+                const sheetName = power && power.name;
+                if (!sheetName) {
                     return;
                 }
+                const viewName =
+                    power.resolvesToPower && power.choicePower
+                        ? power.choicePower.name
+                        : sheetName;
+                const popoverKey = `${sheetName}::${viewName}`;
                 if (
                     this.detailPopover &&
                     this.detailPopover.kind === "power" &&
-                    this.detailPopover.name === name
+                    this.detailPopover.popoverKey === popoverKey
                 ) {
                     this.closeDetailPopover();
                     return;
                 }
                 const def =
                     typeof pouvoirs !== "undefined" && pouvoirs
-                        ? pouvoirs.definitionOf(name)
+                        ? pouvoirs.definitionOf(viewName)
+                        : null;
+                const groupDef =
+                    power.resolvesToPower &&
+                    typeof pouvoirs !== "undefined" &&
+                    pouvoirs
+                        ? pouvoirs.definitionOf(sheetName)
                         : null;
                 const pos = this.popoverPosition(event);
                 const metaParts = [];
                 if (def && def.category) {
                     metaParts.push(def.category);
                 }
-                if (def && def.kind === "group") {
+                if (power.resolvesToPower && power.viaGroup) {
+                    metaParts.push(`via ${power.viaGroup}`);
+                } else if (def && def.kind === "group") {
                     metaParts.push("groupe");
                 } else if (def && def.kind === "variant") {
                     metaParts.push(
@@ -1468,18 +1579,30 @@
                 const text =
                     (def && def.value) ||
                     "Aucune description disponible pour ce pouvoir.";
-                const table = def && def.table ? def.table : null;
+                const table =
+                    !power.resolvesToPower && def && def.table ? def.table : null;
                 const tableRows = table ? this.formatPowerTableRows(table) : [];
                 const tableHasRoll = tableRows.some((row) => row.roll);
                 const tableHasValues = tableRows.some((row) => row.value);
                 this.detailPopover = {
                     kind: "power",
-                    name,
+                    name: viewName,
+                    popoverKey,
                     focus: null,
-                    title: name,
+                    title: power.displayName || viewName,
                     meta: metaParts.length ? metaParts.join(" · ") : null,
                     comment: (power.comment || "").trim() || null,
-                    groupChoice: (power.choice || "").trim() || null,
+                    groupChoice:
+                        power.resolvesToPower
+                            ? null
+                            : (power.choice || "").trim() || null,
+                    groupOrigin:
+                        power.resolvesToPower && groupDef
+                            ? {
+                                  name: groupDef.name,
+                                  value: groupDef.value || "",
+                              }
+                            : null,
                     text,
                     blocks: this.parseCatalogBlocks(text),
                     tableRows: tableRows.length ? tableRows : null,

@@ -2933,6 +2933,8 @@ pouvoirs.normalizeName = function normalizeName(name) {
     .replace(/\s*\(groupe\)\s*$/i, "")
     .replace(/['’]/g, "'")
     .replace(/\s+/g, " ")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase();
 };
 
