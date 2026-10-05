@@ -350,10 +350,13 @@ const HeroSheet = (() => {
     if (!name) {
       return null;
     }
+    const comment =
+      typeof raw.comment === "string" ? raw.comment.trim() : "";
     return {
       name,
       level: Number(raw.level) || 0,
       page: raw.page ?? null,
+      comment,
       innateFromOrigin: !!raw.innateFromOrigin,
       freeFromOrigin: !!raw.freeFromOrigin,
       extras: (Array.isArray(raw.extras) ? raw.extras : [])
@@ -1077,6 +1080,20 @@ const HeroSheet = (() => {
     return { ok: true, data: next };
   }
 
+  function setPowerComment(data, powerName, comment) {
+    const locked = guardEditable(data);
+    if (locked) {
+      return locked;
+    }
+    const next = nextClone(data);
+    const power = findPower(next, powerName);
+    if (!power) {
+      return { ok: false, reason: "missing_power" };
+    }
+    power.comment = (comment || "").trim();
+    return { ok: true, data: next };
+  }
+
   function restorePower(data, removalIdOrName) {
     const locked = guardEditable(data);
     if (locked) {
@@ -1299,6 +1316,7 @@ const HeroSheet = (() => {
     addPowerExtraFromLimit,
     removePowerLimit,
     removePowerExtra,
+    setPowerComment,
     applyBonus,
     addSpeciality,
     setSpecialityFocus,

@@ -152,7 +152,7 @@
 
                     <h3>Pouvoirs</h3>
                     <div class="powers-list">
-                        <div v-for="(value, key) in brouillonData.powers" :key="key">
+                        <div v-for="(value, key) in brouillonData.powers" :key="key" class="power-row">
                             <p>
                                 <span
                                     class="name catalog-clickable"
@@ -161,6 +161,13 @@
                                 <span class="value">{{ value.level }}</span>
                                 <span class="page" v-if="value.page"> (p. {{ value.page }})</span>
                             </p>
+                            <textarea
+                                class="power-comment-input"
+                                :value="value.comment || ''"
+                                rows="2"
+                                placeholder="Précisions (manifestation, objet, type choisi…)"
+                                @change="setBrouillonPowerComment(value, $event.target.value)"
+                            ></textarea>
                         </div>
                     </div>
 
@@ -447,6 +454,18 @@
                                 <span class="mods-hint" v-else-if="value.fromOrigin">
                                     (pouvoir d’origine — non retirable)
                                 </span>
+                            </div>
+
+                            <div class="power-comment-block">
+                                <textarea
+                                    v-if="heroView.isEditable"
+                                    class="power-comment-input"
+                                    :value="value.comment || ''"
+                                    rows="2"
+                                    placeholder="Précisions (manifestation, objet, type choisi…)"
+                                    @change="doSetPowerComment(value.name, $event.target.value)"
+                                ></textarea>
+                                <p class="power-comment" v-else-if="value.comment">{{ value.comment }}</p>
                             </div>
 
                             <div class="power-modifiers" v-if="(value.limites && value.limites.length) || (value.extras && value.extras.length)">
@@ -880,6 +899,9 @@
                 <button type="button" class="specialty-popover-close" @click="closeDetailPopover()">×</button>
             </div>
             <p class="mods-hint" v-if="detailPopover.meta">{{ detailPopover.meta }}</p>
+            <p class="power-comment popover-comment" v-if="detailPopover.comment">
+                <span class="mods-hint">Précision :</span> {{ detailPopover.comment }}
+            </p>
             <div class="specialty-popover-body" v-if="detailPopover.blocks && detailPopover.blocks.length">
                 <template v-for="(block, idx) in detailPopover.blocks" :key="'b-' + idx">
                     <p v-if="block.type === 'p'" class="specialty-popover-text">{{ block.text }}</p>
@@ -1419,6 +1441,7 @@
                     focus: null,
                     title: name,
                     meta: metaParts.length ? metaParts.join(" · ") : null,
+                    comment: (power.comment || "").trim() || null,
                     text,
                     blocks: this.parseCatalogBlocks(text),
                     tableRows: tableRows.length ? tableRows : null,
@@ -1564,6 +1587,33 @@
                 }
                 this.persistPersonnage(result.data, {
                     undoLabel: `Retrait extra sur ${powerName}`,
+                });
+            },
+            doSetPowerComment(powerName, comment) {
+                const result = HeroSheet.setPowerComment(
+                    this.personnageData,
+                    powerName,
+                    comment
+                );
+                if (!result.ok) {
+                    window.alert(
+                        result.reason === "finished"
+                            ? "Personnage terminé : modifications verrouillées."
+                            : "Impossible d’enregistrer le commentaire."
+                    );
+                    return;
+                }
+                this.persistPersonnage(result.data, {
+                    undoLabel: `Commentaire sur ${powerName}`,
+                });
+            },
+            setBrouillonPowerComment(power, comment) {
+                if (!power) {
+                    return;
+                }
+                power.comment = (comment || "").trim();
+                this.persistBrouillon(this.brouillonData, {
+                    undoLabel: `Commentaire sur ${power.name}`,
                 });
             },
             spendRemovalBonus(rewardId) {

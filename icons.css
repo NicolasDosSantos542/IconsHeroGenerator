@@ -735,12 +735,46 @@ html {
   width: 4.5rem;
 }
 
-.power-main {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.45rem 0.75rem;
+.power-comment-block {
+  margin: 0.35rem 0 0.15rem;
+}
+
+.power-comment-input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0.25rem 0 0;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid rgba(17, 17, 17, 0.25);
+  border-radius: 0.3rem;
+  background: #fff;
+  color: var(--icons-ink);
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.35;
+  resize: vertical;
+  min-height: 2.4rem;
+}
+
+.power-comment-input:focus {
+  outline: 2px solid var(--icons-blue);
+  outline-offset: 1px;
+}
+
+.power-comment {
+  margin: 0.2rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--icons-ink);
+  font-style: italic;
+}
+
+.popover-comment {
+  margin: 0 0 0.55rem;
+  padding: 0.35rem 0.45rem;
+  border-left: 3px solid var(--icons-blue);
+  background: rgba(17, 17, 17, 0.04);
+  font-style: italic;
 }
 
 .power-modifiers {
