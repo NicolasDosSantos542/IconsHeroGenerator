@@ -486,11 +486,7 @@ html {
 }
 
 .power-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.45rem;
+  display: block;
   border-bottom: 1.5px solid var(--icons-line);
   padding: 0.35rem 0.1rem;
 }
@@ -673,8 +669,65 @@ html {
   color: var(--icons-ink);
 }
 
-.powers-list p {
-  margin: 0;
+.power-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem 0.75rem;
+}
+
+.power-modifiers {
+  margin-top: 0.35rem;
+}
+
+.modifier-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.3rem;
+}
+
+.modifier-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.15rem 0.4rem 0.15rem 0.5rem;
+  border: 1.5px solid var(--icons-ink);
+  border-radius: 999px;
+  font-family: "Oswald", Impact, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  background: #fff;
+}
+
+.modifier-tag small {
+  font-family: inherit;
+  font-weight: 500;
+  opacity: 0.75;
+}
+
+.limit-tag {
+  background: #fff4e8;
+}
+
+.extra-tag {
+  background: #eef6ff;
+}
+
+.power-mod-panel {
+  margin-top: 0.45rem;
+  margin-bottom: 0.25rem;
+  padding: 0.55rem;
+}
+
+.power-mod-panel .mods-row {
+  margin-bottom: 0.35rem;
+}
+
+.power-mod-panel .mods-row:last-child {
+  margin-bottom: 0;
 }
 
 .languages-block {

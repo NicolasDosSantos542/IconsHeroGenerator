@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="icons.css">
     <script src="js/data/specialites.js"></script>
+    <script src="js/data/pouvoirs.js"></script>
     <script src="js/character.js"></script>
     <script src="js/hero.js"></script>
     <script src="js/origin-effects.js"></script>
@@ -421,24 +422,154 @@
 
                     <h3>Pouvoirs</h3>
                     <div class="powers-list">
-                        <div v-for="(value, key) in heroView.powers" :key="key" class="power-row">
-                            <p>
-                                <span class="name">{{ value.name }}:</span>
-                                <span class="value">
-                                    {{ value.level }}
-                                    <small v-if="value.bonus">(+{{ value.bonus }})</small>
+                        <div v-for="(value, key) in heroView.powers" :key="key" class="power-row power-card">
+                            <div class="power-main">
+                                <p>
+                                    <span class="name">{{ value.name }}:</span>
+                                    <span class="value">
+                                        {{ value.level }}
+                                        <small v-if="value.bonus">(+{{ value.bonus }})</small>
+                                    </span>
+                                    <span class="page" v-if="value.page"> (p. {{ value.page }})</span>
+                                </p>
+                                <input
+                                    v-if="heroView.canRemovePower && value.canRemoveForBonus"
+                                    type="button"
+                                    value="Supprimer"
+                                    @click="doRemovePower(value.name)"
+                                >
+                                <span class="mods-hint" v-else-if="value.fromOrigin">
+                                    (pouvoir d’origine — non retirable)
                                 </span>
-                                <span class="page" v-if="value.page"> (p. {{ value.page }})</span>
+                            </div>
+
+                            <div class="power-modifiers" v-if="(value.limites && value.limites.length) || (value.extras && value.extras.length)">
+                                <div class="modifier-tags" v-if="value.limites && value.limites.length">
+                                    <span class="mods-hint">Limites :</span>
+                                    <span
+                                        class="modifier-tag limit-tag"
+                                        v-for="limit in value.limites"
+                                        :key="limit.id"
+                                    >
+                                        {{ formatModifierLabel(limit) }}
+                                        <small>({{ limitBenefitLabel(limit.benefit) }})</small>
+                                        <button
+                                            v-if="heroView.isEditable"
+                                            type="button"
+                                            class="language-tag-remove"
+                                            @click="doRemovePowerLimit(value.name, limit.id)"
+                                        >×</button>
+                                    </span>
+                                </div>
+                                <div class="modifier-tags" v-if="value.extras && value.extras.length">
+                                    <span class="mods-hint">Extras :</span>
+                                    <span
+                                        class="modifier-tag extra-tag"
+                                        v-for="extra in value.extras"
+                                        :key="extra.id"
+                                    >
+                                        {{ formatModifierLabel(extra) }}
+                                        <button
+                                            v-if="heroView.isEditable"
+                                            type="button"
+                                            class="language-tag-remove"
+                                            @click="doRemovePowerExtra(value.name, extra.id)"
+                                        >×</button>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="mods-panel power-mod-panel" v-if="heroView.isEditable">
+                                <div class="mods-row">
+                                    <select v-model="limitDrafts[value.name]">
+                                        <option disabled value="">Limite…</option>
+                                        <option v-for="opt in limiteOptions" :key="opt" :value="opt">{{ opt }}</option>
+                                        <option value="__custom__">Autre…</option>
+                                    </select>
+                                    <select v-model="limitBenefitDrafts[value.name]">
+                                        <option value="extra">→ Extra</option>
+                                        <option value="tenacity">→ +1 Ténacité</option>
+                                        <option value="level">→ +2 niveau</option>
+                                    </select>
+                                    <input
+                                        v-if="limitDrafts[value.name] === '__custom__'"
+                                        type="text"
+                                        v-model="limitCustomDrafts[value.name]"
+                                        placeholder="Limite custom…"
+                                    >
+                                    <input
+                                        v-if="modifierNeedsDetail(resolveModifierName(limitDrafts[value.name], limitCustomDrafts[value.name]))"
+                                        type="text"
+                                        v-model="limitDetailDrafts[value.name]"
+                                        placeholder="Préciser X…"
+                                    >
+                                    <input type="button" value="Ajouter limite" @click="doAddPowerLimit(value.name)">
+                                </div>
+                                <div class="mods-row" v-if="value.canAddLimitExtra">
+                                    <select v-model="extraDrafts[value.name]">
+                                        <option disabled value="">Extra (via limite)…</option>
+                                        <option v-for="opt in extraOptions" :key="opt" :value="opt">{{ opt }}</option>
+                                        <option value="__custom__">Autre…</option>
+                                    </select>
+                                    <input
+                                        v-if="extraDrafts[value.name] === '__custom__'"
+                                        type="text"
+                                        v-model="extraCustomDrafts[value.name]"
+                                        placeholder="Extra custom…"
+                                    >
+                                    <input
+                                        v-if="modifierNeedsDetail(resolveModifierName(extraDrafts[value.name], extraCustomDrafts[value.name]))"
+                                        type="text"
+                                        v-model="extraDetailDrafts[value.name]"
+                                        placeholder="Préciser X…"
+                                    >
+                                    <input type="button" value="Ajouter extra" @click="doAddPowerExtraFromLimit(value.name)">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mods-panel" v-if="heroView.hasPendingRemovalRewards">
+                        <h4>Récompense de suppression</h4>
+                        <div
+                            class="origin-step"
+                            v-for="reward in heroView.pendingRemovalRewards"
+                            :key="reward.id"
+                        >
+                            <p class="mods-hint">
+                                À la place de « {{ reward.removedName }} » : +2 sur une capacité, ou un Extra sur un pouvoir restant.
                             </p>
-                            <input
-                                v-if="heroView.canRemovePower && value.canRemoveForBonus"
-                                type="button"
-                                value="Supprimer (+2)"
-                                @click="doRemovePower(value.name)"
-                            >
-                            <span class="mods-hint" v-else-if="value.fromOrigin">
-                                (pouvoir d’origine — non retirable)
-                            </span>
+                            <div class="mods-row">
+                                <input type="button" value="Prendre +2" @click="spendRemovalBonus(reward.id)">
+                            </div>
+                            <div class="mods-row">
+                                <select v-model="removalExtraPower[reward.id]">
+                                    <option disabled value="">Pouvoir…</option>
+                                    <option
+                                        v-for="power in heroView.powers"
+                                        :key="reward.id + '-' + power.name"
+                                        :value="power.name"
+                                    >{{ power.name }}</option>
+                                </select>
+                                <select v-model="removalExtraName[reward.id]">
+                                    <option disabled value="">Extra…</option>
+                                    <option v-for="opt in extraOptions" :key="reward.id + '-' + opt" :value="opt">{{ opt }}</option>
+                                    <option value="__custom__">Autre…</option>
+                                </select>
+                                <input
+                                    v-if="removalExtraName[reward.id] === '__custom__'"
+                                    type="text"
+                                    v-model="removalExtraCustom[reward.id]"
+                                    placeholder="Extra custom…"
+                                >
+                                <input
+                                    v-if="modifierNeedsDetail(resolveModifierName(removalExtraName[reward.id], removalExtraCustom[reward.id]))"
+                                    type="text"
+                                    v-model="removalExtraDetail[reward.id]"
+                                    placeholder="Préciser X…"
+                                >
+                                <input type="button" value="Ajouter Extra" @click="spendRemovalExtra(reward.id)">
+                            </div>
                         </div>
                     </div>
 
@@ -450,7 +581,7 @@
                                 <input type="button" value="Restaurer" @click="doRestorePower(power.id)">
                             </li>
                         </ul>
-                        <p class="mods-hint">Restaurer un pouvoir retire aussi le +2 associé (placé ou en attente).</p>
+                        <p class="mods-hint">Restaurer annule aussi le +2 ou l’Extra obtenu via cette suppression.</p>
                     </div>
 
                     <div class="mods-panel" v-if="heroView.isEditable && heroView.pendingBonuses > 0">
@@ -779,6 +910,17 @@
                 newLanguage: "",
                 focusDrafts: {},
                 focusCustoms: {},
+                limitDrafts: {},
+                limitBenefitDrafts: {},
+                limitCustomDrafts: {},
+                limitDetailDrafts: {},
+                extraDrafts: {},
+                extraCustomDrafts: {},
+                extraDetailDrafts: {},
+                removalExtraPower: {},
+                removalExtraName: {},
+                removalExtraCustom: {},
+                removalExtraDetail: {},
                 sacrificePower: "",
                 originDecisions: {},
                 undoStack: [],
@@ -839,6 +981,16 @@
             },
             newSpecialityIsGroup() {
                 return HeroSheet.isGroupSpecialityName(this.newSpeciality);
+            },
+            limiteOptions() {
+                return (limites.list || [])
+                    .map((item) => (item.name || "").trim())
+                    .filter(Boolean);
+            },
+            extraOptions() {
+                return (extras.list || [])
+                    .map((item) => (item.name || "").trim())
+                    .filter(Boolean);
             },
             brouillonLanguages() {
                 if (!this.brouillonData) {
@@ -1031,6 +1183,182 @@
             },
             closeSpecialtyPopover() {
                 this.specialtyPopover = null;
+            },
+            limitBenefitLabel(benefit) {
+                if (benefit === "tenacity") {
+                    return "+1 Ténacité";
+                }
+                if (benefit === "level") {
+                    return "+2 niv.";
+                }
+                return "Extra";
+            },
+            resolveModifierName(selectValue, customValue) {
+                if (selectValue === "__custom__") {
+                    return (customValue || "").trim();
+                }
+                return (selectValue || "").trim();
+            },
+            modifierNeedsDetail(name) {
+                return HeroSheet.modifierNeedsDetail(name);
+            },
+            formatModifierLabel(entry) {
+                return HeroSheet.formatModifierLabel(entry);
+            },
+            doAddPowerLimit(powerName) {
+                if (!this.limitBenefitDrafts[powerName]) {
+                    this.limitBenefitDrafts[powerName] = "extra";
+                }
+                const name = this.resolveModifierName(
+                    this.limitDrafts[powerName],
+                    this.limitCustomDrafts[powerName]
+                );
+                const detail = (this.limitDetailDrafts[powerName] || "").trim();
+                if (this.modifierNeedsDetail(name) && !detail) {
+                    window.alert("Précisez la valeur de X pour cette limite.");
+                    return;
+                }
+                const result = HeroSheet.addPowerLimit(
+                    this.personnageData,
+                    powerName,
+                    name,
+                    this.limitBenefitDrafts[powerName],
+                    detail
+                );
+                if (!result.ok) {
+                    window.alert(
+                        result.reason === "max"
+                            ? "Niveau maximum (10) atteint pour ce +2."
+                            : result.reason === "duplicate"
+                              ? "Cette limite est déjà sur ce pouvoir."
+                              : result.reason === "need_detail"
+                                ? "Précisez la valeur de X pour cette limite."
+                                : "Ajout de limite impossible."
+                    );
+                    return;
+                }
+                this.persistPersonnage(result.data, {
+                    undoLabel: `Limite ${HeroSheet.formatModifierLabel({ name, detail })} sur ${powerName}`,
+                });
+                this.limitDrafts[powerName] = "";
+                this.limitCustomDrafts[powerName] = "";
+                this.limitDetailDrafts[powerName] = "";
+            },
+            doAddPowerExtraFromLimit(powerName) {
+                const name = this.resolveModifierName(
+                    this.extraDrafts[powerName],
+                    this.extraCustomDrafts[powerName]
+                );
+                const detail = (this.extraDetailDrafts[powerName] || "").trim();
+                if (this.modifierNeedsDetail(name) && !detail) {
+                    window.alert("Précisez la valeur de X pour cet extra.");
+                    return;
+                }
+                const result = HeroSheet.addPowerExtraFromLimit(
+                    this.personnageData,
+                    powerName,
+                    name,
+                    detail
+                );
+                if (!result.ok) {
+                    window.alert(
+                        result.reason === "no_slot"
+                            ? "Ajoutez d’abord une limite avec bénéfice Extra."
+                            : result.reason === "duplicate"
+                              ? "Cet extra est déjà sur ce pouvoir."
+                              : result.reason === "need_detail"
+                                ? "Précisez la valeur de X pour cet extra."
+                                : "Ajout d’extra impossible."
+                    );
+                    return;
+                }
+                this.persistPersonnage(result.data, {
+                    undoLabel: `Extra ${HeroSheet.formatModifierLabel({ name, detail })} sur ${powerName}`,
+                });
+                this.extraDrafts[powerName] = "";
+                this.extraCustomDrafts[powerName] = "";
+                this.extraDetailDrafts[powerName] = "";
+            },
+            doRemovePowerLimit(powerName, limitId) {
+                const result = HeroSheet.removePowerLimit(
+                    this.personnageData,
+                    powerName,
+                    limitId
+                );
+                if (!result.ok) {
+                    window.alert("Suppression de limite impossible.");
+                    return;
+                }
+                this.persistPersonnage(result.data, {
+                    undoLabel: `Retrait limite sur ${powerName}`,
+                });
+            },
+            doRemovePowerExtra(powerName, extraId) {
+                const result = HeroSheet.removePowerExtra(
+                    this.personnageData,
+                    powerName,
+                    extraId
+                );
+                if (!result.ok) {
+                    window.alert("Suppression d’extra impossible.");
+                    return;
+                }
+                this.persistPersonnage(result.data, {
+                    undoLabel: `Retrait extra sur ${powerName}`,
+                });
+            },
+            spendRemovalBonus(rewardId) {
+                const result = HeroSheet.spendRemovalAsBonus(
+                    this.personnageData,
+                    rewardId
+                );
+                if (!result.ok) {
+                    window.alert("Impossible d’appliquer le +2.");
+                    return;
+                }
+                this.persistPersonnage(result.data, {
+                    undoLabel: "Suppression → +2",
+                });
+            },
+            spendRemovalExtra(rewardId) {
+                const powerName = this.removalExtraPower[rewardId];
+                const name = this.resolveModifierName(
+                    this.removalExtraName[rewardId],
+                    this.removalExtraCustom[rewardId]
+                );
+                const detail = (this.removalExtraDetail[rewardId] || "").trim();
+                if (!powerName || !name) {
+                    window.alert("Choisissez un pouvoir et un extra.");
+                    return;
+                }
+                if (this.modifierNeedsDetail(name) && !detail) {
+                    window.alert("Précisez la valeur de X pour cet extra.");
+                    return;
+                }
+                const result = HeroSheet.spendRemovalAsExtra(
+                    this.personnageData,
+                    rewardId,
+                    powerName,
+                    name,
+                    detail
+                );
+                if (!result.ok) {
+                    window.alert(
+                        result.reason === "duplicate"
+                            ? "Cet extra est déjà sur ce pouvoir."
+                            : result.reason === "need_detail"
+                              ? "Précisez la valeur de X pour cet extra."
+                              : "Impossible d’ajouter l’extra."
+                    );
+                    return;
+                }
+                this.persistPersonnage(result.data, {
+                    undoLabel: `Suppression → Extra ${HeroSheet.formatModifierLabel({ name, detail })}`,
+                });
+                this.removalExtraPower[rewardId] = "";
+                this.removalExtraName[rewardId] = "";
+                this.removalExtraCustom[rewardId] = "";
+                this.removalExtraDetail[rewardId] = "";
             },
             display(tab) {
                 this.closeSpecialtyPopover();
@@ -1660,6 +1988,8 @@
                 if (!result.ok) {
                     const messages = {
                         pending_bonuses: "Placez d’abord tous les bonus +2 en attente.",
+                        removal_reward:
+                            "Choisissez d’abord la récompense des pouvoirs supprimés (+2 ou Extra).",
                         origin_pending: "Terminez d’abord les effets d’origine.",
                         speciality_focus:
                             "Choisissez d’abord le focus de chaque spécialité de groupe.",
