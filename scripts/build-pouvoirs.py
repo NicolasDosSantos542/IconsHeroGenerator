@@ -674,11 +674,11 @@ GROUP_TABLES = {
             },
             {
                 "name": "Compréhension des langages",
-                "value": "Vous pouvez comprendre et communiquer dans n’importe quelle langue.",
+                "value": "Vous pouvez comprendre et communiquer dans n’importe quelle langue. Le MJ peut toutefois demander un test d’Intellect pour comprendre des langues particulièrement obscures ou extraterrestres.",
             },
             {
                 "name": "Sens des dimensions",
-                "value": "Vous pouvez détecter l’énergie ou la signature vibratoire de chaque dimension.",
+                "value": "Vous pouvez détecter l’énergie ou la signature vibratoire de chaque dimension, et savoir lorsque vous vous retrouvez dans un plan méconnu.",
             },
             {
                 "name": "Sens de la direction",
@@ -690,11 +690,11 @@ GROUP_TABLES = {
             },
             {
                 "name": "Sens de la chasse",
-                "value": "Vous pouvez suivre les traces ou la piste d’un sujet.",
+                "value": "Vous pouvez suivre les traces ou la piste d’un sujet, ce qui peut requérir un test d’Éveil sur un terrain ou des conditions difficiles.",
             },
             {
                 "name": "Vision infrarouge",
-                "value": "Vous pouvez voir les sources de chaleur, vous permettant de voir dans le noir.",
+                "value": "Vous pouvez voir les sources de chaleur, vous permettant de voir dans le noir en détectant les différences de température.",
             },
             {
                 "name": "Vision microscopique",
@@ -706,7 +706,19 @@ GROUP_TABLES = {
             },
             {
                 "name": "Sens de l’espace",
-                "value": "Grâce à un radar, un sonar ou une capacité similaire, vous gagnez une vision tridimensionnelle de votre environnement.",
+                "value": "Grâce à un radar, un sonar ou une capacité similaire, vous gagnez une vision tridimensionnelle de l’environnement jusqu’à portée visuelle.",
+            },
+            {
+                "name": "Télé-localisation",
+                "value": "Vous pouvez localiser un ou plusieurs individus connus, où qu’ils soient, avec un test d’Éveil réussi.",
+            },
+            {
+                "name": "Vision véritable",
+                "value": "Vous pouvez voir la véritable apparence d’un objet ou d’une personne, faisant fi des déguisements ou des camouflages.",
+            },
+            {
+                "name": "Vision de l’ultraviolet",
+                "value": "Vous pouvez discerner les radiations ultraviolettes, vous permettant de voir dans le noir tant qu’il y a au minimum une source de lumière UV.",
             },
         ],
     },
@@ -732,6 +744,49 @@ def attach_group_tables(powers):
         p["table"] = table
     if missing:
         raise SystemExit(f"Missing GROUP_TABLES for: {missing}")
+    return powers
+
+
+TABLE_EMBED_RE = re.compile(
+    r"\s+(?:"
+    r"1[Dd]6\s+(?:Pouvoir|Capacité|Type|Taille|Forme|Transformation|Membre)\b"
+    r"|2[Dd]6\s+(?:Type|Membre|Emotion|Émotion|Emotion)\b"
+    r"|[Dd]6\s+[Dd]6\s+\S*"
+    r"|[Dd]6\s+(?:Pouvoir|Capacité|Type|Taille|Forme|Transformation)\b"
+    r").*$",
+    re.S,
+)
+
+
+def polish_power_value(value, table=None):
+    """Strip embedded OCR tables and restore readable paragraph/bullet layout."""
+    if not value:
+        return value
+    text = value
+    if table:
+        text = TABLE_EMBED_RE.sub("", text).strip()
+        if table.get("senses"):
+            for marker in ("Sens additionnels", "Sens additionnel"):
+                idx = text.find(marker)
+                if idx > 0:
+                    text = text[:idx].strip()
+                    break
+    # Restore bullet list line breaks
+    text = re.sub(r"\s*•\s*", "\n• ", text)
+    # Paragraph breaks between sentences
+    text = re.sub(
+        r"([.!?…])\s+(?=[A-ZÀÂÄÉÈÊËÎÏÔÙÛÜÇ«\"])",
+        r"\1\n\n",
+        text,
+    )
+    # Collapse excess blank lines
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip()
+
+
+def polish_powers(powers):
+    for p in powers:
+        p["value"] = polish_power_value(p.get("value") or "", p.get("table"))
     return powers
 
 
@@ -791,12 +846,28 @@ def write_js(powers):
             "  pouvoirs.byName[entry.name] = entry;",
             "});",
             "",
+            "pouvoirs.normalizeName = function normalizeName(name) {",
+            '  return (name || "")',
+            "    .trim()",
+            '    .replace(/\\s*\\(groupe\\)\\s*$/i, "")',
+            "    .replace(/['’]/g, \"'\")",
+            '    .replace(/\\s+/g, " ")',
+            "    .toLowerCase();",
+            "};",
+            "",
             "pouvoirs.definitionOf = function definitionOf(name) {",
             '  const key = (name || "").trim();',
+            "  if (!key) return null;",
             "  if (pouvoirs.byName[key]) return pouvoirs.byName[key];",
-            "  const lower = key.toLowerCase();",
+            "",
+            '  const stripped = key.replace(/\\s*\\(groupe\\)\\s*$/i, "").trim();',
+            "  if (stripped !== key && pouvoirs.byName[stripped]) {",
+            "    return pouvoirs.byName[stripped];",
+            "  }",
+            "",
+            "  const needle = pouvoirs.normalizeName(key);",
             "  for (const entry of pouvoirs.list) {",
-            "    if (entry.name.toLowerCase() === lower) return entry;",
+            "    if (pouvoirs.normalizeName(entry.name) === needle) return entry;",
             "  }",
             "  return null;",
             "};",
@@ -867,7 +938,7 @@ def write_js(powers):
 
 
 if __name__ == "__main__":
-    powers = attach_group_tables(build())
+    powers = polish_powers(attach_group_tables(build()))
     write_js(powers)
     print(f"Wrote {len(powers)} powers → {OUT}")
     from collections import Counter

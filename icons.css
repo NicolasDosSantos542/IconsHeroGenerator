@@ -607,6 +607,14 @@ html {
   color: var(--icons-blue);
 }
 
+.catalog-clickable {
+  cursor: pointer;
+}
+
+.catalog-clickable:hover {
+  color: var(--icons-blue);
+}
+
 .specialty-popover-backdrop {
   position: fixed;
   inset: 0;
@@ -625,6 +633,11 @@ html {
   border-radius: 0.4rem;
   background: #fffef8;
   box-shadow: 4px 4px 0 rgba(17, 17, 17, 0.18);
+}
+
+.specialty-popover.power-popover {
+  width: min(28rem, calc(100vw - 1.5rem));
+  max-height: min(70vh, 32rem);
 }
 
 .specialty-popover-header {
@@ -663,10 +676,63 @@ html {
 }
 
 .specialty-popover-text {
-  margin: 0;
+  margin: 0 0 0.55rem;
   font-size: 0.95rem;
   line-height: 1.45;
   color: var(--icons-ink);
+}
+
+.specialty-popover-body .specialty-popover-text:last-child {
+  margin-bottom: 0;
+}
+
+.specialty-popover-section {
+  margin-top: 0.65rem;
+  padding-top: 0.45rem;
+  border-top: 1px solid rgba(17, 17, 17, 0.12);
+}
+
+.specialty-popover-list {
+  margin: 0.25rem 0 0;
+  padding-left: 1.1rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.specialty-popover-list li + li {
+  margin-top: 0.35rem;
+}
+
+.power-roll-table {
+  width: 100%;
+  margin-top: 0.35rem;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.power-roll-table th,
+.power-roll-table td {
+  padding: 0.28rem 0.4rem;
+  border-bottom: 1px solid rgba(17, 17, 17, 0.12);
+  text-align: left;
+  vertical-align: top;
+}
+
+.power-roll-table th {
+  font-family: "Oswald", Impact, sans-serif;
+  font-weight: 500;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--icons-muted, #555);
+}
+
+.power-roll-table .roll-cell {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  width: 4.5rem;
 }
 
 .power-main {

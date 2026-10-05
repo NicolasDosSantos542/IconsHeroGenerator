@@ -6,7 +6,7 @@ let pouvoirs = {
       page: 30,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez absorber un type particulier d’attaque, comme Impacter ou un type d’énergie (voir Contrôle de l’énergie pour des exemples) que vous devez choisir lors de l’acquisition de ce pouvoir. Vous pourriez donc avoir Absorption d’Impact, Absorption de feu ou des radiations et ainsi de suite… Soustrayez votre niveau d’Absorption au niveau de l’attaque. Si celle-ci est réduite à 0 ou moins, elle n’a aucun effet sur vous. Tout niveau restant vous affecte normalement et vous pouvez appliquer toute Résistance dont vous disposez à ces dégâts résiduels (voir Résistance, page 100). Une fois absorbée, vous pouvez employer l’énergie captée. Choisissez l’un des effets suivants pour utiliser l’énergie absorbée : Augmentation de capacité, Décharge ou Guérison. Vous pouvez acquérir les autres en tant qu’extras.",
+      value: "Vous pouvez absorber un type particulier d’attaque, comme Impacter ou un type d’énergie (voir Contrôle de l’énergie pour des exemples) que vous devez choisir lors de l’acquisition de ce pouvoir.\n\nVous pourriez donc avoir Absorption d’Impact, Absorption de feu ou des radiations et ainsi de suite…\n\nSoustrayez votre niveau d’Absorption au niveau de l’attaque.\n\nSi celle-ci est réduite à 0 ou moins, elle n’a aucun effet sur vous.\n\nTout niveau restant vous affecte normalement et vous pouvez appliquer toute Résistance dont vous disposez à ces dégâts résiduels (voir Résistance, page 100).\n\nUne fois absorbée, vous pouvez employer l’énergie captée.\n\nChoisissez l’un des effets suivants pour utiliser l’énergie absorbée : Augmentation de capacité, Décharge ou Guérison.\n\nVous pouvez acquérir les autres en tant qu’extras.",
       extras: [
         { name: "Augmentation de capacité", value: "sur la case suivant l’absorption d’énergie, en réaction, vous pouvez utiliser l’énergie absorbée sous la forme d’une Augmentation de capacité, avec un niveau égal aux dégâts absorbés. La capacité concernée doit être choisie à l’acquisition de ce pouvoir, et toute autre capacité concernée compte comme un extra séparé." },
         { name: "Décharge", value: "sur la case suivant l’absorption d’énergie, vous pouvez relâcher celle-ci sous la forme d’une Décharge avec un niveau égal aux dégâts absorbés." },
@@ -21,7 +21,7 @@ let pouvoirs = {
       page: 30,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez vous déplacer normalement sur les surfaces verticales ou inversées, murs et plafonds par exemple. Le Meneur de Jeu peut exiger un test de pouvoir quand vous tentez de vous déplacer sur une surface particulièrement visqueuse ou lisse, avec une Difficulté dépendant de cette surface.",
+      value: "Vous pouvez vous déplacer normalement sur les surfaces verticales ou inversées, murs et plafonds par exemple.\n\nLe Meneur de Jeu peut exiger un test de pouvoir quand vous tentez de vous déplacer sur une surface particulièrement visqueuse ou lisse, avec une Difficulté dépendant de cette surface.",
       extras: [],
       limites: [],
     },
@@ -31,7 +31,7 @@ let pouvoirs = {
       page: 30,
       kind: "variant",
       variantOf: "Corrosion",
-      value: "Vous êtes capables d’exsuder ou de projeter une substance corrosive qui inflige des dégâts. Reportez-vous au pouvoir Corrosion, page 62. L’acide exsude de vos mains ou vous pouvez avoir un crachat acide. Si l’acide est exsudé par vos pores (ou votre corps tout entier), affectant tout ce qui peut vous toucher, reportez-vous au pouvoir Aura (page 36).",
+      value: "Vous êtes capables d’exsuder ou de projeter une substance corrosive qui inflige des dégâts.\n\nReportez-vous au pouvoir Corrosion, page 62.\n\nL’acide exsude de vos mains ou vous pouvez avoir un crachat acide.\n\nSi l’acide est exsudé par vos pores (ou votre corps tout entier), affectant tout ce qui peut vous toucher, reportez-vous au pouvoir Aura (page 36).",
       extras: [],
       limites: [],
     },
@@ -41,7 +41,7 @@ let pouvoirs = {
       page: 30,
       kind: "power",
       variantOf: null,
-      value: "Vous êtes capables de vous transformer pour vous adapter à des environnements hostiles. Après une planche de préparation, vos traits physiques – votre apparence, votre peau, votre capacité pulmonaire – et votre résistance aux dégâts naturels changent. Vous pouvez par exemple augmenter votre Force pour supporter la forte gravité d’un monde extraterrestre ou bénéficier du pouvoir Vitalité pour être capable de respirer du méthane. Ce pouvoir s’adapte aux conditions, pas aux menaces : vous ne pouvez pas voir des ailes pousser si on vous jette du haut d’une falaise, mais vous pouvez développer des ouïes et devenir Amphibie lorsque vous êtes plongés dans l’eau. De la même façon, vous ne gagnez aucune résistance aux attaques, mais vous pouvez gagner une Résistance à la chaleur dans le domaine des Hommes de Lave. Les bénéfices maximums sont limités au niveau du Pouvoir et durent aussi longtemps que votre exposition à cet environnement. Le MJ a le dernier mot pour décider comment vous vous adaptez – et quels pouvoirs vous obtenez – pour survivre à un environnement, ainsi que pour déterminer quelles conditions ou menaces sont affectées par votre pouvoir.",
+      value: "Vous êtes capables de vous transformer pour vous adapter à des environnements hostiles.\n\nAprès une planche de préparation, vos traits physiques – votre apparence, votre peau, votre capacité pulmonaire – et votre résistance aux dégâts naturels changent.\n\nVous pouvez par exemple augmenter votre Force pour supporter la forte gravité d’un monde extraterrestre ou bénéficier du pouvoir Vitalité pour être capable de respirer du méthane.\n\nCe pouvoir s’adapte aux conditions, pas aux menaces : vous ne pouvez pas voir des ailes pousser si on vous jette du haut d’une falaise, mais vous pouvez développer des ouïes et devenir Amphibie lorsque vous êtes plongés dans l’eau.\n\nDe la même façon, vous ne gagnez aucune résistance aux attaques, mais vous pouvez gagner une Résistance à la chaleur dans le domaine des Hommes de Lave.\n\nLes bénéfices maximums sont limités au niveau du Pouvoir et durent aussi longtemps que votre exposition à cet environnement.\n\nLe MJ a le dernier mot pour décider comment vous vous adaptez – et quels pouvoirs vous obtenez – pour survivre à un environnement, ainsi que pour déterminer quelles conditions ou menaces sont affectées par votre pouvoir.",
       extras: [
         { name: "Pouvoirs", value: "Sens du danger, Régénération, Résistance." },
         { name: "Standard", value: "Affecte les autres." },
@@ -59,7 +59,7 @@ let pouvoirs = {
       page: 30,
       kind: "power",
       variantOf: null,
-      value: "Vous êtes la cause d’une Affliction à développement rapide, fonctionnant comme une maladie ou une toxine, en touchant une cible. Effectuez un test de Vaillance pour toucher votre cible, puis un test d’Affliction contre une Difficulté égale au plus élevé de la Force ou de la Régénération de la victime. • Un échec massif ou majeur n’entraîne aucun effet et met fin à tout effet continu d’Affliction. • Un échec modéré n’entraîne aucun effet sur cette planche, mais l’Affliction se poursuit et un nouveau test est requis à la planche suivante, au début de votre case. • Un succès marginal réduit l’Endurance de la moitié du niveau d’Affliction, ignorant la Résistance aux dégâts. L’Affliction se poursuit et un nouveau test est requis à la planche suivante, au début de votre case. • Un succès modéré, majeur ou massif réduit l’Endurance du niveau d’Affliction, ignorant la Résistance aux dégâts. L’Affliction se poursuit et un nouveau test est requis à la planche suivante, au début de votre case. Vous décidez ce que votre Affliction entraîne lorsque l’Endurance de votre victime est réduite à 0 : reste-t-elle inconsciente (comme sur un succès majeur d’Etourdir) ou commence-telle à perdre de la Force (comme sur un succès majeur de Tuer) ?",
+      value: "Vous êtes la cause d’une Affliction à développement rapide, fonctionnant comme une maladie ou une toxine, en touchant une cible.\n\nEffectuez un test de Vaillance pour toucher votre cible, puis un test d’Affliction contre une Difficulté égale au plus élevé de la Force ou de la Régénération de la victime.\n• Un échec massif ou majeur n’entraîne aucun effet et met fin à tout effet continu d’Affliction.\n• Un échec modéré n’entraîne aucun effet sur cette planche, mais l’Affliction se poursuit et un nouveau test est requis à la planche suivante, au début de votre case.\n• Un succès marginal réduit l’Endurance de la moitié du niveau d’Affliction, ignorant la Résistance aux dégâts.\n\nL’Affliction se poursuit et un nouveau test est requis à la planche suivante, au début de votre case.\n• Un succès modéré, majeur ou massif réduit l’Endurance du niveau d’Affliction, ignorant la Résistance aux dégâts.\n\nL’Affliction se poursuit et un nouveau test est requis à la planche suivante, au début de votre case.\n\nVous décidez ce que votre Affliction entraîne lorsque l’Endurance de votre victime est réduite à 0 : reste-t-elle inconsciente (comme sur un succès majeur d’Etourdir) ou commence-telle à perdre de la Force (comme sur un succès majeur de Tuer) ?",
       extras: [
         { name: "Pouvoirs", value: "Drain d’énergie." },
         { name: "Standard", value: "A Distance, Contagieux, Récupération lente, Réversible, Salve." },
@@ -79,7 +79,7 @@ let pouvoirs = {
       page: 31,
       kind: "variant",
       variantOf: "Membres additionnels",
-      value: "Vous disposez d’ailes fonctionnelles, vous permettant de voler. Voyez les pouvoirs Membres additionnels (page 84) et Vol (page 111) pour plus de détails.",
+      value: "Vous disposez d’ailes fonctionnelles, vous permettant de voler.\n\nVoyez les pouvoirs Membres additionnels (page 84) et Vol (page 111) pour plus de détails.",
       extras: [],
       limites: [],
     },
@@ -89,7 +89,7 @@ let pouvoirs = {
       page: 32,
       kind: "power",
       variantOf: null,
-      value: "Votre personnage peut se transformer en une toute autre personne ! Créez un second personnage, qui sera votre alter-ego. Le nouveau personnage possède automatiquement un pouvoir de moins (pour contrebalancer celuici). Le Meneur de Jeu peut exiger que certaines capacités, notamment l’origine ou les capacités mentales, restent cohérentes entre les deux personnages, mais cela n’est pas obligatoire. Vous transformer en votre alter-ego prend une planche de préparation, pendant laquelle vous ne pouvez faire rien d’autre. Identité normale Si votre héros possède simplement une identité « humaine » sans pouvoir, il s’agit plutôt d’un aspect que d’une itération de ce pouvoir. Alter-egos en série Si vous tirez ce pouvoir, vous pouvez choisir l’option suivante : cessez de jeter les dés et effacez tout autre pouvoir. A leur place, vous pouvez assumer une série d’alter-égos surhumains ! Vous pouvez soit disposer d’un nombre d’alter-egos égal au nombre de pouvoirs initialement tirés (minimum 3) ou une série illimitée de formes surhumaines aléatoires (générez aléatoirement un nouveau personnage pour chaque identité ainsi assumée). Dans les deux cas, vous transformer en l’un de vos alterego prend une planche de préparation, mais vous devez ensuite revenir à votre forme normale pendant un temps équivalent à celui passé sous votre (ou vos) forme surhumaine…",
+      value: "Votre personnage peut se transformer en une toute autre personne !\n\nCréez un second personnage, qui sera votre alter-ego.\n\nLe nouveau personnage possède automatiquement un pouvoir de moins (pour contrebalancer celuici).\n\nLe Meneur de Jeu peut exiger que certaines capacités, notamment l’origine ou les capacités mentales, restent cohérentes entre les deux personnages, mais cela n’est pas obligatoire.\n\nVous transformer en votre alter-ego prend une planche de préparation, pendant laquelle vous ne pouvez faire rien d’autre.\n\nIdentité normale Si votre héros possède simplement une identité « humaine » sans pouvoir, il s’agit plutôt d’un aspect que d’une itération de ce pouvoir.\n\nAlter-egos en série Si vous tirez ce pouvoir, vous pouvez choisir l’option suivante : cessez de jeter les dés et effacez tout autre pouvoir.\n\nA leur place, vous pouvez assumer une série d’alter-égos surhumains !\n\nVous pouvez soit disposer d’un nombre d’alter-egos égal au nombre de pouvoirs initialement tirés (minimum 3) ou une série illimitée de formes surhumaines aléatoires (générez aléatoirement un nouveau personnage pour chaque identité ainsi assumée).\n\nDans les deux cas, vous transformer en l’un de vos alterego prend une planche de préparation, mais vous devez ensuite revenir à votre forme normale pendant un temps équivalent à celui passé sous votre (ou vos) forme surhumaine…",
       extras: [
         { name: "Instantané", value: "vous n’avez pas besoin d’une planche de préparation pour assumer votre alter-ego, vous pouvez le faire instantanément pendant votre case." },
         { name: "Sans intervalle", value: "vous n’avez pas besoin de revenir à votre forme normale entre vos formes d’alter-ego en série." },
@@ -102,7 +102,7 @@ let pouvoirs = {
       page: 32,
       kind: "power",
       variantOf: null,
-      value: "Les personnages amphibies peuvent vivre aussi bien sous l’eau que sur terre. Sous l’eau, vous respirez normalement et, une fois immergé, votre Coordination et votre Éveil sont égaux au plus élevé de leur niveau d’origine +1 ou du niveau de votre pouvoir. Vous pouvez nager à une vitesse égale à la moitié (arrondie au supérieur) du niveau de votre pouvoir. Reportez-vous à la Table des Références pour avoir une idée de votre vitesse : 3 vous permet d’égaler la vitesse d’un dauphin, 5 d’être aussi rapide qu’un submersible et 7 qu’une torpille. Au-delà, vous êtes plus rapide qu’aucun véhicule ou créature aquatique connu.",
+      value: "Les personnages amphibies peuvent vivre aussi bien sous l’eau que sur terre.\n\nSous l’eau, vous respirez normalement et, une fois immergé, votre Coordination et votre Éveil sont égaux au plus élevé de leur niveau d’origine +1 ou du niveau de votre pouvoir.\n\nVous pouvez nager à une vitesse égale à la moitié (arrondie au supérieur) du niveau de votre pouvoir.\n\nReportez-vous à la Table des Références pour avoir une idée de votre vitesse : 3 vous permet d’égaler la vitesse d’un dauphin, 5 d’être aussi rapide qu’un submersible et 7 qu’une torpille.\n\nAu-delà, vous êtes plus rapide qu’aucun véhicule ou créature aquatique connu.",
       extras: [
         { name: "Pouvoirs", value: "Bonds (seulement lorsque vous bondissez hors de l’eau), Résistance (gaz, pression, eau), Serviteur (limité aux créatures aquatiques)." },
         { name: "Accroissement", value: "votre pouvoir amphibie augmente votre Vaillance et votre Force lorsque vous êtes immergé, les portant au plus élevé de leur niveau d’origine +1 ou du niveau de votre pouvoir." },
@@ -118,7 +118,7 @@ let pouvoirs = {
       page: 33,
       kind: "variant",
       variantOf: "Serviteur",
-      value: "Vous pouvez donner vie à des objets inanimés ou à des images. Reportez-vous à la description du pouvoir Serviteur (page 101), sans doute avec la limite Source si vous êtes limités à n’animer que les objets disponibles autour de vous.",
+      value: "Vous pouvez donner vie à des objets inanimés ou à des images.\n\nReportez-vous à la description du pouvoir Serviteur (page 101), sans doute avec la limite Source si vous êtes limités à n’animer que les objets disponibles autour de vous.",
       extras: [],
       limites: [],
     },
@@ -138,7 +138,7 @@ let pouvoirs = {
       page: 33,
       kind: "group",
       variantOf: null,
-      value: "Vous êtes capables de dupliquer un large éventail de pouvoirs en utilisant une source comme la magie, la technologie ou le pouvoir cosmique. Reportez-vous aux pouvoirs Gadgets, Sorcellerie et Pouvoir cosmique. Choisissez ou lancez un d6 sur la table suivante pour déterminer le type d’Arcanes que vous maitrisez. 1D6 Pouvoir 1-2 Pouvoir cosmique 3-4 Gadgets 5-6 Sorcellerie",
+      value: "Vous êtes capables de dupliquer un large éventail de pouvoirs en utilisant une source comme la magie, la technologie ou le pouvoir cosmique.\n\nReportez-vous aux pouvoirs Gadgets, Sorcellerie et Pouvoir cosmique.\n\nChoisissez ou lancez un d6 sur la table suivante pour déterminer le type d’Arcanes que vous maitrisez.",
       table: {
         "dice": "1d6",
         "label": "Pouvoir",
@@ -175,7 +175,7 @@ let pouvoirs = {
       page: 34,
       kind: "variant",
       variantOf: "Gadgets",
-      value: "Vous possédez une arme spéciale. Voyez les pouvoirs Décharge et Frappe, ainsi que la section Accessoires offensifs dans le chapitre Accessoires. Si vous pouvez créer ou invoquer de multiples armes différentes, reportez-vous au pouvoir Gadgets, page 75, avec possiblement la limite Seulement des armes.",
+      value: "Vous possédez une arme spéciale.\n\nVoyez les pouvoirs Décharge et Frappe, ainsi que la section Accessoires offensifs dans le chapitre Accessoires.\n\nSi vous pouvez créer ou invoquer de multiples armes différentes, reportez-vous au pouvoir Gadgets, page 75, avec possiblement la limite Seulement des armes.",
       extras: [],
       limites: [],
     },
@@ -185,7 +185,7 @@ let pouvoirs = {
       page: 34,
       kind: "variant",
       variantOf: "Résistance",
-      value: "Pour les armures naturelles, reportez-vous au pouvoir Résistance, et plus spécifiquement Résistance aux dégâts (page 100). Pour des armures portées, comme les armures de combat, voyez plutôt Accessoires de Défense dans le chapitre Accessoires. Votre armure peut ressembler à ce que vous voulez, qu’il s’agisse d’une carapace rocheuse, de cuir ou d’écailles, d’une armure médiévale ou high-tech ou même d’une peau ordinaire ou de vêtements banals.",
+      value: "Pour les armures naturelles, reportez-vous au pouvoir Résistance, et plus spécifiquement Résistance aux dégâts (page 100).\n\nPour des armures portées, comme les armures de combat, voyez plutôt Accessoires de Défense dans le chapitre Accessoires.\n\nVotre armure peut ressembler à ce que vous voulez, qu’il s’agisse d’une carapace rocheuse, de cuir ou d’écailles, d’une armure médiévale ou high-tech ou même d’une peau ordinaire ou de vêtements banals.",
       extras: [],
       limites: [],
     },
@@ -195,7 +195,7 @@ let pouvoirs = {
       page: 34,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez attaquer plusieurs fois par case, en divisant votre niveau d’Attaque rapide en tests d’attaque supplémentaires. Effectuez d’abord votre attaque normalement. Puis, vous pouvez attaquer à nouveau. Pour savoir combien de fois, fractionnez votre niveau de pouvoir Attaque rapide en une série de tests supplémentaires, dont le nombre est limité par le niveau de la capacité d’attaque. Si vous utilisez vos attaques additionnelles contre le même opposant, sur la même planche, traitez ce cas comme un effort combiné (voir Effort combiné dans Les bases). Exemple : un héros a une Vaillance de 4 et le pouvoir Attaque rapide à 8. Il peut faire trois attaques de niveau 4 : une avec sa Vaillance normale, et deux de plus avec son Attaque rapide, en divisant le niveau 8 d’Attaque rapide en deux attaques de niveau 4 (le niveau de Vaillance du héros). S’il avait eu une Attaque rapide de niveau 6, il aurait pu également faire deux attaques supplémentaires : l’une à 4 et l’autre à 2. Avec une Attaque rapide à 10, il aurait fait trois attaques supplémentaires : deux de niveau 4 et une de niveau 2.",
+      value: "Vous pouvez attaquer plusieurs fois par case, en divisant votre niveau d’Attaque rapide en tests d’attaque supplémentaires.\n\nEffectuez d’abord votre attaque normalement.\n\nPuis, vous pouvez attaquer à nouveau.\n\nPour savoir combien de fois, fractionnez votre niveau de pouvoir Attaque rapide en une série de tests supplémentaires, dont le nombre est limité par le niveau de la capacité d’attaque.\n\nSi vous utilisez vos attaques additionnelles contre le même opposant, sur la même planche, traitez ce cas comme un effort combiné (voir Effort combiné dans Les bases).\n\nExemple : un héros a une Vaillance de 4 et le pouvoir Attaque rapide à 8.\n\nIl peut faire trois attaques de niveau 4 : une avec sa Vaillance normale, et deux de plus avec son Attaque rapide, en divisant le niveau 8 d’Attaque rapide en deux attaques de niveau 4 (le niveau de Vaillance du héros).\n\nS’il avait eu une Attaque rapide de niveau 6, il aurait pu également faire deux attaques supplémentaires : l’une à 4 et l’autre à 2.\n\nAvec une Attaque rapide à 10, il aurait fait trois attaques supplémentaires : deux de niveau 4 et une de niveau 2.",
       extras: [],
       limites: [],
     },
@@ -205,7 +205,7 @@ let pouvoirs = {
       page: 34,
       kind: "group",
       variantOf: null,
-      value: "Vous pouvez augmenter le niveau d’une capacité choisie lors de l’acquisition de ce pouvoir. Cela en fait donc un groupe de six pouvoirs, un par attribut : Augmentation de Vaillance, de Coordination, de Force et ainsi de suite. Choisissez un attribut ou lancez un dé sur la table suivante : 1d6 Capacité 1 Vaillance 2 Coordination 3 Force 4 Intellect 5 Eveil 6 Volonté La capacité est augmentée jusqu’au niveau d’Augmentation de capacité, pendant un nombre de planches lui aussi égal au niveau du pouvoir. Puis, la capacité affectée voit son niveau initial réduit de 1 pendant le même laps de temps, pendant qu’elle « récupère ». Exemple : Une Augmentation de Force de niveau 8 élève votre Force au niveau 8 pendant 8 planches, puis le niveau de votre Force baisse à son niveau normal moins 1, pendant 8 planches, le temps de récupérer. Si, grâce à l’extra Augmentation de pouvoir, le héros augmente une capacité qui a un niveau 0 (comme un pouvoir que le personnage ne possède pas ordinairement), il retombe à 0 pendant le délai de récupération, le rendant inutilisable pendant ce temps. Lorsque vous tirez sur la table de détermination pour obtenir le niveau de ce pouvoir, tout résultat égal ou inférieur à votre niveau normal dans cette capacité est à ignorer : relancez jusqu’à obtenir un niveau supérieur. Les capacités de niveau 10 ne peuvent pas être augmentées : choisissez une autre capacité ou relancez le dé. Augmentation de capacité ne compte comme un pouvoir, pour déterminer la Ténacité, que si son niveau est de 7 ou supérieur.",
+      value: "Vous pouvez augmenter le niveau d’une capacité choisie lors de l’acquisition de ce pouvoir.\n\nCela en fait donc un groupe de six pouvoirs, un par attribut : Augmentation de Vaillance, de Coordination, de Force et ainsi de suite.\n\nChoisissez un attribut ou lancez un dé sur la table suivante :",
       table: {
         "dice": "1d6",
         "label": "Capacité",
@@ -266,7 +266,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Contrôle de pouvoir",
-      value: "Vous pouvez élever le niveau des pouvoirs d’une autre personne en la touchant. Le sujet gagne un nombre de niveaux à un pouvoir donné, et vous perdez le même niveau dans votre pouvoir d’Augmentation. Lorsque vous cessez de vous concentrer, les niveaux ainsi échangés reviennent à la normale. Les pouvoirs ne peuvent être élevés au-dessus de 10 et vous ne pouvez réduire votre pouvoir d’Augmentation en dessous de 0. Si les niveaux transférés excédent la Volonté de la cible, faites-lui faire un test de Volonté avec le niveau transféré en guise de Difficulté. En cas d’échec, le pouvoir affecté souffre d’une limite choisie le Meneur de Jeu. Instable est un choix commun.",
+      value: "Vous pouvez élever le niveau des pouvoirs d’une autre personne en la touchant.\n\nLe sujet gagne un nombre de niveaux à un pouvoir donné, et vous perdez le même niveau dans votre pouvoir d’Augmentation.\n\nLorsque vous cessez de vous concentrer, les niveaux ainsi échangés reviennent à la normale.\n\nLes pouvoirs ne peuvent être élevés au-dessus de 10 et vous ne pouvez réduire votre pouvoir d’Augmentation en dessous de 0.\n\nSi les niveaux transférés excédent la Volonté de la cible, faites-lui faire un test de Volonté avec le niveau transféré en guise de Difficulté.\n\nEn cas d’échec, le pouvoir affecté souffre d’une limite choisie le Meneur de Jeu.\n\nInstable est un choix commun.",
       extras: [
         { name: "Standard", value: "A distance, Salve." },
         { name: "Pouvoirs", value: "Octroi de pouvoir." },
@@ -283,7 +283,7 @@ let pouvoirs = {
       page: 36,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez vous entourer d’un effet capable d’infliger des dégâts, comme une éruption de feu ou d’énergie, des épines acérées, de l’acide qui suinte… Choisissez l’effet de votre Aura quand vous gagnez ce pouvoir. Tout ce qui vous touche souffre de dégâts égaux à votre niveau de pouvoir, y compris toute personne vous attaquant à mains nues (s’ils brandissent une arme de contact, c’est celle-ci qui est affectée). Si vous touchez délibérément vos adversaires, ils subissent des dégâts égaux à votre Aura. Si vous frappez un adversaire, il subit les dégâts de votre Aura comme effet secondaire des dégâts infligés par votre Force (voir Effet secondaire sous Extras standards).",
+      value: "Vous pouvez vous entourer d’un effet capable d’infliger des dégâts, comme une éruption de feu ou d’énergie, des épines acérées, de l’acide qui suinte…\n\nChoisissez l’effet de votre Aura quand vous gagnez ce pouvoir.\n\nTout ce qui vous touche souffre de dégâts égaux à votre niveau de pouvoir, y compris toute personne vous attaquant à mains nues (s’ils brandissent une arme de contact, c’est celle-ci qui est affectée).\n\nSi vous touchez délibérément vos adversaires, ils subissent des dégâts égaux à votre Aura.\n\nSi vous frappez un adversaire, il subit les dégâts de votre Aura comme effet secondaire des dégâts infligés par votre Force (voir Effet secondaire sous Extras standards).",
       extras: [
         { name: "Pouvoirs", value: "Contrôle de l’énergie (du même type que l’Aura), Décharge, Résistance (aux effets de l’Aura), Vitalité." },
         { name: "Standard", value: "Contagieux." },
@@ -300,7 +300,7 @@ let pouvoirs = {
       page: 37,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez projeter, jusqu’à portée étendue, un effet qui submerge temporairement les sens de votre cible : il peut s’agir d’un flash aveuglant, d’un son assourdissant, d’un produit chimique, d’une flaque de boue ou tout autre chose similaire. Choisissez un sens affecté par votre pouvoir lorsque vous recevez celui-ci. Plutôt qu’un sens « normal », vous pouvez choisir que votre Aveuglement affecte un pouvoir de Perception, comme Sens du danger ou Détection. Effectuez un test de Coordination contre la Coordination d’une cible à portée : avec un succès mineur, vous aveuglez la cible pour une planche ; avec un succès majeur, vous aveuglez la cible pendant une planche par niveau de pouvoir ; avec un succès massif, votre cible est affectée pendant le chapitre tout entier. Les personnages aveuglés ont une difficulté accrue de +2 pour toute action basée sur le sens affecté et échouent automatiquement à tout test d’Eveil y recourant. Utiliser un avantage pour récupérer permet de se débarrasser immédiatement de l’aveuglement.",
+      value: "Vous pouvez projeter, jusqu’à portée étendue, un effet qui submerge temporairement les sens de votre cible : il peut s’agir d’un flash aveuglant, d’un son assourdissant, d’un produit chimique, d’une flaque de boue ou tout autre chose similaire.\n\nChoisissez un sens affecté par votre pouvoir lorsque vous recevez celui-ci.\n\nPlutôt qu’un sens « normal », vous pouvez choisir que votre Aveuglement affecte un pouvoir de Perception, comme Sens du danger ou Détection.\n\nEffectuez un test de Coordination contre la Coordination d’une cible à portée : avec un succès mineur, vous aveuglez la cible pour une planche ; avec un succès majeur, vous aveuglez la cible pendant une planche par niveau de pouvoir ; avec un succès massif, votre cible est affectée pendant le chapitre tout entier.\n\nLes personnages aveuglés ont une difficulté accrue de +2 pour toute action basée sur le sens affecté et échouent automatiquement à tout test d’Eveil y recourant.\n\nUtiliser un avantage pour récupérer permet de se débarrasser immédiatement de l’aveuglement.",
       extras: [
         { name: "Standard", value: "Contagieux, Salve." },
         { name: "Pouvoirs", value: "Résistance (à l’aveuglement)." },
@@ -314,7 +314,7 @@ let pouvoirs = {
       page: 37,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez sauter sur de longues distances, d’un pâté de maisons au niveau 1 jusqu’à des kilomètres au niveau 10. Bonds 1 à 2 vous permet de couvrir la distance de niveau 3 sur la Table des Références du livre de base d’ICONS et pour chaque tranche de deux niveaux additionnels en Bonds, vous augmentez la distance parcourue d’un cran sur la table. Ainsi, Bonds 5 vous permet de couvrir dix pâtés de maisons (ou un grand immeuble) en une seule enjambée ! Vous ne souffrez d’aucun dégât lié à un bond délibéré, mais vous êtes affecté normalement par les autres chutes. À la discrétion du MJ, un test réussi de Force (plus Athlétisme) contre la distance de la chute vous permet d’éviter tout dégâts jusqu’à concurrence de votre niveau de pouvoir Bonds.",
+      value: "Vous pouvez sauter sur de longues distances, d’un pâté de maisons au niveau 1 jusqu’à des kilomètres au niveau 10.\n\nBonds 1 à 2 vous permet de couvrir la distance de niveau 3 sur la Table des Références du livre de base d’ICONS et pour chaque tranche de deux niveaux additionnels en Bonds, vous augmentez la distance parcourue d’un cran sur la table.\n\nAinsi, Bonds 5 vous permet de couvrir dix pâtés de maisons (ou un grand immeuble) en une seule enjambée !\n\nVous ne souffrez d’aucun dégât lié à un bond délibéré, mais vous êtes affecté normalement par les autres chutes.\n\nÀ la discrétion du MJ, un test réussi de Force (plus Athlétisme) contre la distance de la chute vous permet d’éviter tout dégâts jusqu’à concurrence de votre niveau de pouvoir Bonds.",
       extras: [],
       limites: [],
     },
@@ -334,7 +334,7 @@ let pouvoirs = {
       page: 38,
       kind: "power",
       variantOf: null,
-      value: "Ce pouvoir vous protège des influences extérieures. C’est une variante de Résistance définie en tant que pouvoir d’esprit plutôt que défensif. Voir le pouvoir Résistance pour plus de détails.",
+      value: "Ce pouvoir vous protège des influences extérieures.\n\nC’est une variante de Résistance définie en tant que pouvoir d’esprit plutôt que défensif.\n\nVoir le pouvoir Résistance pour plus de détails.",
       extras: [
         { name: "Standard", value: "Affecte les autres, Salve." },
         { name: "Piège mental", value: "toute personne « touchant » votre esprit avec un pouvoir mental est attaqué par une Décharge mentale égale à votre niveau de Bouclier mental." },
@@ -347,7 +347,7 @@ let pouvoirs = {
       page: 38,
       kind: "power",
       variantOf: null,
-      value: "Vous avez la capacité de générer une barrière énergétique personnelle qui agit comme une Résistance aux dégâts égale à votre niveau de pouvoir, maintenue tant que vous vous concentrez. De plus, lorsqu’un adversaire doit vous toucher pour que son pouvoir puisse prendre effet, vous pouvez vous défendre avec le niveau de votre Champ de force, s’il est plus élevé que la capacité normalement opposée à l’attaque. Par exemple, un héros avec une Force de 3 et un Champ de Force de 6 résistera à une Affliction avec le niveau 6 de son Champ de Force, plutôt que le niveau 3 de sa Force.",
+      value: "Vous avez la capacité de générer une barrière énergétique personnelle qui agit comme une Résistance aux dégâts égale à votre niveau de pouvoir, maintenue tant que vous vous concentrez.\n\nDe plus, lorsqu’un adversaire doit vous toucher pour que son pouvoir puisse prendre effet, vous pouvez vous défendre avec le niveau de votre Champ de force, s’il est plus élevé que la capacité normalement opposée à l’attaque.\n\nPar exemple, un héros avec une Force de 3 et un Champ de Force de 6 résistera à une Affliction avec le niveau 6 de son Champ de Force, plutôt que le niveau 3 de sa Force.",
       extras: [],
       limites: [],
     },
@@ -357,7 +357,7 @@ let pouvoirs = {
       page: 38,
       kind: "variant",
       variantOf: "Métamorphose",
-      value: "Vous pouvez vous transformer en différentes formes. Voyez le pouvoir Métamorphose (page 85). Le complet change-forme doit avoir Mé tamorphos e avec deux fois l’extra Catégorie supplémentaire, afin de pouvoir assumer les trois types de formes : objets, animaux et humanoïdes.",
+      value: "Vous pouvez vous transformer en différentes formes.\n\nVoyez le pouvoir Métamorphose (page 85).\n\nLe complet change-forme doit avoir Mé tamorphos e avec deux fois l’extra Catégorie supplémentaire, afin de pouvoir assumer les trois types de formes : objets, animaux et humanoïdes.",
       extras: [],
       limites: [],
     },
@@ -367,7 +367,7 @@ let pouvoirs = {
       page: 39,
       kind: "variant",
       variantOf: "Membres additionnels",
-      value: "Vous avez de longs cheveux que vous pouvez animer et contrôler. Reportez-vous au pouvoir Membres additionnels, page 84, et plus spécifiquement aux tentacules.",
+      value: "Vous avez de longs cheveux que vous pouvez animer et contrôler.\n\nReportez-vous au pouvoir Membres additionnels, page 84, et plus spécifiquement aux tentacules.",
       extras: [],
       limites: [],
     },
@@ -377,7 +377,7 @@ let pouvoirs = {
       page: 39,
       kind: "variant",
       variantOf: "Augmentation de capacité",
-      value: "Vous êtes capable de concentrer votre Chi ou votre force de vie (parfois appelée Ki ou Prana) afin d’augmenter une ou plusieurs de vos capacités. Reportez-vous au pouvoir Augmentation de capacité (page 34), en y ajoutant éventuellement les limites Préparation et Fatigant. Le Chi peut aussi inclure des extras comme Décharge, Guérison, Résistance ou Frappe.",
+      value: "Vous êtes capable de concentrer votre Chi ou votre force de vie (parfois appelée Ki ou Prana) afin d’augmenter une ou plusieurs de vos capacités.\n\nReportez-vous au pouvoir Augmentation de capacité (page 34), en y ajoutant éventuellement les limites Préparation et Fatigant.\n\nLe Chi peut aussi inclure des extras comme Décharge, Guérison, Résistance ou Frappe.",
       extras: [],
       limites: [],
     },
@@ -387,7 +387,7 @@ let pouvoirs = {
       page: 39,
       kind: "variant",
       variantOf: "Serviteur",
-      value: "Reportez-vous au pouvoir Serviteur (page 101). Un compagnon animal peut aussi être géré comme un aspect : sans avoir lui-même de traits, il peut être activé pour prodiguer au personnage des bonus dans les bonnes circonstances, il peut être utilisé comme une complication s’il est menacé ou causer d’autres problèmes au personnage.",
+      value: "Reportez-vous au pouvoir Serviteur (page 101).\n\nUn compagnon animal peut aussi être géré comme un aspect : sans avoir lui-même de traits, il peut être activé pour prodiguer au personnage des bonus dans les bonnes circonstances, il peut être utilisé comme une complication s’il est menacé ou causer d’autres problèmes au personnage.",
       extras: [],
       limites: [],
     },
@@ -407,7 +407,7 @@ let pouvoirs = {
       page: 39,
       kind: "power",
       variantOf: null,
-      value: "Vous êtes « en harmonie » avec votre environnement, vous permettant de ressentir des choses comme le climat, le mouvement, la présence (ou l’absence) de vie, la contamination chimique et ainsi de suite, à portée visuelle. A chaque session de jeu, et avec un Test de Conscience environnementale de Difficulté 5 réussi, vous pouvez demander au Meneur de Jeu une question fermée (appelant une réponse par oui ou non) à propos de votre environnement. Vous pouvez de plus recourir à un avantage pour avoir de l’intuition par rapport à votre environnement. Extra • Pouvoirs : Contrôle de l’eau, Contrôle des plantes, Domination (Contrôle des animaux uniquement), Postcognition (environnement seulement), Précognition (environnement seulement).",
+      value: "Vous êtes « en harmonie » avec votre environnement, vous permettant de ressentir des choses comme le climat, le mouvement, la présence (ou l’absence) de vie, la contamination chimique et ainsi de suite, à portée visuelle.\n\nA chaque session de jeu, et avec un Test de Conscience environnementale de Difficulté 5 réussi, vous pouvez demander au Meneur de Jeu une question fermée (appelant une réponse par oui ou non) à propos de votre environnement.\n\nVous pouvez de plus recourir à un avantage pour avoir de l’intuition par rapport à votre environnement.\n\nExtra\n• Pouvoirs : Contrôle de l’eau, Contrôle des plantes, Domination (Contrôle des animaux uniquement), Postcognition (environnement seulement), Précognition (environnement seulement).",
       extras: [],
       limites: [
         { name: "Localisation spécifique", value: "votre Conscience environnementale ne fonctionne que dans un endroit particulier ou un type de terrain (un pays précis, seulement en forêt, seulement en ville…)." },
@@ -420,7 +420,7 @@ let pouvoirs = {
       page: 40,
       kind: "variant",
       variantOf: "Domination",
-      value: "Reportez-vous à la limite Contrôle animal du pouvoir Domination (page 66). Les contrôleurs d’animaux ont souvent les extras Salve ou Lien mental pour compenser cette limite. Ils peuvent aussi avoir en plus la limite « un type seulement », les limitant au contrôle d’un type spécifique d’animaux.",
+      value: "Reportez-vous à la limite Contrôle animal du pouvoir Domination (page 66).\n\nLes contrôleurs d’animaux ont souvent les extras Salve ou Lien mental pour compenser cette limite.\n\nIls peuvent aussi avoir en plus la limite « un type seulement », les limitant au contrôle d’un type spécifique d’animaux.",
       extras: [],
       limites: [],
     },
@@ -463,7 +463,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Contrôle du continuum",
-      value: "Vous pouvez contrôler la friction entre les objets, rendant le contact entre eux soit plus collant, soit plus glissant. Vous pouvez changer la friction de toute zone à portée de vue, augmentant ou réduisant la Difficulté pour y grimper du niveau de votre pouvoir. Vous pouvez aussi créer une zone dérapante qui force toute personne y évoluant à faire un test de Coordination contre votre Contrôle de la friction afin d’éviter de tomber comme si elle avait subi un effet de projection modéré.",
+      value: "Vous pouvez contrôler la friction entre les objets, rendant le contact entre eux soit plus collant, soit plus glissant.\n\nVous pouvez changer la friction de toute zone à portée de vue, augmentant ou réduisant la Difficulté pour y grimper du niveau de votre pouvoir.\n\nVous pouvez aussi créer une zone dérapante qui force toute personne y évoluant à faire un test de Coordination contre votre Contrôle de la friction afin d’éviter de tomber comme si elle avait subi un effet de projection modéré.",
       extras: [
         { name: "Pouvoirs", value: "Accroches, Aveuglement (à distance, en collant les paupières d’une personne), Contrôle du feu (Contrôle de la chaleur seulement, en contrôlant la chaleur de friction), Immobilisation (seulement pour coller des gens aux surfaces), Résistance (à la friction, à l’immobilisation)." },
         { name: "Blocage", value: "vous pouvez désactiver toute machine dotée de pièces mouvantes à portée étendue, avec un test de Contrôle de la friction, en bloquant ces parties mouvantes. La Difficulté est de 3 ou plus, choisie par le Meneur de jeu selon la possibilité à visualiser l’intérieur de la machine. Cela marche comme une Affliction à distance contre les machines intelligentes." },
@@ -477,7 +477,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Contrôle du continuum",
-      value: "Vous contrôlez la force de la gravité à portée étendue, et vous pouvez donc l’augmenter ou l’affaiblir à concurrence du niveau de votre pouvoir. La gravité normale de la Terre (1G) est le niveau 0. Si vous réduisez le niveau de gravité jusqu’à -5, tous les individus affectés gagnent le pouvoirs Bonds à niveau 1. Si vous la réduisez en dessous de -5, toutes les personnes à portée étendue gagnent le pouvoir Vol à niveau 1. Si vous augmentez la force de la gravité, une personne – ou toutes les personnes – à portée étendue doit ajouter le niveau de gravité à la Difficulté de tout test de Coordination et de Force. Les pouvoirs dépendant de la gravité (Voltige par exemple) souffrent de la même pénalité.",
+      value: "Vous contrôlez la force de la gravité à portée étendue, et vous pouvez donc l’augmenter ou l’affaiblir à concurrence du niveau de votre pouvoir.\n\nLa gravité normale de la Terre (1G) est le niveau 0.\n\nSi vous réduisez le niveau de gravité jusqu’à -5, tous les individus affectés gagnent le pouvoirs Bonds à niveau 1.\n\nSi vous la réduisez en dessous de -5, toutes les personnes à portée étendue gagnent le pouvoir Vol à niveau 1.\n\nSi vous augmentez la force de la gravité, une personne – ou toutes les personnes – à portée étendue doit ajouter le niveau de gravité à la Difficulté de tout test de Coordination et de Force.\n\nLes pouvoirs dépendant de la gravité (Voltige par exemple) souffrent de la même pénalité.",
       extras: [
         { name: "Pouvoirs", value: "Champ de force, Décharge, Super-sens (sens spatial, gravimétrique), Télékinésie, Vol." },
         { name: "Augmentation de Force", value: "lorsque vous soulevez ou lancez quelque chose, vous pouvez augmenter votre Force jusqu’au niveau de votre pouvoir de Contrôle de la gravité ou votre Force +1, selon ce qui est le plus haut." },
@@ -491,7 +491,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Contrôle de l'énergie",
-      value: "Vous pouvez générer et contrôler la lumière. Ce pouvoir vous permet d’illuminer une zone à portée étendue et de projeter un rayon aveuglant, également à portée étendue (voir Aveuglement page 42).",
+      value: "Vous pouvez générer et contrôler la lumière.\n\nCe pouvoir vous permet d’illuminer une zone à portée étendue et de projeter un rayon aveuglant, également à portée étendue (voir Aveuglement page 42).",
       extras: [
         { name: "Standard", value: "Salve." },
         { name: "Pouvoirs", value: "Absorption (lumière), Champ de force, Contrôle des ténèbres, Décharge (rayon laser ou photonique), Forme alternative (forme énergétique), Frappe (armes de lumière), Guérison (traitement seulement), Illusion (Images, visuel seulement), Invisibilité, Résistance (à l’Aveuglement, aux ténèbres, à la lumière), Vol." },
@@ -508,7 +508,7 @@ let pouvoirs = {
       page: 43,
       kind: "group",
       variantOf: null,
-      value: "Vous exercez un contrôle sur la matière. Reportez-vous aux descriptions des pouvoirs Télékinésie et Transmutation. Choisissez ou lancez un dé sur la table suivante : D6 Taille 1-4 Télékinésie 5-6 Transmutation",
+      value: "Vous exercez un contrôle sur la matière.\n\nReportez-vous aux descriptions des pouvoirs Télékinésie et Transmutation.\n\nChoisissez ou lancez un dé sur la table suivante :",
       table: {
         "dice": "1d6",
         "label": "Pouvoir",
@@ -541,7 +541,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Contrôle élémentaire",
-      value: "Vous pouvez manipuler la terre et la roche. Cette capacité est limitée aux matériaux naturels comme la pierre et la poussière, et aux matériaux cohérents semi-naturels que sont l’asphalte et le verre, par exemple. Des choses comme les métaux raffinés, les mécanismes artificiellement construits (ce qui inclue ordinateurs, armes, véhicules…) et les choses vivantes ou l’ayant été (comme le caoutchouc, le bois, la chair) sont au-delà du périmètre de ce pouvoir.",
+      value: "Vous pouvez manipuler la terre et la roche.\n\nCette capacité est limitée aux matériaux naturels comme la pierre et la poussière, et aux matériaux cohérents semi-naturels que sont l’asphalte et le verre, par exemple.\n\nDes choses comme les métaux raffinés, les mécanismes artificiellement construits (ce qui inclue ordinateurs, armes, véhicules…) et les choses vivantes ou l’ayant été (comme le caoutchouc, le bois, la chair) sont au-delà du périmètre de ce pouvoir.",
       extras: [
         { name: "Pouvoirs", value: "Champ de force (armure de pierre et de terre), Contrôle de la gravité, Fouissage, Immobilisation, Résistance (à la terre, tremblement de terre), Serviteur (élémentaire de terre)." },
         { name: "Contrôle de la lave", value: "vous pouvez transformer toute roche à portée étendue en lave. Cette lave se solidifie en une planche, sauf si vous restez concentré pour la maintenir en fusion. Vous pouvez tirer des Décharges de lave qui infligent des dégâts équivalent à votre niveau de pouvoir. Si vous attaquez une créature de pierre dotée de conscience avec ce pouvoir, traitez là comme une Affliction à distance (page 30)." },
@@ -578,7 +578,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Contrôle élémentaire",
-      value: "Contrôle de l’eau vous permet de créer et de contrôler de l’eau. Vous pouvez bouger une masse d’eau basée sur votre niveau de pouvoir dans la colonne Poids de la Table des références.",
+      value: "Contrôle de l’eau vous permet de créer et de contrôler de l’eau.\n\nVous pouvez bouger une masse d’eau basée sur votre niveau de pouvoir dans la colonne Poids de la Table des références.",
       extras: [
         { name: "Pouvoirs", value: "Amphibie (passagers), Contrôle du climat, Contrôle du froid (glace seulement), Serviteur (élémentaire d’eau)." },
         { name: "Déshydratation", value: "vous pouvez détruire l’eau. Vous pouvez faire baisser le niveau de l’eau, ou utiliser cet extra comme une attaque d’Affliction contre les humains et les autres créatures composées majoritairement d’eau." },
@@ -600,7 +600,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Contrôle de l'énergie",
-      value: "Vous pouvez générer et contrôler l’électricité, ainsi que lancer des éclairs jusqu’à portée étendue infligeant des dégâts égaux à votre niveau de pouvoir. Vous pouvez également recharger des accessoires électriques et propager le voltage au travers de l’eau et des métaux conducteurs comme le cuivre, le fer ou l’acier. Lorsque vous touchez une surface conductrice, toute autre personne en contact avec celle-ci est vulnérable à votre attaque.",
+      value: "Vous pouvez générer et contrôler l’électricité, ainsi que lancer des éclairs jusqu’à portée étendue infligeant des dégâts égaux à votre niveau de pouvoir.\n\nVous pouvez également recharger des accessoires électriques et propager le voltage au travers de l’eau et des métaux conducteurs comme le cuivre, le fer ou l’acier.\n\nLorsque vous touchez une surface conductrice, toute autre personne en contact avec celle-ci est vulnérable à votre attaque.",
       extras: [
         { name: "Pouvoirs", value: "Absorption (électricité), Augmentation de capacité (seulement la Force), Aura (électricité), Contrôle des machines, Résistance (électricité), Super-vitesse, Téléportation (transmission, lignes électriques), Vol." },
         { name: "Coupure de courant", value: "vous pouvez couper toute l’électricité à portée étendue pendant une durée égale à votre niveau. Cela empêche les robots, les armures de combat ou les ordinateurs de fonctionner, sauf s’ils bénéficient d’une source d’énergie alternative." },
@@ -616,7 +616,7 @@ let pouvoirs = {
       page: 46,
       kind: "group",
       variantOf: null,
-      value: "Vous exercez un contrôle sur l’un des spectres d’énergie et de forces (ou leur absence) : Contrôle du froid, Contrôle des ténèbres, Contrôle de l’électricité, Contrôle de la force, Contrôle de la lumière, Contrôle magnétique, Contrôle des radiations, Contrôle sonique et Contrôle des vibrations. Reportez-vous à chacun de ces pouvoirs pour plus de détails. Choisissez ou lancez un dé sur la table suivante : d6 d6 Pouvoir 1-3 1 Contrôle du froid 2 Contrôle des ténèbres 3 Contrôle de l’électricité 4-5 Contrôle de la force 6 Contrôle de la lumière 4-6 1-2 Contrôle magnétique 3 Contrôle des radiations 4-5 Contrôle sonique 6 Contrôle des vibrations",
+      value: "Vous exercez un contrôle sur l’un des spectres d’énergie et de forces (ou leur absence) : Contrôle du froid, Contrôle des ténèbres, Contrôle de l’électricité, Contrôle de la force, Contrôle de la lumière, Contrôle magnétique, Contrôle des radiations, Contrôle sonique et Contrôle des vibrations.\n\nReportez-vous à chacun de ces pouvoirs pour plus de détails.\n\nChoisissez ou lancez un dé sur la table suivante :",
       table: {
         "dice": "d6xd6",
         "label": "Pouvoir",
@@ -735,7 +735,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Contrôle du continuum",
-      value: "Contrôle de l’espace vous permet de tordre les dimensions spatiales à portée étendue. Vous pouvez étendre ou compresser les distances et distordre la topographie. Les effets durent tant que vous vous concentrez. Choisissez l’un des effets suivants, vous pouvez prendre les autres sous forme d’extras : • Compresser les distances : vous et les autres bougez à travers une zone comme si vous aviez une Super-vitesse à un niveau égal à celui de votre Contrôle de l’espace. • Etendre les distances : vous réduisez la vitesse de mouvement dans la zone du niveau de votre pouvoir. • Distordre l’espace : vous tordez l’espace. Toute personne dans la zone affectée doit faire un test de Coordination contre Contrôle de l’espace pour éviter de perdre une action alors qu’ils essaient de reprendre leurs marques.",
+      value: "Contrôle de l’espace vous permet de tordre les dimensions spatiales à portée étendue.\n\nVous pouvez étendre ou compresser les distances et distordre la topographie.\n\nLes effets durent tant que vous vous concentrez.\n\nChoisissez l’un des effets suivants, vous pouvez prendre les autres sous forme d’extras :\n• Compresser les distances : vous et les autres bougez à travers une zone comme si vous aviez une Super-vitesse à un niveau égal à celui de votre Contrôle de l’espace.\n• Etendre les distances : vous réduisez la vitesse de mouvement dans la zone du niveau de votre pouvoir.\n• Distordre l’espace : vous tordez l’espace.\n\nToute personne dans la zone affectée doit faire un test de Coordination contre Contrôle de l’espace pour éviter de perdre une action alors qu’ils essaient de reprendre leurs marques.",
       extras: [
         { name: "Standard", value: "Défensif." },
         { name: "Pouvoirs", value: "Décharge (choc spatial, Salve), Duplication, Elasticité (en changeant la topographie spatiale), Téléportation (passagers, portail)." },
@@ -751,7 +751,7 @@ let pouvoirs = {
       page: 47,
       kind: "group",
       variantOf: null,
-      value: "Vous pouvez contrôler un aspect des pouvoirs d’une autre personne. Reportez-vous aux descriptions des pouvoirs Octroi de pouvoir, Augmentation de pouvoir et Nullification. Choisissez ou lancez un dé sur la table suivante : d6 Pouvoir 1-2 Octroi de pouvoir 3-4 Augmentation de pouvoir 5-6 Nullification",
+      value: "Vous pouvez contrôler un aspect des pouvoirs d’une autre personne.\n\nReportez-vous aux descriptions des pouvoirs Octroi de pouvoir, Augmentation de pouvoir et Nullification.\n\nChoisissez ou lancez un dé sur la table suivante :",
       table: {
         "dice": "1d6",
         "label": "Pouvoir",
@@ -788,7 +788,7 @@ let pouvoirs = {
       page: 48,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez exercer une forme de contrôle sur ce que ressent une cible, imposant à son esprit une émotion particulière sous la forme d’un aspect temporaire – comme « terrifié » ou « amouraché » – que vous pouvez activer gratuitement aussi longtemps que dure le pouvoir. Pour ainsi influencer quelqu’un, il doit être à portée visuelle et vous devez réussir un test de Pouvoir avec le niveau d’Éveil de la cible en guise de Difficulté. • Un échec signifie que votre tentative de contrôle n’a aucun effet et vous devrez recourir à un effort tenace pour essayer à nouveau de contrôler la même cible durant ce chapitre. • Un succès marginal signifie que votre tentative n’a aucun effet, mais vous pouvez essayer à nouveau sans effort tenace. • Un succès modéré affecte l’aspect émotionnel voulu à votre cible. Concentrez-vous et réussissez un nouveau test de Contrôle des émotions contre son Eveil au début de chaque planche pour maintenir l’aspect. • Un succès majeur a les mêmes effets qu’un modéré mais ne nécessite un nouveau test qu’après une durée égale au niveau de votre pouvoir. • Un succès massif permet de maintenir l’aspect pendant l’intégralité du chapitre. Vous ne pouvez placer qu’un seul aspect émotionnel à la fois sur une cible. Les autres aspects de la cible peuvent être activés pour lui permettre de récupérer, auquel cas vous devrez réaliser un nouveau test de Contrôle des émotions pour maintenir l’effet.",
+      value: "Vous pouvez exercer une forme de contrôle sur ce que ressent une cible, imposant à son esprit une émotion particulière sous la forme d’un aspect temporaire – comme « terrifié » ou « amouraché » – que vous pouvez activer gratuitement aussi longtemps que dure le pouvoir.\n\nPour ainsi influencer quelqu’un, il doit être à portée visuelle et vous devez réussir un test de Pouvoir avec le niveau d’Éveil de la cible en guise de Difficulté.\n• Un échec signifie que votre tentative de contrôle n’a aucun effet et vous devrez recourir à un effort tenace pour essayer à nouveau de contrôler la même cible durant ce chapitre.\n• Un succès marginal signifie que votre tentative n’a aucun effet, mais vous pouvez essayer à nouveau sans effort tenace.\n• Un succès modéré affecte l’aspect émotionnel voulu à votre cible.\n\nConcentrez-vous et réussissez un nouveau test de Contrôle des émotions contre son Eveil au début de chaque planche pour maintenir l’aspect.\n• Un succès majeur a les mêmes effets qu’un modéré mais ne nécessite un nouveau test qu’après une durée égale au niveau de votre pouvoir.\n• Un succès massif permet de maintenir l’aspect pendant l’intégralité du chapitre.\n\nVous ne pouvez placer qu’un seul aspect émotionnel à la fois sur une cible.\n\nLes autres aspects de la cible peuvent être activés pour lui permettre de récupérer, auquel cas vous devrez réaliser un nouveau test de Contrôle des émotions pour maintenir l’effet.",
       extras: [
         { name: "Pouvoirs", value: "Augmentation de capacité (affecte les autres). 2d6 Emotion Effet 2-3 Doute Assaillie par le doute, la cible agit toujours en dernier et ne peut avoir recours à l’effort tenace. 4-5 Peur Emplie de terreur, la cible fuit ou, si elle en est incapable, se recroqueville sur elle-même. 6 Haine La cible est emplie de haine à l’encontre de quelqu’un, et cherche à s’y attaquer. 7 Amour La cible aime un sujet, l’aidera et le défendra autant que possible. 8 Plaisir Emplie de sensations de plaisir, la cible s’assoie sans plus agir. 9-10 Respect Emplie d’un grand respect pour un sujet, la cible fera tout ce qui possible pour l’assister. 11-12 Tristesse Submergée par la tristesse et le désespoir, la cible ne peut rien faire." },
       ],
@@ -804,7 +804,7 @@ let pouvoirs = {
       page: 49,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez contrôler les esprits, les fantômes et les entités similaires. Faites un test de Contrôle des esprits contre la Volonté pour contrôler un esprit à portée visuelle. Si la Volonté de l’esprit est supérieure au niveau le plus élevé entre votre pouvoir et votre Volonté, vous ne pouvez le dominer sans recourir à un effort tenace. La personnalité et les objectifs d’un esprit dominé demeurent, mais il ne peut se soustraire à vos ordres. L’esprit obéit aux ordres télépathiques ou vocaux. Chaque fois que vous ordonnez à un esprit d’accomplir quelque chose à laquelle il est fermement opposé – typiquement lorsque votre ordre va à l’encontre des aspects de l’esprit – vous devez réaliser un nouveau test de Contrôle des esprits contre sa Volonté pour réaffirmer votre main mise. Un échec libère l’esprit de votre influence et vous ne pourrez plus le contrôler dans ce numéro sans effort tenace.",
+      value: "Vous pouvez contrôler les esprits, les fantômes et les entités similaires.\n\nFaites un test de Contrôle des esprits contre la Volonté pour contrôler un esprit à portée visuelle.\n\nSi la Volonté de l’esprit est supérieure au niveau le plus élevé entre votre pouvoir et votre Volonté, vous ne pouvez le dominer sans recourir à un effort tenace.\n\nLa personnalité et les objectifs d’un esprit dominé demeurent, mais il ne peut se soustraire à vos ordres.\n\nL’esprit obéit aux ordres télépathiques ou vocaux.\n\nChaque fois que vous ordonnez à un esprit d’accomplir quelque chose à laquelle il est fermement opposé – typiquement lorsque votre ordre va à l’encontre des aspects de l’esprit – vous devez réaliser un nouveau test de Contrôle des esprits contre sa Volonté pour réaffirmer votre main mise.\n\nUn échec libère l’esprit de votre influence et vous ne pourrez plus le contrôler dans ce numéro sans effort tenace.",
       extras: [
         { name: "Pouvoirs", value: "Drain d’énergie, Nullification (pouvoirs d’esprit et Contrôle des esprits seulement), Projection astrale, Serviteur (réanimation de corps morts), Super-sens (détection d’esprits)." },
         { name: "Affliction spirituelle", value: "avec un lien concret avec votre cible (comme une boucle de cheveux ou la classique poupée vaudou), vous pouvez lui infliger une Affliction sans limite de distance au même niveau que votre Contrôle des esprits. La victime gagne un bonus de +2 pour résister à cet effet sauf si vous vous tenez à portée étendue, ou moins, de celle-ci." },
@@ -829,7 +829,7 @@ let pouvoirs = {
       page: 50,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez mentalement animer et contrôler des machines et des accessoires mécaniques, jusqu’à portée étendue. Les machines bougent et agissent selon vos ordres, avec une Force égale à leur Solidité (ou leur Force propre pour ce qui est des robots ou des armures de combat) et une Coordination égale à votre niveau de pouvoir ou à celle de la machine si elle en dispose. Votre pouvoir prodigue à la machine toute énergie ou carburant nécessaire à son fonctionnement, même si elle ne dispose pas de cette source d’alimentation (si elle est à sec ou non branchée, par exemple). Les machines dotées de consciences peuvent résister à votre contrôle grâce à leur Volonté, comme le peuvent les machines liées cybernétiquement à un opérateur conscient (comme de nombreuses armures de combat). Dans ce cas, traitez ce pouvoir comme une Domination.",
+      value: "Vous pouvez mentalement animer et contrôler des machines et des accessoires mécaniques, jusqu’à portée étendue.\n\nLes machines bougent et agissent selon vos ordres, avec une Force égale à leur Solidité (ou leur Force propre pour ce qui est des robots ou des armures de combat) et une Coordination égale à votre niveau de pouvoir ou à celle de la machine si elle en dispose.\n\nVotre pouvoir prodigue à la machine toute énergie ou carburant nécessaire à son fonctionnement, même si elle ne dispose pas de cette source d’alimentation (si elle est à sec ou non branchée, par exemple).\n\nLes machines dotées de consciences peuvent résister à votre contrôle grâce à leur Volonté, comme le peuvent les machines liées cybernétiquement à un opérateur conscient (comme de nombreuses armures de combat).\n\nDans ce cas, traitez ce pouvoir comme une Domination.",
       extras: [
         { name: "Standard", value: "Diffusion, Prolongé." },
         { name: "Pouvoirs", value: "Gadgets, Interface." },
@@ -860,7 +860,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Contrôle élémentaire",
-      value: "Vous contrôlez les plantes, les animant et leur prodiguant une conscience rudimentaire tant que vous restez concentré. Vous ne pouvez pas contrôler de plantes avec un niveau de Solidité plus élevé que votre niveau de pouvoir. Pour prendre le contrôle d’une plante consciente, faites un test de Contrôle des plantes contre sa volonté, comme si vous utilisiez le pouvoir Domination.",
+      value: "Vous contrôlez les plantes, les animant et leur prodiguant une conscience rudimentaire tant que vous restez concentré.\n\nVous ne pouvez pas contrôler de plantes avec un niveau de Solidité plus élevé que votre niveau de pouvoir.\n\nPour prendre le contrôle d’une plante consciente, faites un test de Contrôle des plantes contre sa volonté, comme si vous utilisiez le pouvoir Domination.",
       extras: [
         { name: "Pouvoirs", value: "Affliction (allergènes ou contrôle de la flore intestinale), Immobilisation, Mimétisme végétal, Serviteur (élémentaire végétal ou plante animée), Téléportation, Vitalité (ignorer le sommeil, ou le besoin de se nourrir grâce à la photosynthèse)." },
         { name: "Contrôle fongique", value: "vous pouvez commander les actions des champignons et des moisissures tout autant que celles des plantes vertes." },
@@ -879,7 +879,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Contrôle du continuum",
-      value: "Vous exercez un certain contrôle sur la chance brute. Ce pouvoir vous donne des points de Ténacité supplémentaires égaux à son niveau, que vous récupérez en même temps que vos points habituels. Ces points ne sont toutefois utilisables que pour activer l’aspect « chance » qui vient avec ce pouvoir. Quand vous acquérez ce pouvoir, vous devez choisir si votre Contrôle des probabilités repose sur la chance ou la guigne (ou lancez 1d6, de 1 à 3 : chance, de 4 à 6 : guigne). • La chance peut être activée à votre avantage pour un effort soutenu ou des retcons explicables par un « coup de chance » à votre bénéfice. • La guigne peut être activée pour nuire à d’autres en augmentant leur difficulté ou leur imposant des défis. Contrairement à l’utilisation normale des Points de Ténacité, les points offerts par votre Contrôle des probabilités ne nécessitent pas l’activation d’un aspect pour les utiliser. Dans les faits, votre pouvoir lui-même est l’aspect associé aux points : vous « activez » votre chance ou votre guigne en utilisant votre pouvoir. Dans certains cas, pour infliger de la guigne à une cible, le MJ pourra vous demander un test de pouvoir contre une capacité approprié de votre cible (comme la Volonté).",
+      value: "Vous exercez un certain contrôle sur la chance brute.\n\nCe pouvoir vous donne des points de Ténacité supplémentaires égaux à son niveau, que vous récupérez en même temps que vos points habituels.\n\nCes points ne sont toutefois utilisables que pour activer l’aspect « chance » qui vient avec ce pouvoir.\n\nQuand vous acquérez ce pouvoir, vous devez choisir si votre Contrôle des probabilités repose sur la chance ou la guigne (ou lancez 1d6, de 1 à 3 : chance, de 4 à 6 : guigne).\n• La chance peut être activée à votre avantage pour un effort soutenu ou des retcons explicables par un « coup de chance » à votre bénéfice.\n• La guigne peut être activée pour nuire à d’autres en augmentant leur difficulté ou leur imposant des défis.\n\nContrairement à l’utilisation normale des Points de Ténacité, les points offerts par votre Contrôle des probabilités ne nécessitent pas l’activation d’un aspect pour les utiliser.\n\nDans les faits, votre pouvoir lui-même est l’aspect associé aux points : vous « activez » votre chance ou votre guigne en utilisant votre pouvoir.\n\nDans certains cas, pour infliger de la guigne à une cible, le MJ pourra vous demander un test de pouvoir contre une capacité approprié de votre cible (comme la Volonté).",
       extras: [
         { name: "Deux types", value: "vous pouvez utiliser votre Contrôle des Probabilités pour générer aussi bien de la chance que de la guigne." },
       ],
@@ -894,7 +894,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Contrôle de l'énergie",
-      value: "Vous pouvez générer et contrôler des radiations, comme les micro-ondes ou les rayons gamma. Vous pouvez projeter une décharge de radiations concentrées jusqu’à portée étendue, infligeant des dégâts égaux à votre niveau de pouvoir.",
+      value: "Vous pouvez générer et contrôler des radiations, comme les micro-ondes ou les rayons gamma.\n\nVous pouvez projeter une décharge de radiations concentrées jusqu’à portée étendue, infligeant des dégâts égaux à votre niveau de pouvoir.",
       extras: [
         { name: "Standard", value: "Salve." },
         { name: "Pouvoirs", value: "Absorption (radiation), Affliction (maladie liée au rayonnement), Aura, Aveuglement, Champ de force, Contrôle du feu (contrôle de la chaleur uniquement), Nullification (pouvoirs basés sur les radiations ou les mutagènes), Vol." },
@@ -910,7 +910,7 @@ let pouvoirs = {
       page: 54,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez manipuler les rêves. Cela commence par la capacité à contrôler vos propres rêves, décidant de leur nature. Mais vous pouvez surtout implanter des images dans les songes d’un sujet endormi, de la même manière qu’avec le pouvoir Illusion.",
+      value: "Vous pouvez manipuler les rêves.\n\nCela commence par la capacité à contrôler vos propres rêves, décidant de leur nature.\n\nMais vous pouvez surtout implanter des images dans les songes d’un sujet endormi, de la même manière qu’avec le pouvoir Illusion.",
       extras: [
         { name: "Pouvoirs", value: "Illusion, Projection astrale, Télépathie." },
         { name: "Sommeil", value: "vous pouvez plonger quelqu’un dans un profond sommeil avec un test réussi de Contrôle des rêves contre la Volonté de votre cible." },
@@ -927,7 +927,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Contrôle de l'énergie",
-      value: "Vous pouvez générer des ténèbres, obscurcissant une zone à portée étendue. Les effets durent le temps de votre concentration, la lumière revenant à la normale sur la planche suivant la fin de votre concentration. La zone affectée obtient l’aspect « obscur » qui peut être activé gratuitement pour infliger un handicap aux personnes à l’intérieur, les rendant incapable de voir, et une Difficulté augmentée pour toutes les actions basées sur la vue.",
+      value: "Vous pouvez générer des ténèbres, obscurcissant une zone à portée étendue.\n\nLes effets durent le temps de votre concentration, la lumière revenant à la normale sur la planche suivant la fin de votre concentration.\n\nLa zone affectée obtient l’aspect « obscur » qui peut être activé gratuitement pour infliger un handicap aux personnes à l’intérieur, les rendant incapable de voir, et une Difficulté augmentée pour toutes les actions basées sur la vue.",
       extras: [
         { name: "Pouvoirs", value: "Absorption (lumière), Aveuglement, Champ de force, Contrôle des émotions (seulement la peur), Décharge, Drain d’énergie, Résistance (aux ténèbres, à la lumière), Serviteur (ombres animées), Super-sens (vision infrarouge), Téléportation (transmission, ténèbres et ombres), Vol." },
         { name: "Constructs d’ombre", value: "vous pouvez projeter une « force noire », essentiellement des ténèbres solidifiées, pour former différents constructs avec une Solidité égale à votre niveau de pouvoir." },
@@ -942,7 +942,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Contrôle de l'énergie",
-      value: "Vous pouvez générer et contrôler des vibrations à différentes fréquences. Vous pouvez tirer une Décharge d’énergie vibratoire jusqu’à portée étendue, occasionnant des dégâts équivalents au niveau de votre pouvoir.",
+      value: "Vous pouvez générer et contrôler des vibrations à différentes fréquences.\n\nVous pouvez tirer une Décharge d’énergie vibratoire jusqu’à portée étendue, occasionnant des dégâts équivalents au niveau de votre pouvoir.",
       extras: [
         { name: "Standard", value: "Salve." },
         { name: "Pouvoirs", value: "Absorption (vibrations), Champ de force, Contrôle de la terre (tremblement de terre seulement), Contrôle sonique, Corrosion (à distance, objets cristallins seulement), Fouissage, Immatérialité, Nullification (Contrôle des vibrations et Contrôle sonique uniquement), Résistance (à l’Immobilisation, à la pression), Super-sens (sens de l’espace), Voyage dimensionnel (dimensions vibrationnelles), Vol." },
@@ -963,7 +963,7 @@ let pouvoirs = {
       page: 56,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez changer le nombre de dimensions physiques que votre corps occupe, altérant par la même vos capacités. Vous pouvez alterner entre 3D et deux autres états dimensionnels. Assumer d’autres états dimensionnels est un extra (un pour deux états additionnels). Vos capacités sont basées sur le nombre de dimensions que vous occupez : • 0D : votre existence se résume à un point mathématique dans l’espace. Vous ne pouvez ni bouger ni entreprendre d’action, mais la bonne nouvelle est que vous êtes invisible et immunisé à tout, excepté aux pouvoirs qui agissent directement sur votre esprit. • 1D : vous n’êtes quasiment qu’une ligne invisible (Invisibilité égale à votre niveau de pouvoir). Vous n’avez aucune Force mais vous pouvez vous glisser dans toute ouverture quelle que soit sa taille. • 2D : Vous êtes une image plate de vous-même. Vous pouvez vous glisser dans toute fissure ou ouverture qui s’accommode à votre largeur, et vous disposez d’une Invisibilité lorsque qu’on regarde votre profil. Sous forme d’extra, vous pouvez développer une Frappe de type Taillader égale à votre niveau, vous permettant de trancher au travers des choses. • 3D : Vous disposez de vos capacités physiques normales. • 4D : votre Force augmente au niveau de votre pouvoir et vous pouvez « éviter » les objets physiques comme si vous aviez le pouvoir Immatérialité. Vous gagnez le Super-sens de Vision pénétrante en étant capable de voir « au-delà » des barrières physiques (les voyant depuis un espace dimensionnel supérieur). • 5D : Vous gagnez le pouvoir Contrôle temporel au même niveau que votre pouvoir. • 6D : Vous gagnez le pouvoir Voyage dimensionnel au même niveau que votre pouvoir en opérant une « rotation » entre différentes dimensions.",
+      value: "Vous pouvez changer le nombre de dimensions physiques que votre corps occupe, altérant par la même vos capacités.\n\nVous pouvez alterner entre 3D et deux autres états dimensionnels.\n\nAssumer d’autres états dimensionnels est un extra (un pour deux états additionnels).\n\nVos capacités sont basées sur le nombre de dimensions que vous occupez :\n• 0D : votre existence se résume à un point mathématique dans l’espace.\n\nVous ne pouvez ni bouger ni entreprendre d’action, mais la bonne nouvelle est que vous êtes invisible et immunisé à tout, excepté aux pouvoirs qui agissent directement sur votre esprit.\n• 1D : vous n’êtes quasiment qu’une ligne invisible (Invisibilité égale à votre niveau de pouvoir).\n\nVous n’avez aucune Force mais vous pouvez vous glisser dans toute ouverture quelle que soit sa taille.\n• 2D : Vous êtes une image plate de vous-même.\n\nVous pouvez vous glisser dans toute fissure ou ouverture qui s’accommode à votre largeur, et vous disposez d’une Invisibilité lorsque qu’on regarde votre profil.\n\nSous forme d’extra, vous pouvez développer une Frappe de type Taillader égale à votre niveau, vous permettant de trancher au travers des choses.\n• 3D : Vous disposez de vos capacités physiques normales.\n• 4D : votre Force augmente au niveau de votre pouvoir et vous pouvez « éviter » les objets physiques comme si vous aviez le pouvoir Immatérialité.\n\nVous gagnez le Super-sens de Vision pénétrante en étant capable de voir « au-delà » des barrières physiques (les voyant depuis un espace dimensionnel supérieur).\n• 5D : Vous gagnez le pouvoir Contrôle temporel au même niveau que votre pouvoir.\n• 6D : Vous gagnez le pouvoir Voyage dimensionnel au même niveau que votre pouvoir en opérant une « rotation » entre différentes dimensions.",
       extras: [],
       limites: [
         { name: "Une seule direction", value: "vous pouvez soit ajouter soit retirer des dimensions, mais pas les deux." },
@@ -976,7 +976,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Contrôle élémentaire",
-      value: "Vous pouvez manipuler le climat, ce qui inclue les vents, la température et les précipitations. Avec une planche de préparation, vous pouvez créer n’importe quelle condition climatique sur une zone autour de vous, à portée visuelle. Utiliser le climat comme une attaque directe nécessite toutefois un extra ou une prouesse appropriée. Vous pouvez prédire le temps qu’il va faire avec un test de Contrôle du climat contre une Difficulté égale au nombre de jours de votre prédiction.",
+      value: "Vous pouvez manipuler le climat, ce qui inclue les vents, la température et les précipitations.\n\nAvec une planche de préparation, vous pouvez créer n’importe quelle condition climatique sur une zone autour de vous, à portée visuelle.\n\nUtiliser le climat comme une attaque directe nécessite toutefois un extra ou une prouesse appropriée.\n\nVous pouvez prédire le temps qu’il va faire avec un test de Contrôle du climat contre une Difficulté égale au nombre de jours de votre prédiction.",
       extras: [
         { name: "Pouvoirs", value: "Affliction (froid ou chaud), Contrôle de l’air, Contrôle du feu (contrôle de la chaleur seulement), Contrôle du froid, Décharge (grêle, Salve), Résistance (au climat), Vitalité (froid et chaleur seulement), Vol (passagers)." },
         { name: "Brouillard", value: "vous pouvez invoquer une nappe de brouillard épais, réduisant la vue à portée proche dans une zone à portée visuelle." },
@@ -993,7 +993,7 @@ let pouvoirs = {
       page: 57,
       kind: "group",
       variantOf: null,
-      value: "Vous contrôlez l’une des forces fondamentales de la réalité. Reportez-vous aux descriptions des pouvoirs Contrôle de la friction, Contrôle de la gravité, Contrôle des probabilités, Contrôle spatial et Contrôle temporel. Choisissez ou lancez un dé sur la table suivante : 1d6 Pouvoir 1 Contrôle de la friction 2 Contrôle de la gravité 3 Contrôle des probabilités 4 Contrôle spatial 5 Contrôle temporel 6 Choisissez ou relancez, en ignorant ce résultat",
+      value: "Vous contrôlez l’une des forces fondamentales de la réalité.\n\nReportez-vous aux descriptions des pouvoirs Contrôle de la friction, Contrôle de la gravité, Contrôle des probabilités, Contrôle spatial et Contrôle temporel.\n\nChoisissez ou lancez un dé sur la table suivante :",
       table: {
         "dice": "1d6",
         "label": "Pouvoir",
@@ -1047,7 +1047,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Contrôle élémentaire",
-      value: "Vous pouvez manipuler les sources de feu, les portant au niveau de votre pouvoir ou, à l’inverse, en soustrayant votre niveau au leur (jusqu’à 0, ce qui les éteint). Vous pouvez contrôler un feu en vous concentrant, mais une fois que votre concentration se relâche, le feu se déchaine seul.",
+      value: "Vous pouvez manipuler les sources de feu, les portant au niveau de votre pouvoir ou, à l’inverse, en soustrayant votre niveau au leur (jusqu’à 0, ce qui les éteint).\n\nVous pouvez contrôler un feu en vous concentrant, mais une fois que votre concentration se relâche, le feu se déchaine seul.",
       extras: [
         { name: "Pouvoirs", value: "Absorption (feu), Affliction (chaleur, Salve), Aura (feu), Aveuglement (Salve, A distance), Décharge (feu, Salve), Frappe (armes de feu), Serviteur (élémentaire de feu), Vol." },
         { name: "Formes enflammées", value: "vous pouvez modeler le feu en objets, qu’il s’agisse d’écrire dans le ciel ou de créer des cages, des dômes, des sphères et ainsi de suite, tant que vous restez concentré. Ces objets ne sont pas solides, mais ils infligent des dégâts égaux à votre niveau de pouvoir à tout ce qui entre en contact avec eux. Emprisonner une cible à l’intérieur d’une forme enflammée (comme une cage) est un test de Contrôle du feu contre la Coordination." },
@@ -1066,7 +1066,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Contrôle de l'énergie",
-      value: "Vous pouvez réduire la température pour créer du froid. Choisissez gratuitement l’un des extras suivants, les autres pouvant être ajoutés au coût habituel des extras.",
+      value: "Vous pouvez réduire la température pour créer du froid.\n\nChoisissez gratuitement l’un des extras suivants, les autres pouvant être ajoutés au coût habituel des extras.",
       extras: [
         { name: "Pouvoirs", value: "Absorption (chaleur, froid), Affliction (congélation), Aura (froid), Contrôle du feu (« feu froid »), Décharge (glace), Immobilisation (glace), Résistance aux dégâts (armure de glace), Résistance (à la chaleur, au froid)." },
         { name: "Constructs de glace", value: "vous pouvez créer des colonnes, des murs et d’autres larges formes géométriques de glace, qui ont une Solidité égale au niveau de votre pouvoir." },
@@ -1084,7 +1084,7 @@ let pouvoirs = {
       page: 59,
       kind: "group",
       variantOf: null,
-      value: "Vous contrôlez l’un des éléments essentiels du monde naturel. Reportez-vous aux descriptions des pouvoirs Contrôle de l’air, Contrôle de la terre, Contrôle du feu, Contrôle des plantes, Contrôle de l’eau et Contrôle du climat. Choisissez ou lancez un dé sur la table suivante : 1d6 Pouvoir 1 Contrôle de l’air 2 Contrôle de la terre 3 Contrôle du feu 4 Contrôle des plantes 5 Contrôle de l’eau 6 Contrôle du climat",
+      value: "Vous contrôlez l’un des éléments essentiels du monde naturel.\n\nReportez-vous aux descriptions des pouvoirs Contrôle de l’air, Contrôle de la terre, Contrôle du feu, Contrôle des plantes, Contrôle de l’eau et Contrôle du climat.\n\nChoisissez ou lancez un dé sur la table suivante :",
       table: {
         "dice": "1d6",
         "label": "Pouvoir",
@@ -1137,7 +1137,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Contrôle de l'énergie",
-      value: "Vous pouvez générer et contrôler les champs magnétiques. Vous pouvez faire bouger et contrôler les objets ferreux comme si vous utilisiez le pouvoir Télékinésie (page 106).",
+      value: "Vous pouvez générer et contrôler les champs magnétiques.\n\nVous pouvez faire bouger et contrôler les objets ferreux comme si vous utilisiez le pouvoir Télékinésie (page 106).",
       extras: [
         { name: "Pouvoirs", value: "Champ de force, Contrôle des machines (assemblage de machine), Décharge (force magnétique), Détection d’énergie, Immobilisation, Nullification (électroniques seulement), Super-sens (sens de la direction), Télékinésie, Vol." },
       ],
@@ -1150,7 +1150,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Contrôle de l'énergie",
-      value: "Vous pouvez créer et contrôler le son. Ce pouvoir vous permet de projeter une onde sonore assourdissante (voir Aveuglement, page 37).",
+      value: "Vous pouvez créer et contrôler le son.\n\nCe pouvoir vous permet de projeter une onde sonore assourdissante (voir Aveuglement, page 37).",
       extras: [
         { name: "Standard", value: "Salve." },
         { name: "Pouvoirs", value: "Absorption (son), Champ de force (constructs de force), Corrosion (à distance, objets cristallins seulement, vibrations soniques), Décharge (son), Domination (hypnose seulement), Forme alternative (forme d’énergie), Illusion (son seulement), Résistance (sonique), Sens spatial (sonar), Vol." },
@@ -1168,7 +1168,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Contrôle du continuum",
-      value: "Vous pouvez contrôler le flot du temps, vous permettant d’accomplir un certain nombre d’effets. Choisissiez l’un des extras ci-dessous gratuitement lors vous obtenez ce pouvoir. Les autres doivent être acquis comme des extras normaux :",
+      value: "Vous pouvez contrôler le flot du temps, vous permettant d’accomplir un certain nombre d’effets.\n\nChoisissiez l’un des extras ci-dessous gratuitement lors vous obtenez ce pouvoir.\n\nLes autres doivent être acquis comme des extras normaux :",
       extras: [
         { name: "Pouvoirs", value: "Attaque rapide, Duplication, Paralysie (salve), Précognition, Post-cognition, Supervitesse (et tous ses extras, Affecte les autres)." },
         { name: "Suspension", value: "placez quelqu’un (vous y compris) dans un état d’animation suspendue. Le temps est si ralenti que les effets du vieillissement, ou une condition comme une Affliction ou la perte de Force pendant l’agonie, sont eux aussi suspendus. Les personnages en animation suspendue bénéficient d’une Vitalité totale pendant que leurs fonctions corporelles sont suspendues." },
@@ -1184,7 +1184,7 @@ let pouvoirs = {
       page: 61,
       kind: "variant",
       variantOf: "Contrôle de la Force",
-      value: "Vous pouvez créer des objets solides – des constructs – à partir d’une forme d’énergie (ou de matière). Reportez-vous à l’extra Constructs du pouvoir Contrôle de la Force (page 40) ainsi qu’aux extras similaires nommés constructs des pouvoirs Contrôle de l’énergie et Contrôle élémentaire, en fonction du type d’énergie ou de matière utilisé.",
+      value: "Vous pouvez créer des objets solides – des constructs – à partir d’une forme d’énergie (ou de matière).\n\nReportez-vous à l’extra Constructs du pouvoir Contrôle de la Force (page 40) ainsi qu’aux extras similaires nommés constructs des pouvoirs Contrôle de l’énergie et Contrôle élémentaire, en fonction du type d’énergie ou de matière utilisé.",
       extras: [],
       limites: [],
     },
@@ -1194,7 +1194,7 @@ let pouvoirs = {
       page: 61,
       kind: "variant",
       variantOf: null,
-      value: "Vous pouvez transformer un type d’énergie en un autre. C’est un type de Contrôle d’énergie avec la limite Source, ne fonctionnant qu’avec une énergie ambiante, comme Contrôle de la lumière (Source : sons) pour convertir les sons alentours en lumière. Votre pouvoir de Contrôle de l’énergie est limité par la source disponible. Si vous êtes également résistant au type d’énergie que vous générez ou convertissez, prenez Résistance à ce type d’énergie ou Absorption d’énergie en tant qu’extra de votre pouvoir de Contrôle de l’énergie.",
+      value: "Vous pouvez transformer un type d’énergie en un autre.\n\nC’est un type de Contrôle d’énergie avec la limite Source, ne fonctionnant qu’avec une énergie ambiante, comme Contrôle de la lumière (Source : sons) pour convertir les sons alentours en lumière.\n\nVotre pouvoir de Contrôle de l’énergie est limité par la source disponible.\n\nSi vous êtes également résistant au type d’énergie que vous générez ou convertissez, prenez Résistance à ce type d’énergie ou Absorption d’énergie en tant qu’extra de votre pouvoir de Contrôle de l’énergie.",
       extras: [],
       limites: [],
     },
@@ -1204,7 +1204,7 @@ let pouvoirs = {
       page: 61,
       kind: "variant",
       variantOf: null,
-      value: "Votre origine artificielle signifie que vous êtes un construct plutôt qu’un être vivant normal. Vous pouvez supprimer un pouvoir tiré au hasard et le remplacer par Vitalité (voir page 110).",
+      value: "Votre origine artificielle signifie que vous êtes un construct plutôt qu’un être vivant normal.\n\nVous pouvez supprimer un pouvoir tiré au hasard et le remplacer par Vitalité (voir page 110).",
       extras: [],
       limites: [],
     },
@@ -1214,7 +1214,7 @@ let pouvoirs = {
       page: 61,
       kind: "variant",
       variantOf: null,
-      value: "Votre origine artificielle signifie que vous êtes un construct plutôt qu’un être vivant normal. Vous bénéficiez de Vitalité en plus de vos autres pouvoirs, et vous pouvez abandonner l’un des pouvoirs tirés au sort pour augmenter cette Vitalité au niveau 10.",
+      value: "Votre origine artificielle signifie que vous êtes un construct plutôt qu’un être vivant normal.\n\nVous bénéficiez de Vitalité en plus de vos autres pouvoirs, et vous pouvez abandonner l’un des pouvoirs tirés au sort pour augmenter cette Vitalité au niveau 10.",
       extras: [],
       limites: [],
     },
@@ -1224,7 +1224,7 @@ let pouvoirs = {
       page: 61,
       kind: "variant",
       variantOf: "Forme alternative",
-      value: "Pour les pouvoirs permettant de transformer votre corps en une autre matière ou énergie, reportez-vous à Forme alternative, page 72. Pour certains personnages, un corps alternatif est une condition permanente, appliquant ainsi la limite Constant au pouvoir, ou un aspect adapté qui causera des complications liées à ce type inhabituel d’enveloppe corporelle.",
+      value: "Pour les pouvoirs permettant de transformer votre corps en une autre matière ou énergie, reportez-vous à Forme alternative, page 72.\n\nPour certains personnages, un corps alternatif est une condition permanente, appliquant ainsi la limite Constant au pouvoir, ou un aspect adapté qui causera des complications liées à ce type inhabituel d’enveloppe corporelle.",
       extras: [],
       limites: [],
     },
@@ -1234,7 +1234,7 @@ let pouvoirs = {
       page: 62,
       kind: "variant",
       variantOf: null,
-      value: "Votre origine artificielle signifie que vous êtes un construct plutôt qu’un être vivant normal. Vous pouvez supprimer un pouvoir tiré au hasard et le remplacer par Vitalité totale.",
+      value: "Votre origine artificielle signifie que vous êtes un construct plutôt qu’un être vivant normal.\n\nVous pouvez supprimer un pouvoir tiré au hasard et le remplacer par Vitalité totale.",
       extras: [],
       limites: [],
     },
@@ -1244,7 +1244,7 @@ let pouvoirs = {
       page: 62,
       kind: "power",
       variantOf: null,
-      value: "Vous bénéficiez d’une attaque corrosive, acide, brûlante ou provoquant le pourrissement qui cause des dégâts égaux à votre niveau de pouvoir lors d’une attaque réussie. La cible encaisse ensuite, au début de votre case, la moitié de votre niveau de corrosion pendant deux planches successives, ou jusqu’à ce qu’une action soit entreprise pour neutraliser les effets de l’attaque. La Corrosion endommage les objets en réduisant leur Solidité. Soustrayez le niveau du pouvoir à la Solidité de l’objet. Une fois sa Solidité réduite à 0, l’objet est détruit. Ainsi, un acide de niveau 7 frappant de l’acier (Solidité 8) réduira sa Solidité à 1 (pas plus qu’une feuille de papier) et une seconde attaque identique détruira complétement le métal.",
+      value: "Vous bénéficiez d’une attaque corrosive, acide, brûlante ou provoquant le pourrissement qui cause des dégâts égaux à votre niveau de pouvoir lors d’une attaque réussie.\n\nLa cible encaisse ensuite, au début de votre case, la moitié de votre niveau de corrosion pendant deux planches successives, ou jusqu’à ce qu’une action soit entreprise pour neutraliser les effets de l’attaque.\n\nLa Corrosion endommage les objets en réduisant leur Solidité.\n\nSoustrayez le niveau du pouvoir à la Solidité de l’objet.\n\nUne fois sa Solidité réduite à 0, l’objet est détruit.\n\nAinsi, un acide de niveau 7 frappant de l’acier (Solidité 8) réduira sa Solidité à 1 (pas plus qu’une feuille de papier) et une seconde attaque identique détruira complétement le métal.",
       extras: [
         { name: "Standard", value: "À distance, Contagieux, Salve." },
         { name: "Pouvoirs", value: "Résistance (à la corrosion)." },
@@ -1272,7 +1272,7 @@ let pouvoirs = {
       page: 63,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez projeter, à portée étendue, une attaque sous la forme d’une décharge. Au moment où vous recevez ce pouvoir, choisissez ses effets – force pure, élément, énergie – et de quel type d’attaque il s’agit : Impacter ou Tirer. Votre décharge inflige des dégâts égaux à son niveau.",
+      value: "Vous pouvez projeter, à portée étendue, une attaque sous la forme d’une décharge.\n\nAu moment où vous recevez ce pouvoir, choisissez ses effets – force pure, élément, énergie – et de quel type d’attaque il s’agit : Impacter ou Tirer.\n\nVotre décharge inflige des dégâts égaux à son niveau.",
       extras: [
         { name: "Standard", value: "Affecte X, Contagieux, Effet secondaire, Salve." },
         { name: "Désintégration", value: "si votre Décharge détruit une cible, celle-ci est complétement vaporisée (transformée en énergie, etc.) sans laisser une seule trace." },
@@ -1288,7 +1288,7 @@ let pouvoirs = {
       page: 63,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez, à portée visuelle, frapper les esprits de décharges de « force » mentale. Effectuez un test de Volonté, avec le niveau de Volonté de votre cible comme Difficulté et infligez des dégâts égaux à votre niveau de pouvoir. Vous ignorez la Résistance aux dégâts mais pas la Résistance mentale. Lorsque vous recevez ce pouvoir, décidez si votre Décharge mentale est une attaque de type Impacter ou Tirer. Si c’est une attaque d’impact, elle ne peut obtenir plus qu’un succès modéré sur une projection (mettant la cible au sol).",
+      value: "Vous pouvez, à portée visuelle, frapper les esprits de décharges de « force » mentale.\n\nEffectuez un test de Volonté, avec le niveau de Volonté de votre cible comme Difficulté et infligez des dégâts égaux à votre niveau de pouvoir.\n\nVous ignorez la Résistance aux dégâts mais pas la Résistance mentale.\n\nLorsque vous recevez ce pouvoir, décidez si votre Décharge mentale est une attaque de type Impacter ou Tirer.\n\nSi c’est une attaque d’impact, elle ne peut obtenir plus qu’un succès modéré sur une projection (mettant la cible au sol).",
       extras: [
         { name: "Standard", value: "Diffusion, Salve." },
         { name: "Sédation", value: "vous pouvez utiliser votre pouvoir pour que les personnages inconscients le restent : lorsque le sujet devrait normalement se réveiller, faites un test de sa Volonté contre votre niveau de Décharge mentale. Si elle réussit, la cible reprend connaissance normalement, mais si elle échoue, elle reste inanimée pendant 2D6 planches supplémentaires, avec un minimum de planches égal à votre niveau de Décharge mentale. Sur un échec majeur ou pire, le sujet reste inconscient pour tout le reste du chapitre." },
@@ -1305,7 +1305,7 @@ let pouvoirs = {
       page: 64,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez augmenter la densité de votre corps, devenant plus lourd, plus fort et plus résistant mais aussi possiblement plus lent. Quand votre pouvoir est actif, votre Force est alors égale au plus élevé de votre niveau de pouvoir ou de votre niveau de Force +1. Vous gagnez le pouvoir Résistance aux dégâts avec un niveau égal à celui de votre Densité.",
+      value: "Vous pouvez augmenter la densité de votre corps, devenant plus lourd, plus fort et plus résistant mais aussi possiblement plus lent.\n\nQuand votre pouvoir est actif, votre Force est alors égale au plus élevé de votre niveau de pouvoir ou de votre niveau de Force +1.\n\nVous gagnez le pouvoir Résistance aux dégâts avec un niveau égal à celui de votre Densité.",
       extras: [
         { name: "Immatérialité", value: "vous pouvez aussi diminuer votre densité jusqu’à l’intangibilité et disposer du pouvoir Immatérialité au même niveau que Densité." },
       ],
@@ -1329,7 +1329,7 @@ let pouvoirs = {
       page: 64,
       kind: "group",
       variantOf: null,
-      value: "Vous avez la capacité de percevoir une forme spécifique d’énergie, de pouvoirs ou de présence avec un Eveil égal à votre niveau de Détection. Choisissez l’un des types de détection suivants ou lancez 2D6 sur la table ci-contre. Cette table n’est absolument pas la liste exhaustive des pouvoirs de détection imaginables. Les joueurs souhaitant bénéficier d’une Détection non listée ici sont invités à en discuter avec leur Meneur de Jeu. Dans certains cas, le Meneur de Jeu peut utiliser une capacité opposée, comme Coordination ou Volonté, en tant que Difficulté pour un test de pouvoir pour détecter un sujet se cachant délibérément.",
+      value: "Vous avez la capacité de percevoir une forme spécifique d’énergie, de pouvoirs ou de présence avec un Eveil égal à votre niveau de Détection.\n\nChoisissez l’un des types de détection suivants ou lancez 2D6 sur la table ci-contre.\n\nCette table n’est absolument pas la liste exhaustive des pouvoirs de détection imaginables.\n\nLes joueurs souhaitant bénéficier d’une Détection non listée ici sont invités à en discuter avec leur Meneur de Jeu.\n\nDans certains cas, le Meneur de Jeu peut utiliser une capacité opposée, comme Coordination ou Volonté, en tant que Difficulté pour un test de pouvoir pour détecter un sujet se cachant délibérément.",
       table: {
         "dice": "2d6",
         "label": "Type",
@@ -1404,7 +1404,7 @@ let pouvoirs = {
       page: 65,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez rapetisser à volonté, jusqu’à une taille minimale montrée dans la table ci-contre. Vous obtenez l’Aspect « petit » qui peut être normalement activé pour des avantages ou des complications. Vous gagnez un modificateur, listé dans la table, à l’attaque et à la défense contre des opposants de taille normale. Quand vous utilisez votre pouvoir de Diminution, vos autres niveaux de capacité (dont la Force) restent inchangés. Aux niveaux 9 à 10, vous pouvez réduire votre taille à des niveaux microscopiques ou atomiques. Vous êtes « hors échelle » : vous ne pouvez plus interagir directement avec le monde normal et devez-vous limiter aux éléments à la même échelle que vous. D’un autre côté, vous pouvez accomplir des exploits comme vous glisser dans des ouvertures infimes ou vous déplacer entre les molécules. 2d6 Type Effet 2 Cosmique Vous pouvez détecter les êtres de niveau cosmique, l’énergie cosmique et les événements susceptibles d’affecter l’univers. 3-4 Emotions Vous pouvez détecter les états émotionnels ou des émotions particulières, comme la peur ou l’amour. 5 Energie Vous pouvez détecter différents types d’énergie et suivre des traces d’énergie. Vous pouvez identifier différents types d’énergie avec un test de pouvoir. 6 Magie Vous pouvez détecter l’énergie magique : sorts, artefacts, êtres capables d’utiliser la sorcellerie… 7 Magnétisme Vous pouvez détecter les champs magnétiques, ce qui inclue l’utilisation de Contrôle magnétique. 8-9 Pouvoir Vous pouvez détecter l’utilisation de certains pouvoirs – quand un pouvoir est utilisé ou quand quelqu’un possède un type de pouvoir, comment les pouvoirs mutants ou mentaux. 10-11 Radiation Vous pouvez détecter l’énergie radioactive et les sources de radiation, ce qui inclut l’utilisation de Contrôle des radiations. 12 Astrale Vous pouvez détecter l’activité spirituelle, comme celle des fantômes ou des formes astrales. Niv. Taille Modif. 1 1,20 mètres 0 2 90 cm 0 3 60 cm +1 4 30 cm +1 5 15 cm +2 6 7 cm +2 7 3 cm +3 8 Insecte +3 9 Microscopique 10 Atomique -",
+      value: "Vous pouvez rapetisser à volonté, jusqu’à une taille minimale montrée dans la table ci-contre.\n\nVous obtenez l’Aspect « petit » qui peut être normalement activé pour des avantages ou des complications.\n\nVous gagnez un modificateur, listé dans la table, à l’attaque et à la défense contre des opposants de taille normale.\n\nQuand vous utilisez votre pouvoir de Diminution, vos autres niveaux de capacité (dont la Force) restent inchangés.\n\nAux niveaux 9 à 10, vous pouvez réduire votre taille à des niveaux microscopiques ou atomiques.\n\nVous êtes « hors échelle » : vous ne pouvez plus interagir directement avec le monde normal et devez-vous limiter aux éléments à la même échelle que vous.\n\nD’un autre côté, vous pouvez accomplir des exploits comme vous glisser dans des ouvertures infimes ou vous déplacer entre les molécules. 2d6 Type Effet 2 Cosmique Vous pouvez détecter les êtres de niveau cosmique, l’énergie cosmique et les événements susceptibles d’affecter l’univers. 3-4 Emotions Vous pouvez détecter les états émotionnels ou des émotions particulières, comme la peur ou l’amour. 5 Energie Vous pouvez détecter différents types d’énergie et suivre des traces d’énergie.\n\nVous pouvez identifier différents types d’énergie avec un test de pouvoir. 6 Magie Vous pouvez détecter l’énergie magique : sorts, artefacts, êtres capables d’utiliser la sorcellerie… 7 Magnétisme Vous pouvez détecter les champs magnétiques, ce qui inclue l’utilisation de Contrôle magnétique. 8-9 Pouvoir Vous pouvez détecter l’utilisation de certains pouvoirs – quand un pouvoir est utilisé ou quand quelqu’un possède un type de pouvoir, comment les pouvoirs mutants ou mentaux. 10-11 Radiation Vous pouvez détecter l’énergie radioactive et les sources de radiation, ce qui inclut l’utilisation de Contrôle des radiations. 12 Astrale Vous pouvez détecter l’activité spirituelle, comme celle des fantômes ou des formes astrales.\n\nNiv.\n\nTaille Modif. 1 1,20 mètres 0 2 90 cm 0 3 60 cm +1 4 30 cm +1 5 15 cm +2 6 7 cm +2 7 3 cm +3 8 Insecte +3 9 Microscopique 10 Atomique -",
       extras: [
         { name: "Pouvoirs", value: "Téléportation (transmission via les lignes téléphoniques)." },
         { name: "Elan", value: "vous grossissez rapidement sous une cible en utilisant l’élan du retour à votre taille normale pour augmenter une attaque. Ajoutez le modificateur de votre niveau de Diminution, comme indiqué sur la table ci-dessus, comme bonus à votre attaque sans arme." },
@@ -1420,7 +1420,7 @@ let pouvoirs = {
       page: 66,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez prendre le contrôle de l’esprit d’une cible à portée visuelle, lui octroyant l’aspect temporaire « contrôlé », aspect que vous pouvez activer gratuitement tant qu’il dure, généralement pour imposer des compulsions. Faites un test de Domination contre Volonté : • Un échec signifie que votre tentative de contrôle n’a aucun effet et vous devrez avoir recours à l’effort tenace pour tenter à nouveau de contrôler la même cible durant ce chapitre. • Un succès marginal n’entraîne aucun effet, mais vous pouvez tenter à nouveau sans recourir à l’effort tenace. • Un succès modéré attribue l’aspect « contrôlé » à votre cible. Concentrez-vous et réussissez un nouveau test de Domination contre sa Volonté au début de chacune de vos planches pour maintenir l’effet. • Un succès majeur attribue l’aspect « Contrôlé » à votre cible. Concentrez-vous et réussissez un nouveau test de Domination contre sa Volonté après une durée égale à votre niveau pour maintenir l’effet. • Un succès massif attribue l’aspect « Contrôlé » à votre cible. Concentrezvous pour maintenir l’effet durant l’intégralité du Chapitre. Les autres aspects de la cible peuvent être activés pour lui permettre de récupérer, auquel cas vous devrez réaliser un nouveau test de Domination pour maintenir l’effet.",
+      value: "Vous pouvez prendre le contrôle de l’esprit d’une cible à portée visuelle, lui octroyant l’aspect temporaire « contrôlé », aspect que vous pouvez activer gratuitement tant qu’il dure, généralement pour imposer des compulsions.\n\nFaites un test de Domination contre Volonté :\n• Un échec signifie que votre tentative de contrôle n’a aucun effet et vous devrez avoir recours à l’effort tenace pour tenter à nouveau de contrôler la même cible durant ce chapitre.\n• Un succès marginal n’entraîne aucun effet, mais vous pouvez tenter à nouveau sans recourir à l’effort tenace.\n• Un succès modéré attribue l’aspect « contrôlé » à votre cible.\n\nConcentrez-vous et réussissez un nouveau test de Domination contre sa Volonté au début de chacune de vos planches pour maintenir l’effet.\n• Un succès majeur attribue l’aspect « Contrôlé » à votre cible.\n\nConcentrez-vous et réussissez un nouveau test de Domination contre sa Volonté après une durée égale à votre niveau pour maintenir l’effet.\n• Un succès massif attribue l’aspect « Contrôlé » à votre cible.\n\nConcentrezvous pour maintenir l’effet durant l’intégralité du Chapitre.\n\nLes autres aspects de la cible peuvent être activés pour lui permettre de récupérer, auquel cas vous devrez réaliser un nouveau test de Domination pour maintenir l’effet.",
       extras: [
         { name: "Standard", value: "Diffusion, Salve." },
         { name: "Pouvoirs", value: "Augmentation de capacité (vous-même ou vos cibles), Invisibilité (esprits seulement)." },
@@ -1448,7 +1448,7 @@ let pouvoirs = {
       page: 68,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez drainer la force vitale d’une cible en la touchant. Effectuez un test de Vaillance pour atteindre votre victime. En cas de succès, testez votre Drain de vie contre la Force ou la Volonté de la cible (choisissez lequel des deux lorsque vous obtenez ce pouvoir). La victime perd un nombre de points d’Endurance équivalent à la marge, alors que vous en regagnez autant (si vous en aviez préalablement perdu). La marge est limitée par le niveau de votre pouvoir.",
+      value: "Vous pouvez drainer la force vitale d’une cible en la touchant.\n\nEffectuez un test de Vaillance pour atteindre votre victime.\n\nEn cas de succès, testez votre Drain de vie contre la Force ou la Volonté de la cible (choisissez lequel des deux lorsque vous obtenez ce pouvoir).\n\nLa victime perd un nombre de points d’Endurance équivalent à la marge, alors que vous en regagnez autant (si vous en aviez préalablement perdu).\n\nLa marge est limitée par le niveau de votre pouvoir.",
       extras: [
         { name: "Standard", value: "À distance, Contagieux, Récupération lente." },
         { name: "Drain de capacité", value: "votre pouvoir draine une capacité plutôt que l’Endurance. Après une durée égale au niveau, la capacité drainée récupère 1 point par page jusqu’à son maximum. Chaque capacité affectée est un extra séparé. Si vous pouvez drainer une capacité et l’Endurance en même temps, ce fait est couvert par un extra supplémentaire." },
@@ -1465,7 +1465,7 @@ let pouvoirs = {
       page: 68,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez tirer de nulle part des duplicatas exacts de vousmême. Vous pouvez créer un nombre de copies égal au niveau du pouvoir : 1 copie avec Duplication 1, 2 copies avec Duplication 2 et ainsi de suite. Le pouvoir de créer un nombre virtuellement illimité de copies est considéré hors-échelle et mieux adapté aux vilains et aux personnages du Meneur de Jeu. Créer une copie prend une planche de préparation. Les copies ont les mêmes capacités que vous, à l’exception de ce pouvoir : elles ne peuvent donc pas se copier. Les copies accomplissant ensemble la même action peuvent profiter des règles d’Effort combiné (voir effort combiné dans le chapitre Les bases du livre de base d’ICONS). Les copies n’ont pas de Ténacité, mais vous pouvez partager vos Points de Ténacité avec elles. Une copie morte ou inconsciente disparaît. Si vous êtes tué ou assommé, toutes vos copies disparaissent.",
+      value: "Vous pouvez tirer de nulle part des duplicatas exacts de vousmême.\n\nVous pouvez créer un nombre de copies égal au niveau du pouvoir : 1 copie avec Duplication 1, 2 copies avec Duplication 2 et ainsi de suite.\n\nLe pouvoir de créer un nombre virtuellement illimité de copies est considéré hors-échelle et mieux adapté aux vilains et aux personnages du Meneur de Jeu.\n\nCréer une copie prend une planche de préparation.\n\nLes copies ont les mêmes capacités que vous, à l’exception de ce pouvoir : elles ne peuvent donc pas se copier.\n\nLes copies accomplissant ensemble la même action peuvent profiter des règles d’Effort combiné (voir effort combiné dans le chapitre Les bases du livre de base d’ICONS).\n\nLes copies n’ont pas de Ténacité, mais vous pouvez partager vos Points de Ténacité avec elles.\n\nUne copie morte ou inconsciente disparaît.\n\nSi vous êtes tué ou assommé, toutes vos copies disparaissent.",
       extras: [
         { name: "Copies réelles", value: "toutes vos copies sont « réelles ». Une copie inconsciente ou morte disparait toujours mais il n’y a pas de « maillon faible » qui les fait toutes disparaître lorsque vous êtes vous-même assommé ou tué. Tant que l’une de ces copies survit, vous survivez." },
         { name: "Instantané", value: "votre Duplication ne nécessite aucune préparation, vous pouvez le faire instantanément. Vous devez toutefois utiliser le pouvoir sur votre case et vous ne pouvez créer qu’une seule copie par planche, à moins que vous ne bénéficiiez en plus de l’extra Multiple, présenté ci-dessous." },
@@ -1488,7 +1488,7 @@ let pouvoirs = {
       page: 70,
       kind: "variant",
       variantOf: "Domination",
-      value: "Vous pouvez échanger votre esprit avec celui d’une cible. Voir la limite Echange d’esprit et l’extra Possession sous le pouvoir Domination (page 66).",
+      value: "Vous pouvez échanger votre esprit avec celui d’une cible.\n\nVoir la limite Echange d’esprit et l’extra Possession sous le pouvoir Domination (page 66).",
       extras: [],
       limites: [],
     },
@@ -1498,7 +1498,7 @@ let pouvoirs = {
       page: 70,
       kind: "power",
       variantOf: null,
-      value: "Votre corps et vos membres sont élastiques et peuvent s’allonger, vous permettant d’atteindre ou d’attaquer des cibles à portée étendue. Pour refléter la difficulté à réaliser des manipulations précises à distance, vos capacités sont limitées par votre niveau en Elasticité lorsque vous vous allongez. Le Meneur de Jeu peut demander un test d’Élasticité pour des utilisations complexes de vos capacités ou leur emploi à des distances extrêmes. Vous pouvez utiliser votre niveau d’Elasticité pour tenter de vous échapper (voir Se libérer dans Action ! du livre de base).",
+      value: "Votre corps et vos membres sont élastiques et peuvent s’allonger, vous permettant d’atteindre ou d’attaquer des cibles à portée étendue.\n\nPour refléter la difficulté à réaliser des manipulations précises à distance, vos capacités sont limitées par votre niveau en Elasticité lorsque vous vous allongez.\n\nLe Meneur de Jeu peut demander un test d’Élasticité pour des utilisations complexes de vos capacités ou leur emploi à des distances extrêmes.\n\nVous pouvez utiliser votre niveau d’Elasticité pour tenter de vous échapper (voir Se libérer dans Action ! du livre de base).",
       extras: [
         { name: "Pouvoirs", value: "Contrôle des dimensions (2D seulement), Forme alternative (forme fluide seulement), Métamorphose, Résistance (à l’Immobilisation, aux dégâts), Vol (glissade seulement)" },
         { name: "Durcissement", value: "vous pouvez agrandir et renforcer vos poings, vous donnant une Frappe de type Cogner égale à votre niveau d’Elasticité." },
@@ -1517,7 +1517,7 @@ let pouvoirs = {
       page: 71,
       kind: "variant",
       variantOf: "Elasticité",
-      value: "Vous avez une forme élastique, capable d’élongation. Voir le pouvoir Elasticité (page 70).",
+      value: "Vous avez une forme élastique, capable d’élongation.\n\nVoir le pouvoir Elasticité (page 70).",
       extras: [],
       limites: [],
     },
@@ -1537,7 +1537,7 @@ let pouvoirs = {
       page: 71,
       kind: "power",
       variantOf: null,
-      value: "Vous avez la capacité de vous déplacer à volonté sur l’échelle de l’évolution, en arrière ou en avant, vous transformant soit en un homme des cavernes primitif, soit en un humanoïde rachitique au cerveau surdéveloppé (oui, nous parlons ici « d’évolution de comic-book », pas de science). L’exacte apparence de vos deux versions est laissée à l’appréciation du Meneur de Jeu. Primitif Si vous régressez, vous devenez un hominidé ou un homme-singe doté d’une Intelligence de 1 et d’une Force égale à votre niveau en Evolution (ou votre Force habituelle +1 selon ce qui est le plus haut). De plus, votre version primitive gagne l’une des particularités suivantes : soit deux spécialités appropriées comme Athlétisme, Arts martiaux (bagarre), Résistance mentale, Discrétion ou Lutte ; soit une Frappe avec un bonus égal au niveau de votre pouvoir Evolution ; soit des pieds préhensiles utilisables comme des mains, comme l’extra Bras supplémentaires du pouvoir Membres additionnels. Vous pouvez choisir des particularités supplémentaires sous forme d’extra. Futuriste Si vous évoluez, vous devenez un être futuriste doté d’une tête élargie, d’une Force réduite à 1 et d’un Intellect égal à votre niveau en Evolution (ou votre Intellect habituel +1 selon ce qui est le plus haut). De plus, votre version futuriste gagne : soit deux spécialités basées sur un savoir avancé ; soit un pouvoir d’Esprit ou de Perception égal à votre niveau d’Evolution (à choisir lorsque vous obtenez ce pouvoir). Vous pouvez gagner des pouvoirs d’Esprit ou de Perception additionnels sous forme d’extras.",
+      value: "Vous avez la capacité de vous déplacer à volonté sur l’échelle de l’évolution, en arrière ou en avant, vous transformant soit en un homme des cavernes primitif, soit en un humanoïde rachitique au cerveau surdéveloppé (oui, nous parlons ici « d’évolution de comic-book », pas de science).\n\nL’exacte apparence de vos deux versions est laissée à l’appréciation du Meneur de Jeu.\n\nPrimitif Si vous régressez, vous devenez un hominidé ou un homme-singe doté d’une Intelligence de 1 et d’une Force égale à votre niveau en Evolution (ou votre Force habituelle +1 selon ce qui est le plus haut).\n\nDe plus, votre version primitive gagne l’une des particularités suivantes : soit deux spécialités appropriées comme Athlétisme, Arts martiaux (bagarre), Résistance mentale, Discrétion ou Lutte ; soit une Frappe avec un bonus égal au niveau de votre pouvoir Evolution ; soit des pieds préhensiles utilisables comme des mains, comme l’extra Bras supplémentaires du pouvoir Membres additionnels.\n\nVous pouvez choisir des particularités supplémentaires sous forme d’extra.\n\nFuturiste Si vous évoluez, vous devenez un être futuriste doté d’une tête élargie, d’une Force réduite à 1 et d’un Intellect égal à votre niveau en Evolution (ou votre Intellect habituel +1 selon ce qui est le plus haut).\n\nDe plus, votre version futuriste gagne : soit deux spécialités basées sur un savoir avancé ; soit un pouvoir d’Esprit ou de Perception égal à votre niveau d’Evolution (à choisir lorsque vous obtenez ce pouvoir).\n\nVous pouvez gagner des pouvoirs d’Esprit ou de Perception additionnels sous forme d’extras.",
       extras: [
         { name: "Standard", value: "Affecte les autres." },
         { name: "Invocation évolutionnaire", value: "plutôt que de vous transformer en une version évolutionnaire, vous invoquez une ou plusieurs d’entre elles à vos côtés en tant qu’êtres distincts, comme si vous disposiez du pouvoir Duplication au même niveau." },
@@ -1554,7 +1554,7 @@ let pouvoirs = {
       page: 72,
       kind: "group",
       variantOf: null,
-      value: "Forme Alternative vous permet de prendre une forme non-biologique. Choisissez une forme ou lancez un dé sur la table suivante : 1d6 Capacité 1 Forme énergétique 2 Forme explosive 3 Forme fluide 4 Forme gazeuse 5 Forme d’ombre 6 Forme solide Changer de forme demande une planche de préparation mais vous pouvez retourner instantanément à votre forme originelle pendant votre case. En fonction de votre forme alternative, et avec l’accord du Meneur de Jeu, vous pouvez utiliser le niveau de votre pouvoir pout déterminer les dégâts lors que vous attaquez en combat rapproché (frapper avec des poings d’acier, enflammer des choses alors que vous êtes constitué de flammes, faire suffoquer avec de l’eau ou du gaz, brûler avec de l’acide…) Chaque type de Forme alternative est en soi un groupe de pouvoirs, vous aurez donc en pouvoir individuel un pouvoir comme Forme électrique, Forme de Feu, Forme gazeuse, Forme de métal, Forme d’eau et ainsi de suite. Forme énergétique Vous vous transformez en champ énergétique cohérent dont vous devez choisir la nature à l’acquisition du pouvoir (voir Contrôle de l’énergie pour les possibilités). Vous obtenez le pouvoir de Vol au même niveau que votre Forme alternative et vous êtes immunisé contre toute attaque physique. Toutefois, vous ne disposez plus d’aucune Force et vous échouez automatiquement à tout test de Force pour toucher ou affecter des objets physiques. Les attaques affectant votre type d’énergie continuent à vous affecter. Vous pouvez acquérir le pouvoir Contrôle de l’énergie – du même type que votre forme – sous forme d’extra. Forme explosive Vous êtes à même de faire exploser votre corps ! Faites un test du niveau de votre pouvoir contre la Coordination de toute personne à portée proche, et considérez le résultat comme un test d’Impacter ou de Tirer (choisissez lequel quand vous faites l’acquisition de ce pouvoir). Vous vous réassemblez au début de la prochaine planche. Tant que vous n’êtes pas recomposé, vous êtes immunisé à toute forme d’attaque physique mais restez incapable d’affecter le monde physique. Vous pouvez retarder votre recomposition d’autant de planches que votre niveau de pouvoir et vous pouvez décider de vous reformer n’importe où à portée étendue de l’endroit où vous avez détonné. Sous forme d’extra, vous pouvez ajouter à votre pouvoir la capacité de Téléportation, au même niveau que votre pouvoir, vous permettant après explosion de vous réassembler encore plus loin (voir Téléportation, page 107) Forme Fluide Vous prenez une forme fluide et vous pouvez vous écouler par des fissures ou d’autres espaces étroits. Vous pouvez devenir un liquide, comme de l’eau, une masse de particules fines, comme de la poussière ou du sable, ou bien encore une masse d’insectes ou de minuscules robots. Tant que vous êtes sous cette forme, vous bénéficiez de Résistance aux dégâts et d’Elasticité au même niveau que votre Pouvoir. Forme Gazeuse Vous vous transformez en nuage de gaz ou de toutes autres particules portées par l’air, peutêtre même une nuée d’insectes ou de nanites. Vous gagnez Vol à 1 et vous pouvez flotter à travers tous les interstices non scellés. Vous êtes immunisé à toute forme d’attaque physique autres que celles capables d’affecter ou de disperser un nuage. Forme d’Ombre Vous vous transformez en une silhouette plate, reflet de votre apparence normale. Vous n’avez plus aucune Force et vous échouez automatiquement à tout test de Force pour toucher ou affecter des objets physiques. Vous êtes immunisé à toute forme d’attaque physique, excepté celles basées sur la lumière qui ont par ailleurs sur vous un effet de Paralysie en plus de leur effet normal. Vous bénéficiez, au même niveau que votre Forme d’ombre, des pouvoirs Accroches, Invisibilité et de la faculté 2D du pouvoir Contrôle dimensionnel, tant que vous restez entouré d’ombres ou de lumière tamisée. Solide Vous prenez l’apparence d’un matériau dense, comme le métal ou la pierre. Votre Force augmente alors de +1 ou devient égale au niveau de votre pouvoir (selon ce qui est le plus élevé), et vous bénéficiez de Résistance aux dégâts, égale au niveau de votre pouvoir.",
+      value: "Forme Alternative vous permet de prendre une forme non-biologique.\n\nChoisissez une forme ou lancez un dé sur la table suivante :",
       table: {
         "dice": "1d6",
         "label": "Forme",
@@ -1609,7 +1609,7 @@ let pouvoirs = {
       page: 74,
       kind: "variant",
       variantOf: "Métamorphose",
-      value: "Reportez-vous à la section Animaux sous le pouvoir Métamorphose (page 85). Les créatures garous ont typiquement la limite Un seul type, leur permettant de se métamorphoser en une unique forme hybride entre l’homme et l’animal.",
+      value: "Reportez-vous à la section Animaux sous le pouvoir Métamorphose (page 85).\n\nLes créatures garous ont typiquement la limite Un seul type, leur permettant de se métamorphoser en une unique forme hybride entre l’homme et l’animal.",
       extras: [],
       limites: [],
     },
@@ -1619,7 +1619,7 @@ let pouvoirs = {
       page: 74,
       kind: "variant",
       variantOf: "Forme alternative",
-      value: "Vous pouvez vous transformer en une ombre vivante. Reportez-vous à Forme d’ombre sous le pouvoir Forme alternative, page 72.",
+      value: "Vous pouvez vous transformer en une ombre vivante.\n\nReportez-vous à Forme d’ombre sous le pouvoir Forme alternative, page 72.",
       extras: [],
       limites: [],
     },
@@ -1629,7 +1629,7 @@ let pouvoirs = {
       page: 74,
       kind: "variant",
       variantOf: "Immatérialité",
-      value: "Vous êtes incorporel, comme un fantôme. Reportez-vous au pouvoir Immatérialité, page 80. Les fantômes non morts ont typiquement les extras Flottant et Vitalité du pouvoir Immatérialité.",
+      value: "Vous êtes incorporel, comme un fantôme.\n\nReportez-vous au pouvoir Immatérialité, page 80.\n\nLes fantômes non morts ont typiquement les extras Flottant et Vitalité du pouvoir Immatérialité.",
       extras: [],
       limites: [],
     },
@@ -1639,7 +1639,7 @@ let pouvoirs = {
       page: 74,
       kind: "power",
       variantOf: null,
-      value: "Vous avez la capacité de creuser dans le sol, à une vitesse égale à votre vitesse de déplacement normale, à travers tous les matériaux souterrains dont la Solidité est inférieure ou égale au niveau de votre pouvoir. Les matériaux plus solides vous ralentissent, divisant par 2 votre vitesse de déplacement par niveau de différence. Lorsque vous creusez, vous pouvez laisser un tunnel derrière vous, permettant à d’autres de l’emprunter, ou le combler automatiquement, à votre guise.",
+      value: "Vous avez la capacité de creuser dans le sol, à une vitesse égale à votre vitesse de déplacement normale, à travers tous les matériaux souterrains dont la Solidité est inférieure ou égale au niveau de votre pouvoir.\n\nLes matériaux plus solides vous ralentissent, divisant par 2 votre vitesse de déplacement par niveau de différence.\n\nLorsque vous creusez, vous pouvez laisser un tunnel derrière vous, permettant à d’autres de l’emprunter, ou le combler automatiquement, à votre guise.",
       extras: [],
       limites: [
         { name: "Un seul type", value: "vous ne pouvez creuser qu’au travers d’un type particulier de matériau, comme le sable ou la glace." },
@@ -1651,7 +1651,7 @@ let pouvoirs = {
       page: 75,
       kind: "power",
       variantOf: null,
-      value: "Vous possédez une arme de corps à corps, comme des griffes, des épines ou une arme de contact, couteau, épée ou marteau. Au moment où vous obtenez ce pouvoir, choisissez les effets de votre Frappe : estce une attaque de type Cogner ou Taillader ? Si vous tailladez, votre attaque inflige des dégâts égaux au niveau de votre pouvoir Frappe. Si vous cognez, votre attaque inflige des dégâts égaux au plus élevé entre votre niveau de votre pouvoir Frappe ou votre Force +1.",
+      value: "Vous possédez une arme de corps à corps, comme des griffes, des épines ou une arme de contact, couteau, épée ou marteau.\n\nAu moment où vous obtenez ce pouvoir, choisissez les effets de votre Frappe : estce une attaque de type Cogner ou Taillader ?\n\nSi vous tailladez, votre attaque inflige des dégâts égaux au niveau de votre pouvoir Frappe.\n\nSi vous cognez, votre attaque inflige des dégâts égaux au plus élevé entre votre niveau de votre pouvoir Frappe ou votre Force +1.",
       extras: [
         { name: "Standard", value: "Affecte X, Attaque secondaire, Contagieux." },
         { name: "Deux types", value: "votre Frappe peut être de type Cogner et Taillader. Choisissez le type d’attaque porté à chaque utilisation." },
@@ -1665,7 +1665,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Arcanes",
-      value: "Vous pouvez produire un très large choix d’accessoires, vous octroyant divers pouvoirs au niveau de votre pouvoir Gadgets. Prenez une planche de préparation et choisissez un pouvoir dont vous voulez dupliquer les effets. Faites un test d’Intellect – incluant tout spécialité appropriée – contre une Difficulté égale au niveau de pouvoir souhaité, avec comme limite votre propre niveau en Gadgets. Un succès vous donne un gadget capable de dupliquer le pouvoir souhaité pour le reste du chapitre ; un échec signifie que vous devrez recourir à un effort tenace pour essayer à nouveau. Vous pouvez aussi dépenser un point de Ténacité pour produire automatiquement le gadget désiré, sans faire de test. Reportez-vous au chapitre Accessoires pour des idées de gadgets. Votre pouvoir Gadgets est dépendant de votre équipement – technologique ou autre. Si vous en êtes privé, votre capacité à utiliser vos gadgets peut se retrouver limitée, ou même supprimée, jusqu’à ce que vous recouvriez votre matériel.",
+      value: "Vous pouvez produire un très large choix d’accessoires, vous octroyant divers pouvoirs au niveau de votre pouvoir Gadgets.\n\nPrenez une planche de préparation et choisissez un pouvoir dont vous voulez dupliquer les effets.\n\nFaites un test d’Intellect – incluant tout spécialité appropriée – contre une Difficulté égale au niveau de pouvoir souhaité, avec comme limite votre propre niveau en Gadgets.\n\nUn succès vous donne un gadget capable de dupliquer le pouvoir souhaité pour le reste du chapitre ; un échec signifie que vous devrez recourir à un effort tenace pour essayer à nouveau.\n\nVous pouvez aussi dépenser un point de Ténacité pour produire automatiquement le gadget désiré, sans faire de test.\n\nReportez-vous au chapitre Accessoires pour des idées de gadgets.\n\nVotre pouvoir Gadgets est dépendant de votre équipement – technologique ou autre.\n\nSi vous en êtes privé, votre capacité à utiliser vos gadgets peut se retrouver limitée, ou même supprimée, jusqu’à ce que vous recouvriez votre matériel.",
       extras: [
         { name: "Arsenal", value: "Vous avez un gadget particulier qui est toujours disponible et ne requiert aucun test de configuration. Chaque fois que vous appliquez cet extra, ajoutez un nouvel accessoire permanent à votre arsenal." },
         { name: "Instantané", value: "vous pouvez configurer des gadgets instantanément sans planche de préparation." },
@@ -1681,7 +1681,7 @@ let pouvoirs = {
       page: 76,
       kind: "power",
       variantOf: null,
-      value: "Un gestalt est la fusion de deux ou plusieurs êtres pour en former un autre. Les êtres composants le Gestalt ont généralement des personnalités et des traits différents et se combinent pour créer un tout plus puissant. Les pouvoirs de la forme unie peuvent dériver des corps séparés ou se manifester uniquement dans le Gestalt. Tous les composants doivent se réunir pour générer la forme unie, être à portée proche et prendre une planche de préparation pour se transformer. Le nombre maximum d’individus composant le Gestalt est égal au niveau du pouvoir. En plus des statistiques de la forme unie, chaque individu devrait voir ses capacités définies. Il incombe au joueur et au Meneur de Jeu de décider si la forme unie a une personnalité ou plusieurs, et si la personnalité unie dérive de celle des individus la composant ou pas. Généralement, chaque capacité et pouvoir de la forme unie a pour niveau maximum soit le niveau du pouvoir Gestalt, soit la plus haute valeur chez les individus le composant, avec un maximum de 10. Exemple : les cinq membres de la Main de la Reine Dragon peuvent se combiner pour former le redouté Quintuple Dragon : un monstre à cinq têtes. Chacune d’entre elles a le même pouvoir de Contrôle de l’énergie que l’un des individus la composant, sous la forme d’un souffle dévastateur. Le monstre a aussi une Force et une Résistance aux dégâts égale à 8, soit leur niveau dans le pouvoir Gestalt. Les dégâts infligés aux formes séparées ne se transfèrent pas à la forme unie, mais par contre, les dégâts subis par le Gestalt, eux, se transfèrent bien aux individus, divisés également entre eux lors qu’ils se séparent.",
+      value: "Un gestalt est la fusion de deux ou plusieurs êtres pour en former un autre.\n\nLes êtres composants le Gestalt ont généralement des personnalités et des traits différents et se combinent pour créer un tout plus puissant.\n\nLes pouvoirs de la forme unie peuvent dériver des corps séparés ou se manifester uniquement dans le Gestalt.\n\nTous les composants doivent se réunir pour générer la forme unie, être à portée proche et prendre une planche de préparation pour se transformer.\n\nLe nombre maximum d’individus composant le Gestalt est égal au niveau du pouvoir.\n\nEn plus des statistiques de la forme unie, chaque individu devrait voir ses capacités définies.\n\nIl incombe au joueur et au Meneur de Jeu de décider si la forme unie a une personnalité ou plusieurs, et si la personnalité unie dérive de celle des individus la composant ou pas.\n\nGénéralement, chaque capacité et pouvoir de la forme unie a pour niveau maximum soit le niveau du pouvoir Gestalt, soit la plus haute valeur chez les individus le composant, avec un maximum de 10.\n\nExemple : les cinq membres de la Main de la Reine Dragon peuvent se combiner pour former le redouté Quintuple Dragon : un monstre à cinq têtes.\n\nChacune d’entre elles a le même pouvoir de Contrôle de l’énergie que l’un des individus la composant, sous la forme d’un souffle dévastateur.\n\nLe monstre a aussi une Force et une Résistance aux dégâts égale à 8, soit leur niveau dans le pouvoir Gestalt.\n\nLes dégâts infligés aux formes séparées ne se transfèrent pas à la forme unie, mais par contre, les dégâts subis par le Gestalt, eux, se transfèrent bien aux individus, divisés également entre eux lors qu’ils se séparent.",
       extras: [
         { name: "Gestalt déguisé", value: "vous pouvez prendre l’apparence de n’importe lequel des individus qui composent le Gestalt tout en maintenant les capacités de votre forme unie." },
         { name: "Instantané", value: "les composants du Gestalt peuvent se combiner instantanément sans planche de préparation." },
@@ -1698,7 +1698,7 @@ let pouvoirs = {
       page: 77,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez grandir à volonté, augmentant votre puissance et votre résistance, mais devenant aussi plus facile à voir et à toucher. Tant que vous êtes agrandi, vous acquérez l’aspect « Large » qui peut être activé normalement pour des avantages ou des complications. Votre niveau de Force est égal au plus élevé de votre niveau de Gigantisme ou de votre Force +1. Vous gagnez une Résistance aux dégâts égale au niveau de votre pouvoir. Votre taille est basée sur votre niveau de gigantisme, comme indiqué dans la table ci-dessous, et vous souffrez d’une pénalité aux tests pour vous défendre ou vous cacher en fonction de la taille que vous choisissez d’assumer, puisque vous simplifiez la tâche aux adversaires qui souhaitent vous voir ou vous frapper. Niv. Taille Défense 1 3 mètres 0 2 4 mètres — 1 3 5 mètres — 1 4 6 mètres — 1 5 7 mètres — 1 6 8 mètres — 2 7 9 mètres — 2 8 10 mètres — 2 9 18 mètres — 3 10 36 mètres — 3",
+      value: "Vous pouvez grandir à volonté, augmentant votre puissance et votre résistance, mais devenant aussi plus facile à voir et à toucher.\n\nTant que vous êtes agrandi, vous acquérez l’aspect « Large » qui peut être activé normalement pour des avantages ou des complications.\n\nVotre niveau de Force est égal au plus élevé de votre niveau de Gigantisme ou de votre Force +1.\n\nVous gagnez une Résistance aux dégâts égale au niveau de votre pouvoir.\n\nVotre taille est basée sur votre niveau de gigantisme, comme indiqué dans la table ci-dessous, et vous souffrez d’une pénalité aux tests pour vous défendre ou vous cacher en fonction de la taille que vous choisissez d’assumer, puisque vous simplifiez la tâche aux adversaires qui souhaitent vous voir ou vous frapper.\n\nNiv.\n\nTaille Défense 1 3 mètres 0 2 4 mètres — 1 3 5 mètres — 1 4 6 mètres — 1 5 7 mètres — 1 6 8 mètres — 2 7 9 mètres — 2 8 10 mètres — 2 9 18 mètres — 3 10 36 mètres — 3",
       extras: [],
       limites: [],
     },
@@ -1708,7 +1708,7 @@ let pouvoirs = {
       page: 78,
       kind: "variant",
       variantOf: "Membres additionnels",
-      value: "Reportez-vous aux pouvoirs Membres additionnels (page 84) et Frappe (page 75). Les griffes infligent généralement des dégâts de type Taillader et peuvent s’étendre à des choses comme des dents aiguisées, des serres, des crocs, des épines, des excroissances osseuses et ainsi de suite. Pour des armes naturelles qui peuvent infliger des dégâts à toute personne vous attaquant, voyez plutôt le pouvoir Aura (page 36).",
+      value: "Reportez-vous aux pouvoirs Membres additionnels (page 84) et Frappe (page 75).\n\nLes griffes infligent généralement des dégâts de type Taillader et peuvent s’étendre à des choses comme des dents aiguisées, des serres, des crocs, des épines, des excroissances osseuses et ainsi de suite.\n\nPour des armes naturelles qui peuvent infliger des dégâts à toute personne vous attaquant, voyez plutôt le pouvoir Aura (page 36).",
       extras: [],
       limites: [],
     },
@@ -1718,7 +1718,7 @@ let pouvoirs = {
       page: 78,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez restaurer les pertes d’Endurance et de Force chez les autres. Touchez votre patient et utilisez une action pour restaurer autant d’Endurance que votre niveau en Guérison. Guérison ne peut pas augmenter l’Endurance au-delà de son niveau initial. Au maximum, par numéro, il vous est possible de rendre à un patient un nombre de points d’Endurance égal à 2 fois votre niveau en Guérison. Au-delà de ce nombre de points, toute nouvelle utilisation supplémentaire de ce pouvoir sur le même patient imposera de recourir à un effort tenace. Guérison peut aussi restaurer la Force perdue. Faites un jet de Guérison, difficulté 2, pour restaurer 1 niveau de Force. Si le test échoue, vous restaurez bien la Force de votre patient mais perdez vousmême 1 niveau de Force ! Vous devrez récupérer normalement par le repos. Si votre Guérison est de niveau 7 ou supérieur, vous n’avez pas de test à faire et vous réussissez automatiquement.",
+      value: "Vous pouvez restaurer les pertes d’Endurance et de Force chez les autres.\n\nTouchez votre patient et utilisez une action pour restaurer autant d’Endurance que votre niveau en Guérison.\n\nGuérison ne peut pas augmenter l’Endurance au-delà de son niveau initial.\n\nAu maximum, par numéro, il vous est possible de rendre à un patient un nombre de points d’Endurance égal à 2 fois votre niveau en Guérison.\n\nAu-delà de ce nombre de points, toute nouvelle utilisation supplémentaire de ce pouvoir sur le même patient imposera de recourir à un effort tenace.\n\nGuérison peut aussi restaurer la Force perdue.\n\nFaites un jet de Guérison, difficulté 2, pour restaurer 1 niveau de Force.\n\nSi le test échoue, vous restaurez bien la Force de votre patient mais perdez vousmême 1 niveau de Force !\n\nVous devrez récupérer normalement par le repos.\n\nSi votre Guérison est de niveau 7 ou supérieur, vous n’avez pas de test à faire et vous réussissez automatiquement.",
       extras: [
         { name: "Pouvoirs", value: "Adaptation (Affecte les autres), Affliction, Drain d’énergie, Nullification (pouvoirs biologiques), Résistante (aux attaques biologiques), Rayon altérant." },
         { name: "Auto-guérison", value: "en plus de pouvoir soigner les autres, vous pouvez utiliser Guérison sur vous-même. Pour ce faire, vous devez être conscient et capable d’agir." },
@@ -1737,7 +1737,7 @@ let pouvoirs = {
       page: 79,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez projeter de fausses impressions sensorielles dans d’autres esprits, créant ainsi des hallucinations vraiment réalistes. Votre pouvoir n’a aucun effet sur les machines comme les caméras, les microphones et autres senseurs. Les cibles considèrent vos illusions comme réelles à moins qu’elles n’aient une bonne raison de ne pas y croire – dans ce cas, effectuez un test d’Eveil contre un test d’Illusion. Si la cible le remporte, elle a écarté l’illusion et sait qu’elle est fausse. En cas d’échec, les cibles réagissent normalement aux illusions, souffrant même des dégâts imaginaires infligés par des attaques illusoires, la « mort » n’étant alors qu’inconscience (comme un test raté pour éviter d’être étourdi). Bien que vos illusions puissent tromper votre prochain, elles n’ont aucun effet sur le monde physique. Un mur illusoire bloquera les gens qui le pensent réel mais pas un camion lancé dessus, un sol illusoire ne supportera aucun poids et les choses le traverseront directement, un feu illusoire ne brûlera en réalité rien et ainsi de suite…",
+      value: "Vous pouvez projeter de fausses impressions sensorielles dans d’autres esprits, créant ainsi des hallucinations vraiment réalistes.\n\nVotre pouvoir n’a aucun effet sur les machines comme les caméras, les microphones et autres senseurs.\n\nLes cibles considèrent vos illusions comme réelles à moins qu’elles n’aient une bonne raison de ne pas y croire – dans ce cas, effectuez un test d’Eveil contre un test d’Illusion.\n\nSi la cible le remporte, elle a écarté l’illusion et sait qu’elle est fausse.\n\nEn cas d’échec, les cibles réagissent normalement aux illusions, souffrant même des dégâts imaginaires infligés par des attaques illusoires, la « mort » n’étant alors qu’inconscience (comme un test raté pour éviter d’être étourdi).\n\nBien que vos illusions puissent tromper votre prochain, elles n’ont aucun effet sur le monde physique.\n\nUn mur illusoire bloquera les gens qui le pensent réel mais pas un camion lancé dessus, un sol illusoire ne supportera aucun poids et les choses le traverseront directement, un feu illusoire ne brûlera en réalité rien et ainsi de suite…",
       extras: [
         { name: "Pouvoirs", value: "Aveuglement, Décharge mentale, Domination (hypnose), Duplication (copies illusoires uniquement), Invisibilité." },
         { name: "Programmée", value: "vous pouvez créer une illusion qui opérera en fonction de paramètres préprogrammés sans effort ou action de votre part, comme par exemple un mur illusoire qui affiche un message déroulant à chaque fois que quelqu’un entre dans la pièce." },
@@ -1750,7 +1750,7 @@ let pouvoirs = {
       page: 80,
       kind: "power",
       variantOf: null,
-      value: "Les Images sont comme les illusions, à ceci près qu’il s’agit d’images sensorielles véridiques plutôt que d’hallucinations mentales. Elles affectent donc les machines comme les caméras et ignorent les résistances mentales. Mais vous ne pouvez pas choisir ceux qui perçoivent ces illusions puisqu’elles n’existent pas seulement dans l’esprit de la cible. A cette exception près, Images fonctionne comme le pouvoir Illusion. Vous pouvez acquérir tous les extras proposés pour le pouvoir Illusion, à l’exception du pouvoir Décharge mentale.",
+      value: "Les Images sont comme les illusions, à ceci près qu’il s’agit d’images sensorielles véridiques plutôt que d’hallucinations mentales.\n\nElles affectent donc les machines comme les caméras et ignorent les résistances mentales.\n\nMais vous ne pouvez pas choisir ceux qui perçoivent ces illusions puisqu’elles n’existent pas seulement dans l’esprit de la cible.\n\nA cette exception près, Images fonctionne comme le pouvoir Illusion.\n\nVous pouvez acquérir tous les extras proposés pour le pouvoir Illusion, à l’exception du pouvoir Décharge mentale.",
       extras: [],
       limites: [],
     },
@@ -1760,7 +1760,7 @@ let pouvoirs = {
       page: 80,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez perdre de votre substance, vous transformer en ectoplasme, altérer votre densité ou votre structure atomique ou simplement vous décaler hors du monde physique par un moyen ou un autre. On dit alors que vous « phasez ». Une fois immatériel, vous êtes immunisé contre les attaques physiques et vous pouvez passer sans danger au travers des objets solides (à l’exception des attaques et des objets possédant l’extra « affecte l’intangible »). Effectuez un test de pouvoir pour passer au travers des champs énergétiques (comme un Champ de force) avec une difficulté égale au niveau du champ. Vous êtes incapables d’affecter le monde physique tant que vous êtes ainsi immatériel, mais vous pouvez encore utiliser des pouvoirs d’esprit et être affecté par eux. Votre utilisation de pouvoirs mentaux contre des cibles physiques se fait toutefois avec une Difficulté accrue de +2.",
+      value: "Vous pouvez perdre de votre substance, vous transformer en ectoplasme, altérer votre densité ou votre structure atomique ou simplement vous décaler hors du monde physique par un moyen ou un autre.\n\nOn dit alors que vous « phasez ».\n\nUne fois immatériel, vous êtes immunisé contre les attaques physiques et vous pouvez passer sans danger au travers des objets solides (à l’exception des attaques et des objets possédant l’extra « affecte l’intangible »).\n\nEffectuez un test de pouvoir pour passer au travers des champs énergétiques (comme un Champ de force) avec une difficulté égale au niveau du champ.\n\nVous êtes incapables d’affecter le monde physique tant que vous êtes ainsi immatériel, mais vous pouvez encore utiliser des pouvoirs d’esprit et être affecté par eux.\n\nVotre utilisation de pouvoirs mentaux contre des cibles physiques se fait toutefois avec une Difficulté accrue de +2.",
       extras: [
         { name: "Standard", value: "Affecte les autres." },
         { name: "Affecte le physique", value: "appliquez cet extra à un autre pouvoir ou à votre Force, vous permettant de l’utiliser pour affecter le monde physique alors que vous êtes immatériel. Ce pouvoir ou cette capacité est néanmoins alors limité par votre niveau d’Immatérialité." },
@@ -1780,7 +1780,7 @@ let pouvoirs = {
       page: 81,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez projeter, à portée étendue, une attaque qui immobilise ou piège la cible avec de la colle, de la glace, de la boue, de la toile d’araignée, etc. Votre Immobilisation a un niveau de Solidité égal au niveau de votre pouvoir. Effectuez un test de Coordination contre la Coordination de la cible pour toucher : • Un échec n’entraine aucun effet • Un succès marginal a le même effet qu’un succès modéré (comme ci-dessous) mais la solidité de votre immobilisation est réduite de moitié. • Un succès modéré entraîne l’immobilisation de la cible sur place, lui infligeant une pénalité de -2 à toutes ses actions. • Un succès majeur ou massif immobilise totalement la cible, qui ne peut entreprendre aucune action physique jusqu’à ce qu’elle réussisse à s’évader.",
+      value: "Vous pouvez projeter, à portée étendue, une attaque qui immobilise ou piège la cible avec de la colle, de la glace, de la boue, de la toile d’araignée, etc.\n\nVotre Immobilisation a un niveau de Solidité égal au niveau de votre pouvoir.\n\nEffectuez un test de Coordination contre la Coordination de la cible pour toucher :\n• Un échec n’entraine aucun effet\n• Un succès marginal a le même effet qu’un succès modéré (comme ci-dessous) mais la solidité de votre immobilisation est réduite de moitié.\n• Un succès modéré entraîne l’immobilisation de la cible sur place, lui infligeant une pénalité de -2 à toutes ses actions.\n• Un succès majeur ou massif immobilise totalement la cible, qui ne peut entreprendre aucune action physique jusqu’à ce qu’elle réussisse à s’évader.",
       extras: [
         { name: "Standard", value: "Contagieux, Effet secondaire, Salve." },
       ],
@@ -1802,7 +1802,7 @@ let pouvoirs = {
       page: 81,
       kind: "power",
       variantOf: null,
-      value: "Vous ne vieillissez pas et vous ne pouvez pas mourir. Vous pouvez toujours subir des dégâts jusqu’au point de succomber, mais la mort n’est que transitoire. Soustrayez votre niveau de Pouvoir de 10 pour déterminer le nombre d’heures qu’il vous faut pour revenir à la vie. Avec une Immortalité de 10, vous récupérez sur la prochaine planche ! Votre corps régénère aussi les éventuels morceaux perdus. A moins de vous atomiser ou de vous exposer à une source constante de dégâts (dans un volcan ou le coeur d’une étoile par exemple), vous finirez toujours par revenir. A chaque fois que votre Force est réduite à 0 et que vous « mourrez », vous perdez tous vos points de Ténacité, mais vous en regagnez normalement ensuite.",
+      value: "Vous ne vieillissez pas et vous ne pouvez pas mourir.\n\nVous pouvez toujours subir des dégâts jusqu’au point de succomber, mais la mort n’est que transitoire.\n\nSoustrayez votre niveau de Pouvoir de 10 pour déterminer le nombre d’heures qu’il vous faut pour revenir à la vie.\n\nAvec une Immortalité de 10, vous récupérez sur la prochaine planche !\n\nVotre corps régénère aussi les éventuels morceaux perdus.\n\nA moins de vous atomiser ou de vous exposer à une source constante de dégâts (dans un volcan ou le coeur d’une étoile par exemple), vous finirez toujours par revenir.\n\nA chaque fois que votre Force est réduite à 0 et que vous « mourrez », vous perdez tous vos points de Ténacité, mais vous en regagnez normalement ensuite.",
       extras: [
         { name: "Pouvoirs", value: "Régénération, Résistance." },
         { name: "Suspension", value: "vous pouvez vous placer à volonté dans un état d’animation suspendue, pendant lequel vos fonctions vitales sont ralenties au point que vous apparaissez mort et que vous n’êtes plus affecté par les besoins biologiques tant que vous restez dans cet état. Vous continuez toutefois de récupérer normalement." },
@@ -1817,7 +1817,7 @@ let pouvoirs = {
       page: 82,
       kind: "variant",
       variantOf: "Résistance",
-      value: "Une Résistance de niveau 10 est en substance une Immunité à cet effet, le réduisant systématiquement à 0, sauf si le Meneur de Jeu décide d’appliquer au personnage un effet hors échelle (supérieur à 10) en guise de complication. Reportez-vous aux pouvoir Résistance, page 100.",
+      value: "Une Résistance de niveau 10 est en substance une Immunité à cet effet, le réduisant systématiquement à 0, sauf si le Meneur de Jeu décide d’appliquer au personnage un effet hors échelle (supérieur à 10) en guise de complication.\n\nReportez-vous aux pouvoir Résistance, page 100.",
       extras: [],
       limites: [],
     },
@@ -1837,7 +1837,7 @@ let pouvoirs = {
       page: 82,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez vous interfacer avec les ordinateurs à portée visuelle. Utilisez le meilleur de votre Interface ou de votre Intellect (et spécialités) quand vous utilisez des ordinateurs. Contre les systèmes informatiques intelligents (y compris les robots conscients), ce pouvoir fonctionne comme Télépathie (page 106).",
+      value: "Vous pouvez vous interfacer avec les ordinateurs à portée visuelle.\n\nUtilisez le meilleur de votre Interface ou de votre Intellect (et spécialités) quand vous utilisez des ordinateurs.\n\nContre les systèmes informatiques intelligents (y compris les robots conscients), ce pouvoir fonctionne comme Télépathie (page 106).",
       extras: [
         { name: "Pouvoirs", value: "Contrôle des machines." },
         { name: "Standard", value: "Diffusion." },
@@ -1857,7 +1857,7 @@ let pouvoirs = {
       page: 83,
       kind: "power",
       variantOf: null,
-      value: "Vous, ainsi que ce que vous portez ou tenez, devenez invisible à volonté. On peut toujours vous repérer et vous localiser par d’autres méthodes que la vue – les bruits, les odeurs, une pluie battante, etc. Si quelque chose est en mesure de vous détecter, effectuez un test d’Invisibilité pour éviter d’être remarqué. Tant que votre localisation reste inconnue, vous ne pouvez pas faire l’objet d’attaques directes puisque vos opposants ne savent pas où viser. Les attaques indirectes comme les salves vous affectent normalement. Même si vous êtes repéré, les attaques contre vous se font avec une difficulté accrue de +2.",
+      value: "Vous, ainsi que ce que vous portez ou tenez, devenez invisible à volonté.\n\nOn peut toujours vous repérer et vous localiser par d’autres méthodes que la vue – les bruits, les odeurs, une pluie battante, etc.\n\nSi quelque chose est en mesure de vous détecter, effectuez un test d’Invisibilité pour éviter d’être remarqué.\n\nTant que votre localisation reste inconnue, vous ne pouvez pas faire l’objet d’attaques directes puisque vos opposants ne savent pas où viser.\n\nLes attaques indirectes comme les salves vous affectent normalement.\n\nMême si vous êtes repéré, les attaques contre vous se font avec une difficulté accrue de +2.",
       extras: [
         { name: "Rayon d’invisibilité", value: "vous pouvez rendre invisible d’autres personnes que vous-même, comme la version Rayon d’invisibilité du pouvoir Rayon altérant (page 98)." },
       ],
@@ -1874,7 +1874,7 @@ let pouvoirs = {
       page: 84,
       kind: "variant",
       variantOf: "Serviteur",
-      value: "Pour l’invocation d’autres créatures ou personnages afin qu’ils vous servent, reportez-vous au pouvoir Serviteur, page 101. Si vous voulez faire venir des objets ou des créatures d’un autre endroit que celui où vous êtes, voyez l’extra Invocation du pouvoir Téléportation, page 107.",
+      value: "Pour l’invocation d’autres créatures ou personnages afin qu’ils vous servent, reportez-vous au pouvoir Serviteur, page 101.\n\nSi vous voulez faire venir des objets ou des créatures d’un autre endroit que celui où vous êtes, voyez l’extra Invocation du pouvoir Téléportation, page 107.",
       extras: [],
       limites: [],
     },
@@ -1884,7 +1884,7 @@ let pouvoirs = {
       page: 84,
       kind: "variant",
       variantOf: "Résistance",
-      value: "Reportez-vous au pouvoir Résistance, et plus spécifiquement à la Résistance aux dégâts. Une Résistance aux dégâts de niveau 10 est, dans les faits, une invulnérabilité à toute forme de dégâts, sauf si le Meneur de Jeu décide d’appliquer au personnage un effet hors échelle (supérieur à 10) en guise de complication.",
+      value: "Reportez-vous au pouvoir Résistance, et plus spécifiquement à la Résistance aux dégâts.\n\nUne Résistance aux dégâts de niveau 10 est, dans les faits, une invulnérabilité à toute forme de dégâts, sauf si le Meneur de Jeu décide d’appliquer au personnage un effet hors échelle (supérieur à 10) en guise de complication.",
       extras: [],
       limites: [],
     },
@@ -1904,7 +1904,7 @@ let pouvoirs = {
       page: 84,
       kind: "group",
       variantOf: null,
-      value: "Vous possédez des morceaux de corps en plus – qu’il s’agisse d’un bout complètement nouveau (comme une queue) ou de bouts supplémentaires (quatre bras au lieu de deux). Choisissez l’une des options suivantes ou lancez 2D6 dans le tableau ci-contre.",
+      value: "Vous possédez des morceaux de corps en plus – qu’il s’agisse d’un bout complètement nouveau (comme une queue) ou de bouts supplémentaires (quatre bras au lieu de deux).\n\nChoisissez l’une des options suivantes ou lancez 2D6 dans le tableau ci-contre.",
       table: {
         "dice": "2d6",
         "label": "Membre",
@@ -1976,7 +1976,7 @@ let pouvoirs = {
       page: 85,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez prendre l’apparence d’autres choses : animaux, objets ou personnes. Choisissez l’une des options suivantes ou lancez un D6 lorsque vous obtenez ce pouvoir. Vous pouvez acquérir les autres options sous forme d’extras : 1D6 Transformation en 1-2 Animaux 3-4 Objets 5-6 Humanoïdes Assumer une nouvelle forme prend une planche de préparation, bien que vous puissiez revenir instantanément à votre forme normale. Vous gagnez les propretés physiques de la forme assumée, jusqu’à concurrence de votre niveau de Métamorphose. Si imiter de manière convaincante une forme particulière devient un souci, votre niveau de pouvoir est la Difficulté d’un test d’Eveil pour quelqu’un remarque que quelque chose cloche. 2d6 Membre Bénéfice 2-3 Carapace Vous avez une épaisse coquille, ce qui vous donne une Résistance aux dégâts égale au niveau de votre pouvoir. 4-5 Griffes Vous avez le pouvoir Frappe (Taillader) à un niveau égal au niveau de votre pouvoir. 6 Bras supplémentaires Vous disposez d’une Force ou du pouvoir Attaque Rapide à un niveau égal au niveau de votre pouvoir. 7 Jambes supplémentaires Vous pouvez vous déplacer plus vite et utiliser le niveau de votre pouvoir pour déterminer votre vitesse, comme avec le pouvoir Bonds. 8 Queue Vous pouvez utiliser votre queue comme s’il s’agissait d’un bras supplémentaire. Vous gagnez le pouvoir Attaque Rapide à un niveau égal au niveau de votre pouvoir. 9-10 Tentacules Vous avez de puissants tentacules qui peuvent pousser sur vos épaules, votre dos ou vos hanches, ou même être constitués de longs cheveux préhensiles. Ils vous font bénéficier du pouvoir Elasticité ou d’une Force égale au niveau de votre pouvoir. 11-12 Ailes Vous avez des ailes fonctionnelles, qu’elles ressemblent à des ailes d’oiseau, de chauve-souris ou d’insecte. Vous gagnez le pouvoir Vol à un niveau égal au niveau de votre pouvoir. Animaux Vous pouvez vous métamorphoser en animal, qu’il s’agisse d’animaux normaux ou d’hybrides homme-animal. Vous conservez vos propres capacités mentales ainsi que votre capacité à parler, sauf si des limites particulières vous l’interdisent. Vos capacités physiques sous forme animale sont égales au plus élevé de votre niveau de pouvoir ou de la capacité normale de l’animal. Reportez-vous à des exemples d’animaux dans la section Créatures du chapitre Mener le jeu du livre de base d’ICONS. Sous forme d’hybride homme-animal, votre Force, votre Coordination, ou les deux, peuvent être élevées au niveau de Métamorphose, selon le type d’animal copié. Les formes hybrides sont humanoïdes en tout point mais ont des particularités cosmétiques (fourrure, museau, queue et ainsi de suite). Vous pouvez toutefois gagner les attaques physiques de l’animal, ainsi que ses capacités de mouvement. Humanoïdes Vous pouvez vous métamorphoser en copies convaincantes d’autres humanoïdes, incluant la voix et les vêtements qu’ils peuvent porter. Votre imitation est suffisamment bonne pour tromper des tests comme la prise d’empreintes digitales, les scans rétinaux et même les tests ADN. Toutefois, vous ne gagnez aucune des capacités de votre modèle à part son apparence (pour cela, voir Mimétisme de pouvoir). Objets Vous pouvez vous métamorphoser en objets inanimés, depuis un rocher jusqu’à une machine comme une voiture. Vous conservez vos propres capacités mentales ainsi que votre capacité à parler, sauf si des limites particulières vous l’interdisent. Vous gagnez les propriétés physiques de l’objet, notamment sa Solidité, au même niveau que votre Pouvoir.",
+      value: "Vous pouvez prendre l’apparence d’autres choses : animaux, objets ou personnes.\n\nChoisissez l’une des options suivantes ou lancez un D6 lorsque vous obtenez ce pouvoir.\n\nVous pouvez acquérir les autres options sous forme d’extras : 1D6 Transformation en 1-2 Animaux 3-4 Objets 5-6 Humanoïdes Assumer une nouvelle forme prend une planche de préparation, bien que vous puissiez revenir instantanément à votre forme normale.\n\nVous gagnez les propretés physiques de la forme assumée, jusqu’à concurrence de votre niveau de Métamorphose.\n\nSi imiter de manière convaincante une forme particulière devient un souci, votre niveau de pouvoir est la Difficulté d’un test d’Eveil pour quelqu’un remarque que quelque chose cloche. 2d6 Membre Bénéfice 2-3 Carapace Vous avez une épaisse coquille, ce qui vous donne une Résistance aux dégâts égale au niveau de votre pouvoir. 4-5 Griffes Vous avez le pouvoir Frappe (Taillader) à un niveau égal au niveau de votre pouvoir. 6 Bras supplémentaires Vous disposez d’une Force ou du pouvoir Attaque Rapide à un niveau égal au niveau de votre pouvoir. 7 Jambes supplémentaires Vous pouvez vous déplacer plus vite et utiliser le niveau de votre pouvoir pour déterminer votre vitesse, comme avec le pouvoir Bonds. 8 Queue Vous pouvez utiliser votre queue comme s’il s’agissait d’un bras supplémentaire.\n\nVous gagnez le pouvoir Attaque Rapide à un niveau égal au niveau de votre pouvoir. 9-10 Tentacules Vous avez de puissants tentacules qui peuvent pousser sur vos épaules, votre dos ou vos hanches, ou même être constitués de longs cheveux préhensiles.\n\nIls vous font bénéficier du pouvoir Elasticité ou d’une Force égale au niveau de votre pouvoir. 11-12 Ailes Vous avez des ailes fonctionnelles, qu’elles ressemblent à des ailes d’oiseau, de chauve-souris ou d’insecte.\n\nVous gagnez le pouvoir Vol à un niveau égal au niveau de votre pouvoir.\n\nAnimaux Vous pouvez vous métamorphoser en animal, qu’il s’agisse d’animaux normaux ou d’hybrides homme-animal.\n\nVous conservez vos propres capacités mentales ainsi que votre capacité à parler, sauf si des limites particulières vous l’interdisent.\n\nVos capacités physiques sous forme animale sont égales au plus élevé de votre niveau de pouvoir ou de la capacité normale de l’animal.\n\nReportez-vous à des exemples d’animaux dans la section Créatures du chapitre Mener le jeu du livre de base d’ICONS.\n\nSous forme d’hybride homme-animal, votre Force, votre Coordination, ou les deux, peuvent être élevées au niveau de Métamorphose, selon le type d’animal copié.\n\nLes formes hybrides sont humanoïdes en tout point mais ont des particularités cosmétiques (fourrure, museau, queue et ainsi de suite).\n\nVous pouvez toutefois gagner les attaques physiques de l’animal, ainsi que ses capacités de mouvement.\n\nHumanoïdes Vous pouvez vous métamorphoser en copies convaincantes d’autres humanoïdes, incluant la voix et les vêtements qu’ils peuvent porter.\n\nVotre imitation est suffisamment bonne pour tromper des tests comme la prise d’empreintes digitales, les scans rétinaux et même les tests ADN.\n\nToutefois, vous ne gagnez aucune des capacités de votre modèle à part son apparence (pour cela, voir Mimétisme de pouvoir).\n\nObjets Vous pouvez vous métamorphoser en objets inanimés, depuis un rocher jusqu’à une machine comme une voiture.\n\nVous conservez vos propres capacités mentales ainsi que votre capacité à parler, sauf si des limites particulières vous l’interdisent.\n\nVous gagnez les propriétés physiques de l’objet, notamment sa Solidité, au même niveau que votre Pouvoir.",
       extras: [
         { name: "Pouvoirs", value: "Diminution, Elasticité, Forme alternative, Gigantisme, Mimétisme de pouvoir." },
         { name: "Catégorie supplémentaire", value: "vous pouvez assumer une catégorie additionnelle de formes. Si vous prenez deux fois cet extra, vous pourrez assumer les trois types de métamorphose : animaux, objets et humanoïdes." },
@@ -1995,7 +1995,7 @@ let pouvoirs = {
       page: 87,
       kind: "group",
       variantOf: null,
-      value: "Vous pouvez copier ou imiter certains des traits d’autres personnages, créatures ou objets. Reportez-vous aux pouvoirs Mimétisme animal, Mimétisme matériel, Némésis, Mimétisme végétal et Mimétisme de pouvoir. Choisissez ou lancez un dé sur la table suivante : D6 Pouvoir 1 Mimétisme animal 2 Mimétisme matériel 3 Némésis 4 Mimétisme végétal 5-6 Mimétisme de pouvoir",
+      value: "Vous pouvez copier ou imiter certains des traits d’autres personnages, créatures ou objets.\n\nReportez-vous aux pouvoirs Mimétisme animal, Mimétisme matériel, Némésis, Mimétisme végétal et Mimétisme de pouvoir.\n\nChoisissez ou lancez un dé sur la table suivante :",
       table: {
         "dice": "1d6",
         "label": "Pouvoir",
@@ -2043,7 +2043,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Mimétisme",
-      value: "Vous pouvez imiter les capacités des animaux, vous gratifiant de la Force d’un éléphant, de la Super-vitesse d’un guépard, de la Coordination d’un singe ou de la vision étendue et du Vol d’un aigle, par exemple. Sur chaque planche, vous pouvez choisir un animal à imiter, gagnant ainsi les niveaux de ses capacités avec pour maximum le niveau de votre pouvoir Mimétisme animal. Un animal doit être à portée visuelle afin que vous puissiez l’imiter. Le Meneur de Jeu déterminera quels animaux sont proches (un fait possiblement modifiable grâce à une retcon). Vous ne pouvez imiter qu’un animal à la fois et vous perdez les capacités de l’animal précédent lorsque vous passez d’un animal à un autre. Vous pouvez soit garder votre apparence normale, soit gagner des traits physiques lié à l’animal que vous imitez (selon votre choix lors de l’acquisition de ce pouvoir).",
+      value: "Vous pouvez imiter les capacités des animaux, vous gratifiant de la Force d’un éléphant, de la Super-vitesse d’un guépard, de la Coordination d’un singe ou de la vision étendue et du Vol d’un aigle, par exemple.\n\nSur chaque planche, vous pouvez choisir un animal à imiter, gagnant ainsi les niveaux de ses capacités avec pour maximum le niveau de votre pouvoir Mimétisme animal.\n\nUn animal doit être à portée visuelle afin que vous puissiez l’imiter.\n\nLe Meneur de Jeu déterminera quels animaux sont proches (un fait possiblement modifiable grâce à une retcon).\n\nVous ne pouvez imiter qu’un animal à la fois et vous perdez les capacités de l’animal précédent lorsque vous passez d’un animal à un autre.\n\nVous pouvez soit garder votre apparence normale, soit gagner des traits physiques lié à l’animal que vous imitez (selon votre choix lors de l’acquisition de ce pouvoir).",
       extras: [
         { name: "Animal supplémentaire", value: "vous pouvez imiter deux animaux à la fois, mélangeant leurs capacités et dupliquant le meilleur des deux. Si vous prenez cet extra plusieurs fois, vous pouvez imiter un animal de plus pour chaque sélection." },
         { name: "Sans limite de distance", value: "vous pouvez imiter n’importe quel animal auquel vous pensez, plutôt que ceux à proximité." },
@@ -2060,7 +2060,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Mimétisme",
-      value: "En touchant un autre personnage et en prenant une planche de préparation, vous pouvez imiter ses pouvoirs et les utiliser vous-même. Vous gagnez tous les pouvoirs de votre cible à un niveau égal au plus faible entre leur niveau existant ou votre niveau de Mimétisme. Ainsi, si vous avez un Mimétisme de pouvoir de niveau 4, tous les pouvoirs que vous imiterez seront limités à ce niveau. Vous conservez les pouvoirs imités jusqu’à ce que vous décidiez d’en copier un autre set ou que vous soyez plongés dans l’inconscience. Dans ce cas, vous perdez tous pouvoirs copiés précédemment.",
+      value: "En touchant un autre personnage et en prenant une planche de préparation, vous pouvez imiter ses pouvoirs et les utiliser vous-même.\n\nVous gagnez tous les pouvoirs de votre cible à un niveau égal au plus faible entre leur niveau existant ou votre niveau de Mimétisme.\n\nAinsi, si vous avez un Mimétisme de pouvoir de niveau 4, tous les pouvoirs que vous imiterez seront limités à ce niveau.\n\nVous conservez les pouvoirs imités jusqu’à ce que vous décidiez d’en copier un autre set ou que vous soyez plongés dans l’inconscience.\n\nDans ce cas, vous perdez tous pouvoirs copiés précédemment.",
       extras: [
         { name: "Pouvoirs", value: "Détection (détection de pouvoir), Némésis, Métamorphose (limitée à la forme de la personne dont vous imitez les pouvoirs)." },
         { name: "Absorption résiduelle", value: "vous n’avez pas besoin de toucher une cible pour copier ses pouvoirs, vous pouvez simplement vous tenir à un endroit où elle les a utilisés récemment, en touchant un objet qui lui appartient ou quelque chose de similaire." },
@@ -2088,7 +2088,7 @@ let pouvoirs = {
       page: 89,
       kind: "power",
       variantOf: null,
-      value: "MIMÉTISME En touchant une substance non-vivante ou une énergie, vous pouvez en acquérir les propriétés, comme avec le pouvoir Forme alternative (page 72), votre forme étant déterminée par le matériau ou l’énergie copié. Il vous faut une planche de préparation pour assumer une nouvelle forme. Si durant votre case, vous choisissez de ne rien faire d’autre que de copier les propriétés d’une attaque portée à votre encontre, vous devenez immunisé à cette attaque et assumez sa forme. Par exemple, si vous êtes atteint par le jet d’un lanceflammes, vous assumez une forme de feu et l’attaque n’a aucun effet. Si sur la même planche, vous êtes atteint par de multiples attaques, vous devez choisir laquelle imiter. Les attaques ne recourant à aucun matériau ou qualités énergétiques – comme un Drain d’énergie ou une Décharge mentale – ne peuvent être imitées.",
+      value: "MIMÉTISME En touchant une substance non-vivante ou une énergie, vous pouvez en acquérir les propriétés, comme avec le pouvoir Forme alternative (page 72), votre forme étant déterminée par le matériau ou l’énergie copié.\n\nIl vous faut une planche de préparation pour assumer une nouvelle forme.\n\nSi durant votre case, vous choisissez de ne rien faire d’autre que de copier les propriétés d’une attaque portée à votre encontre, vous devenez immunisé à cette attaque et assumez sa forme.\n\nPar exemple, si vous êtes atteint par le jet d’un lanceflammes, vous assumez une forme de feu et l’attaque n’a aucun effet.\n\nSi sur la même planche, vous êtes atteint par de multiples attaques, vous devez choisir laquelle imiter.\n\nLes attaques ne recourant à aucun matériau ou qualités énergétiques – comme un Drain d’énergie ou une Décharge mentale – ne peuvent être imitées.",
       extras: [
         { name: "Pouvoirs", value: "Adaptation, Diminution, Gigantisme, Mimétisme de pouvoir, Métamorphose (objets)." },
         { name: "Instantané", value: "changer de forme ne vous demande pas une planche de préparation, c’est instantané lorsque vous touchez un nouveau matériau. Toutefois, vous ne pouvez toujours imiter qu’une seule attaque par planche." },
@@ -2105,7 +2105,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Mimétisme",
-      value: "Après une planche de préparation, vous pouvez copier les capacités des plantes. Votre corps ne change pas significativement, bien qu’il puisse (à la discrétion du Meneur de Jeu) acquérir des aspects végétaux comme une peau verte, des feuilles à la place des cheveux ou une surface semblable à l’écorce. Des pouvoirs potentiels incluent Affliction (causée par les poisons ou les pollens), Vitalité (grâce à la photosynthèse) ou Domination (limitée aux insectes grâce à divers pollens). Vous pouvez soit conserver votre apparence normale soit prendre des traits végétaux (choisissez lors de l’acquisition de ce pouvoir).",
+      value: "Après une planche de préparation, vous pouvez copier les capacités des plantes.\n\nVotre corps ne change pas significativement, bien qu’il puisse (à la discrétion du Meneur de Jeu) acquérir des aspects végétaux comme une peau verte, des feuilles à la place des cheveux ou une surface semblable à l’écorce.\n\nDes pouvoirs potentiels incluent Affliction (causée par les poisons ou les pollens), Vitalité (grâce à la photosynthèse) ou Domination (limitée aux insectes grâce à divers pollens).\n\nVous pouvez soit conserver votre apparence normale soit prendre des traits végétaux (choisissez lors de l’acquisition de ce pouvoir).",
       extras: [
         { name: "Pouvoirs", value: "Contrôle des plantes (tous extras)." },
       ],
@@ -2117,7 +2117,7 @@ let pouvoirs = {
       page: 90,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez renvoyer les effets d’une attaque physique à celui qui vous prend pour cible. Testez votre pouvoir de Miroir en réaction, avec le niveau de la capacité d’attaque comme Difficulté. • Sur un échec, le miroir ne fonctionne pas et vous subissez les effets normaux de l’attaque. • Avec un succès marginal ou modéré, vous n’êtes pas affecté par l’attaque mais celle-ci n’est pas renvoyée vers l’attaquant, qui n’en subit donc pas non plus les effets. • Avec un succès majeur ou massif, l’attaque est renvoyée et votre adversaire en subit les pleins effets. Vous n’êtes aucunement affecté.",
+      value: "Vous pouvez renvoyer les effets d’une attaque physique à celui qui vous prend pour cible.\n\nTestez votre pouvoir de Miroir en réaction, avec le niveau de la capacité d’attaque comme Difficulté.\n• Sur un échec, le miroir ne fonctionne pas et vous subissez les effets normaux de l’attaque.\n• Avec un succès marginal ou modéré, vous n’êtes pas affecté par l’attaque mais celle-ci n’est pas renvoyée vers l’attaquant, qui n’en subit donc pas non plus les effets.\n• Avec un succès majeur ou massif, l’attaque est renvoyée et votre adversaire en subit les pleins effets.\n\nVous n’êtes aucunement affecté.",
       extras: [],
       limites: [
         { name: "Standard", value: "Extra seulement." },
@@ -2131,7 +2131,7 @@ let pouvoirs = {
       page: 91,
       kind: "variant",
       variantOf: "Amphibie",
-      value: "Reportez-vous au pouvoir Amphibie, page 32, avec possiblement la limite Un seul type. Voyez la section Nager dans le chapitre Action ! du livre de base d’ICONS pour des détails sur la natation, particulièrement pour les personnages incapables de respirer sous l’eau.",
+      value: "Reportez-vous au pouvoir Amphibie, page 32, avec possiblement la limite Un seul type.\n\nVoyez la section Nager dans le chapitre Action ! du livre de base d’ICONS pour des détails sur la natation, particulièrement pour les personnages incapables de respirer sous l’eau.",
       extras: [],
       limites: [],
     },
@@ -2142,7 +2142,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Mimétisme",
-      value: "Vous avez le pouvoir d’analyser les traits d’un opposant et de générer un pouvoir ou des pouvoirs (ainsi que les extras appropriés) capables de contrer ou de surpasser cet adversaire. Choisissez un adversaire à portée visuelle et prenez une planche de préparation. Au début de votre prochaine planche, vous gagnez le ou les pouvoirs (déterminés par le MJ) les plus à même de défaire cet opposant. Aucun pouvoir ainsi gagné ne peut avoir un niveau supérieur à celui de Némésis, mais peut avoir un niveau inférieur. Changer d’adversaire demande une nouvelle planche de préparation, durant laquelle vous ne pouvez utiliser aucun autre pouvoir le temps que vous vous adaptiez. De plus, les pouvoirs gagnés grâce à Némésis disparaissent immédiatement à l’issue du combat ou à la disparition de la menace, selon les indications du Meneur de Jeu.",
+      value: "Vous avez le pouvoir d’analyser les traits d’un opposant et de générer un pouvoir ou des pouvoirs (ainsi que les extras appropriés) capables de contrer ou de surpasser cet adversaire.\n\nChoisissez un adversaire à portée visuelle et prenez une planche de préparation.\n\nAu début de votre prochaine planche, vous gagnez le ou les pouvoirs (déterminés par le MJ) les plus à même de défaire cet opposant.\n\nAucun pouvoir ainsi gagné ne peut avoir un niveau supérieur à celui de Némésis, mais peut avoir un niveau inférieur.\n\nChanger d’adversaire demande une nouvelle planche de préparation, durant laquelle vous ne pouvez utiliser aucun autre pouvoir le temps que vous vous adaptiez.\n\nDe plus, les pouvoirs gagnés grâce à Némésis disparaissent immédiatement à l’issue du combat ou à la disparition de la menace, selon les indications du Meneur de Jeu.",
       extras: [
         { name: "Pouvoirs", value: "Détection (détection de pouvoir), Sens du danger." },
         { name: "Instantané", value: "votre pouvoir Némésis s’adapte instantanément à un nouvel adversaire, sous forme de réaction. Utiliser le pouvoir, ou changer d’adversaire, ne requiert aucune préparation." },
@@ -2159,7 +2159,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Contrôle de pouvoir",
-      value: "Vous avez la capacité d’annuler – de neutraliser complètement – les pouvoirs d’une autre personne jusqu’à portée étendue. Effectuez un test de Coordination contre une difficulté égale à la Coordination de la cible pour réussir à l’atteindre. Si c’est un succès, soustrayez votre niveau de Nullification à tous les niveaux de Pouvoir de votre victime. Un pouvoir réduit à 0 ou moins est inutilisable pendant une durée équivalente à votre niveau de pouvoir. Autrement, les pouvoirs réduits récupèrent 1 niveau par planche jusqu’à leur niveau initial.",
+      value: "Vous avez la capacité d’annuler – de neutraliser complètement – les pouvoirs d’une autre personne jusqu’à portée étendue.\n\nEffectuez un test de Coordination contre une difficulté égale à la Coordination de la cible pour réussir à l’atteindre.\n\nSi c’est un succès, soustrayez votre niveau de Nullification à tous les niveaux de Pouvoir de votre victime.\n\nUn pouvoir réduit à 0 ou moins est inutilisable pendant une durée équivalente à votre niveau de pouvoir.\n\nAutrement, les pouvoirs réduits récupèrent 1 niveau par planche jusqu’à leur niveau initial.",
       extras: [
         { name: "Standard", value: "Récupération lente, Salve." },
         { name: "Disruption", value: "plutôt que de nullifier un pouvoir, vous pouvez faire en sorte qu’il soit hors de contrôle, comme s’il avait la limite Instable." },
@@ -2178,7 +2178,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Contrôle de pouvoir",
-      value: "Vous pouvez donner des pouvoirs à d’autres personnes juste en les touchant et en y consacrant une action. Il est ainsi possible d’offrir n’importe quels pouvoirs, tant que le total de leurs niveaux reste inférieur au niveau d’Octroi. Les pouvoirs ainsi octroyés durent tant que la concentration est maintenue et pour un nombre de planches égal au niveau du pouvoir ensuite. Vous pouvez révoquer les pouvoirs ainsi octroyés à n’importe quel moment durant votre case. Certains personnages du Meneur de Jeu ont un Octroi de pouvoir horséchelle, et sont capables de donner divers pouvoirs avec des niveaux virtuellement illimités pour autant de temps qu’ils le désirent.",
+      value: "Vous pouvez donner des pouvoirs à d’autres personnes juste en les touchant et en y consacrant une action.\n\nIl est ainsi possible d’offrir n’importe quels pouvoirs, tant que le total de leurs niveaux reste inférieur au niveau d’Octroi.\n\nLes pouvoirs ainsi octroyés durent tant que la concentration est maintenue et pour un nombre de planches égal au niveau du pouvoir ensuite.\n\nVous pouvez révoquer les pouvoirs ainsi octroyés à n’importe quel moment durant votre case.\n\nCertains personnages du Meneur de Jeu ont un Octroi de pouvoir horséchelle, et sont capables de donner divers pouvoirs avec des niveaux virtuellement illimités pour autant de temps qu’ils le désirent.",
       extras: [
         { name: "Standard", value: "A distance, Salve." },
         { name: "Etendu", value: "l’octroi dure aussi longtemps que vous le désirez, ou jusqu’à ce que vous décidiez de le révoquer." },
@@ -2195,7 +2195,7 @@ let pouvoirs = {
       page: 93,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez rendre un adversaire incapable d’agir. Effectuez, jusqu’à portée étendue, un test de Coordination contre la Coordination de votre cible. Si votre attaque est un succès, faites un test de votre niveau de Paralysie contre la Force ou la Volonté de la victime (choisissez quelle capacité est affectée lorsque vous recevez ce pouvoir) : • Un échec ou un succès marginal n’entraîne aucun effet. • Un succès modéré signifie que la cible ne peut entreprendre aucune action pendant une planche. • Un succès majeur signifie que la cible ne peut entreprendre aucune action pendant une durée égale au niveau de votre pouvoir. • Un succès massif signifie que la cible ne peut entreprendre aucune action pour le reste du chapitre (ou jusqu’à ce que vous désiriez la libérer). Les aspects de la cible peuvent être activés pour lui permettre de récupérer, mettant fin à l’effet de Paralysie. Vous devez décider de la façon dont votre pouvoir fonctionne : il peut laisser votre victime étourdie ou inconsciente, confuse, paralysée ou submergée par la douleur, la peur, le plaisir ou toute autre sensation.",
+      value: "Vous pouvez rendre un adversaire incapable d’agir.\n\nEffectuez, jusqu’à portée étendue, un test de Coordination contre la Coordination de votre cible.\n\nSi votre attaque est un succès, faites un test de votre niveau de Paralysie contre la Force ou la Volonté de la victime (choisissez quelle capacité est affectée lorsque vous recevez ce pouvoir) :\n• Un échec ou un succès marginal n’entraîne aucun effet.\n• Un succès modéré signifie que la cible ne peut entreprendre aucune action pendant une planche.\n• Un succès majeur signifie que la cible ne peut entreprendre aucune action pendant une durée égale au niveau de votre pouvoir.\n• Un succès massif signifie que la cible ne peut entreprendre aucune action pour le reste du chapitre (ou jusqu’à ce que vous désiriez la libérer).\n\nLes aspects de la cible peuvent être activés pour lui permettre de récupérer, mettant fin à l’effet de Paralysie.\n\nVous devez décider de la façon dont votre pouvoir fonctionne : il peut laisser votre victime étourdie ou inconsciente, confuse, paralysée ou submergée par la douleur, la peur, le plaisir ou toute autre sensation.",
       extras: [
         { name: "Standard", value: "Salve, contagieux, Sans limite de distance" },
         { name: "Deux types", value: "vous pouvez cibler la Force ou la Volonté. Choisissez à chaque utilisation." },
@@ -2208,7 +2208,7 @@ let pouvoirs = {
       page: 94,
       kind: "power",
       variantOf: null,
-      value: "Vous êtes doué de PES (perception extrasensorielle), ce qui vous permet de percevoir des choses au loin, comme si vous étiez physiquement présent. Reportez-vous à la Table des Références pour avoir une idée de la distance à laquelle vous pouvez utiliser ce pouvoir. Lorsque vous utilisez votre PES, utilisez le plus bas de votre niveau de pouvoir ou de votre Éveil pour effectuer les tests destinés à aviser ou fouiller sur place. Si les lieux sont protégés contre la PES, effectuez un test de pouvoir contre le niveau de l’écran. Le Meneur de Jeu peut aussi demander un test de PES pour les zones qui vous sont complètement inconnues, déterminant ce que vous voyez en fonction de votre marge.",
+      value: "Vous êtes doué de PES (perception extrasensorielle), ce qui vous permet de percevoir des choses au loin, comme si vous étiez physiquement présent.\n\nReportez-vous à la Table des Références pour avoir une idée de la distance à laquelle vous pouvez utiliser ce pouvoir.\n\nLorsque vous utilisez votre PES, utilisez le plus bas de votre niveau de pouvoir ou de votre Éveil pour effectuer les tests destinés à aviser ou fouiller sur place.\n\nSi les lieux sont protégés contre la PES, effectuez un test de pouvoir contre le niveau de l’écran.\n\nLe Meneur de Jeu peut aussi demander un test de PES pour les zones qui vous sont complètement inconnues, déterminant ce que vous voyez en fonction de votre marge.",
       extras: [
         { name: "Dimensionnel", value: "vous pouvez étendre votre PES à d’autres dimensions, comme une utilisation du pouvoir Voyage dimensionnel (page 112)." },
       ],
@@ -2233,7 +2233,7 @@ let pouvoirs = {
       page: 94,
       kind: "variant",
       variantOf: "Affliction",
-      value: "Reportez-vous aux pouvoir Affliction, (page 30), pour les effets adaptés de différends poisons ou venins qu’un personnage peut infliger à une cible. D’autres toxines spécialisées peuvent avoir différents effets de pouvoir, incluant Illusions (hallucinations), Domination ou Paralysie. Voir Accessoires d’Altération et Armes chimiques dans la section Accessoires offensifs du chapitre Accessoires.",
+      value: "Reportez-vous aux pouvoir Affliction, (page 30), pour les effets adaptés de différends poisons ou venins qu’un personnage peut infliger à une cible.\n\nD’autres toxines spécialisées peuvent avoir différents effets de pouvoir, incluant Illusions (hallucinations), Domination ou Paralysie.\n\nVoir Accessoires d’Altération et Armes chimiques dans la section Accessoires offensifs du chapitre Accessoires.",
       extras: [],
       limites: [],
     },
@@ -2243,7 +2243,7 @@ let pouvoirs = {
       page: 94,
       kind: "variant",
       variantOf: "Téléportation",
-      value: "Vous pouvez ouvrir une porte ou portail à travers l’espace. Reportez-vous à l’extra Portail du pouvoir Téléportation (page 107).",
+      value: "Vous pouvez ouvrir une porte ou portail à travers l’espace.\n\nReportez-vous à l’extra Portail du pouvoir Téléportation (page 107).",
       extras: [],
       limites: [],
     },
@@ -2253,7 +2253,7 @@ let pouvoirs = {
       page: 94,
       kind: "variant",
       variantOf: "Domination",
-      value: "Votre esprit peut posséder le corps d’une cible, vous permettant de contrôler ses actions de l’intérieur. Reportez-vous à l’extra Possession du pouvoir Domination (page 66), avec possiblement l’extra Fusion, permettant à votre corps de fusionner avec celui de la cible que vous possédez. Ce pouvoir fonctionne bien en conjonction avec Immatérialité (pour les possessions réalisées par des fantômes, des esprits, des démons incorporels) mais notez que l’effet de Domination est alors limité par le niveau d’Immatérialité.",
+      value: "Votre esprit peut posséder le corps d’une cible, vous permettant de contrôler ses actions de l’intérieur.\n\nReportez-vous à l’extra Possession du pouvoir Domination (page 66), avec possiblement l’extra Fusion, permettant à votre corps de fusionner avec celui de la cible que vous possédez.\n\nCe pouvoir fonctionne bien en conjonction avec Immatérialité (pour les possessions réalisées par des fantômes, des esprits, des démons incorporels) mais notez que l’effet de Domination est alors limité par le niveau d’Immatérialité.",
       extras: [],
       limites: [],
     },
@@ -2263,7 +2263,7 @@ let pouvoirs = {
       page: 95,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez percevoir les choses qui se sont produites dans le passé. Vous devez toucher un objet ou vous trouver dans un lieu afin de sentir son passé et effectuer un test de pouvoir, dont la difficulté dépend du temps que vous voulez remonter. Difficulté Pouvoir 1 Un jour 2 Quelques jours 3 Une semaine 4 Quelques semaines 5 Un mois 6 Quelques mois 7 Une saison (4 mois) 8 Six mois 9 Un an 10 Plus d’un an • Un échec majeur ou pire peut vous fournir de fausses informations ou des visions trompeuses, si le MJ le désire. • Un échec ne vous donne aucune information et vous devrez recourir à un effort tenace pour pouvoir essayer à nouveau. • Un succès marginal ne vous donne aucune information, mais vous pouvez essayer à nouveau sans recourir à un effort tenace. • Un succès modéré vous permet d’obtenir des indices cryptiques et des visions floues, ouverts à l’interprétation. • Un succès majeur vous donne des informations plus claires, peutêtre un nom ou un visage. • Un succès massif vous offre une vision claire et détaillée, même si elle ne comprend pas forcément toutes les informations sur les événements. Vous pouvez aussi utiliser la Postcognition pour des manoeuvres destinées à découvrir ou créer des aspects et ainsi tirer avantage de ce que vous percevez.",
+      value: "Vous pouvez percevoir les choses qui se sont produites dans le passé.\n\nVous devez toucher un objet ou vous trouver dans un lieu afin de sentir son passé et effectuer un test de pouvoir, dont la difficulté dépend du temps que vous voulez remonter.\n\nDifficulté Pouvoir 1 Un jour 2 Quelques jours 3 Une semaine 4 Quelques semaines 5 Un mois 6 Quelques mois 7 Une saison (4 mois) 8 Six mois 9 Un an 10 Plus d’un an\n• Un échec majeur ou pire peut vous fournir de fausses informations ou des visions trompeuses, si le MJ le désire.\n• Un échec ne vous donne aucune information et vous devrez recourir à un effort tenace pour pouvoir essayer à nouveau.\n• Un succès marginal ne vous donne aucune information, mais vous pouvez essayer à nouveau sans recourir à un effort tenace.\n• Un succès modéré vous permet d’obtenir des indices cryptiques et des visions floues, ouverts à l’interprétation.\n• Un succès majeur vous donne des informations plus claires, peutêtre un nom ou un visage.\n• Un succès massif vous offre une vision claire et détaillée, même si elle ne comprend pas forcément toutes les informations sur les événements.\n\nVous pouvez aussi utiliser la Postcognition pour des manoeuvres destinées à découvrir ou créer des aspects et ainsi tirer avantage de ce que vous percevez.",
       extras: [],
       limites: [],
     },
@@ -2274,7 +2274,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Arcanes",
-      value: "Vous pouvez puiser dans les forces primordiales de l’univers. Choisissez un effet de pouvoir que vous pouvez dupliquer. D’autres effets peuvent être associés sous la forme d’extras. Fondamentalement, n’importe quel pouvoir peut être un extra de Pouvoir Cosmique, avec l’accord du Meneur de Jeu. Sous sa forme la plus basique, Pouvoir cosmique est souvent semblable à l’un des pouvoirs de Contrôle de l’énergie auxquels vous pouvez vous reporter pour exemple.",
+      value: "Vous pouvez puiser dans les forces primordiales de l’univers.\n\nChoisissez un effet de pouvoir que vous pouvez dupliquer.\n\nD’autres effets peuvent être associés sous la forme d’extras.\n\nFondamentalement, n’importe quel pouvoir peut être un extra de Pouvoir Cosmique, avec l’accord du Meneur de Jeu.\n\nSous sa forme la plus basique, Pouvoir cosmique est souvent semblable à l’un des pouvoirs de Contrôle de l’énergie auxquels vous pouvez vous reporter pour exemple.",
       extras: [
         { name: "Pouvoirs", value: "n’importe lequel." },
       ],
@@ -2289,7 +2289,7 @@ let pouvoirs = {
       page: 96,
       kind: "power",
       variantOf: null,
-      value: "Vous avez des visions de ce qui pourrait se passer dans le futur. Tenter délibérément d’obtenir une vision requiert un test de pouvoir, secrètement effectué par le Meneur de Jeu contre une Difficulté basée sur la nature plus ou moins obscure, plus ou moins éloignée dans le futur, des événements que vous voulez percevoir (voir Postcognition, page 95). • Un échec majeur ou pire peut vous fournir de fausses informations ou des visions trompeuses, si le MJ le désire. • Un échec ne vous donne aucune information et vous devrez recourir à un effort tenace pour pouvoir essayer à nouveau. • Un succès marginal ne vous donne aucune information, mais vous pouvez essayer à nouveau sans recourir à un effort tenace. • Un succès modéré vous permet d’obtenir des indices cryptiques et des visions floues, ouverts à l’interprétation. • Un succès majeur vous donne des informations plus claires, peutêtre un nom ou un visage. • Un succès massif vous offre une vision claire et détaillée, même si elle ne comprend pas forcément toutes les informations sur les événements. Le Meneur de Jeu peut aussi choisir de vous donner une vision précognitive à n’importe quel moment, utilisant à des fins narratives des prémonitions particulièrement fortes. Vous pouvez aussi utiliser la Précognition pour des manoeuvres destinées à découvrir ou créer des aspects et ainsi tirer avantage de ce que vous percevez. Vous pouvez éviter certains dangers : avec un succès majeur ou supérieur sur un test de Précognition et l’utilisation d’un avantage, vous pouvez retconner un événement qui vient juste de se dérouler, décrétant qu’il n’était pas réel mais juste un avertissement précognitif ! Exemple : L’héroïne Prometheus a le pouvoir Précognition au niveau 7. Elle et ses coéquipiers font face à une arme nucléaire volée dont le compte à rebours est enclenché. L’un des équipiers de Prometheus coupe le mauvais fil et la bombe explose ! La joueuse de Prometheus déclare une utilisation immédiate de sa Précognition, accompagnée d’un effort déterminé pour obtenir un succès majeur. Elle l’obtient, dépense la Ténacité nécessaire et retconne la scène qui vient juste d’arriver sous la forme d’une vision. Face aux autres personnages, Prometheus sort de sa fugue au moment même où son équipier va couper le fil. « Non ! » avertitelle, « tu vas la faire exploser ! ». Le désastre est, pour le moment, évité. Vous pouvez réaliser cela un nombre maximum de fois par numéro égal à votre niveau de Précognition.",
+      value: "Vous avez des visions de ce qui pourrait se passer dans le futur.\n\nTenter délibérément d’obtenir une vision requiert un test de pouvoir, secrètement effectué par le Meneur de Jeu contre une Difficulté basée sur la nature plus ou moins obscure, plus ou moins éloignée dans le futur, des événements que vous voulez percevoir (voir Postcognition, page 95).\n• Un échec majeur ou pire peut vous fournir de fausses informations ou des visions trompeuses, si le MJ le désire.\n• Un échec ne vous donne aucune information et vous devrez recourir à un effort tenace pour pouvoir essayer à nouveau.\n• Un succès marginal ne vous donne aucune information, mais vous pouvez essayer à nouveau sans recourir à un effort tenace.\n• Un succès modéré vous permet d’obtenir des indices cryptiques et des visions floues, ouverts à l’interprétation.\n• Un succès majeur vous donne des informations plus claires, peutêtre un nom ou un visage.\n• Un succès massif vous offre une vision claire et détaillée, même si elle ne comprend pas forcément toutes les informations sur les événements.\n\nLe Meneur de Jeu peut aussi choisir de vous donner une vision précognitive à n’importe quel moment, utilisant à des fins narratives des prémonitions particulièrement fortes.\n\nVous pouvez aussi utiliser la Précognition pour des manoeuvres destinées à découvrir ou créer des aspects et ainsi tirer avantage de ce que vous percevez.\n\nVous pouvez éviter certains dangers : avec un succès majeur ou supérieur sur un test de Précognition et l’utilisation d’un avantage, vous pouvez retconner un événement qui vient juste de se dérouler, décrétant qu’il n’était pas réel mais juste un avertissement précognitif !\n\nExemple : L’héroïne Prometheus a le pouvoir Précognition au niveau 7.\n\nElle et ses coéquipiers font face à une arme nucléaire volée dont le compte à rebours est enclenché.\n\nL’un des équipiers de Prometheus coupe le mauvais fil et la bombe explose !\n\nLa joueuse de Prometheus déclare une utilisation immédiate de sa Précognition, accompagnée d’un effort déterminé pour obtenir un succès majeur.\n\nElle l’obtient, dépense la Ténacité nécessaire et retconne la scène qui vient juste d’arriver sous la forme d’une vision.\n\nFace aux autres personnages, Prometheus sort de sa fugue au moment même où son équipier va couper le fil.\n\n« Non ! » avertitelle, « tu vas la faire exploser ! ».\n\nLe désastre est, pour le moment, évité.\n\nVous pouvez réaliser cela un nombre maximum de fois par numéro égal à votre niveau de Précognition.",
       extras: [
         { name: "Pouvoirs", value: "Sens du danger, Contrôle des probabilités, Voyage temporel (uniquement jusqu’au moment de votre vision)." },
       ],
@@ -2307,7 +2307,7 @@ let pouvoirs = {
       page: 97,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez séparer votre forme astrale – le véhicule de votre esprit et de votre âme – de votre corps physique, lui permettant de voyager n’importe où. Votre corps est plongé dans un état comateux mais vous restez toujours conscient des atteintes qu’il peut subir. Si votre corps est déplacé par quelqu’un ou quelque chose alors que votre forme astrale est projetée, vous n’en êtes toutefois pas automatiquement conscient, ce qui peut vous contraindre à rechercher votre enveloppe corporelle. Si votre corps périt alors que votre forme astrale est en balade, vous restez piégé sous cette forme. Votre forme astrale est douée de Vol et d’Immatérialité, au même niveau que le Pouvoir. Votre forme astrale peut observer, mais non affecter, le monde physique et ne peut pas être détectée par des moyens physiques. Néanmoins, les pouvoirs Détection astrale et Télépathie peuvent la révéler. Vous pouvez utiliser des pouvoirs mentaux contre des êtres non astraux, mais avec une difficulté augmentée de +2. Vos pouvoirs fonctionnent normalement contre les autres êtres astraux.",
+      value: "Vous pouvez séparer votre forme astrale – le véhicule de votre esprit et de votre âme – de votre corps physique, lui permettant de voyager n’importe où.\n\nVotre corps est plongé dans un état comateux mais vous restez toujours conscient des atteintes qu’il peut subir.\n\nSi votre corps est déplacé par quelqu’un ou quelque chose alors que votre forme astrale est projetée, vous n’en êtes toutefois pas automatiquement conscient, ce qui peut vous contraindre à rechercher votre enveloppe corporelle.\n\nSi votre corps périt alors que votre forme astrale est en balade, vous restez piégé sous cette forme.\n\nVotre forme astrale est douée de Vol et d’Immatérialité, au même niveau que le Pouvoir.\n\nVotre forme astrale peut observer, mais non affecter, le monde physique et ne peut pas être détectée par des moyens physiques.\n\nNéanmoins, les pouvoirs Détection astrale et Télépathie peuvent la révéler.\n\nVous pouvez utiliser des pouvoirs mentaux contre des êtres non astraux, mais avec une difficulté augmentée de +2.\n\nVos pouvoirs fonctionnent normalement contre les autres êtres astraux.",
       extras: [
         { name: "Pouvoirs", value: "Contrôle des rêves, Détection astrale, Voyage dimensionnel (sous forme astrale)." },
         { name: "Maîtrise mentale", value: "sous forme astrale, vous pouvez utiliser vos pouvoirs mentaux sur des êtres non astraux sans modificateur de difficulté." },
@@ -2320,7 +2320,7 @@ let pouvoirs = {
       page: 98,
       kind: "group",
       variantOf: null,
-      value: "Ce pouvoir est un groupe de pouvoirs d’Altération que vous pouvez utiliser sur d’autres, à portée étendue, plutôt que sur vous-même. Choisissez l’une des options dans la liste en bas de page ou lancez un d6. Faites un test de Coordination contre la Coordination de votre cible pour la toucher. Une réussite soumet la cible à l’effet du pouvoir d’Altération choisi. Reportez-vous à la description de chaque pouvoir pour le détail de ses effets.",
+      value: "Ce pouvoir est un groupe de pouvoirs d’Altération que vous pouvez utiliser sur d’autres, à portée étendue, plutôt que sur vous-même.\n\nChoisissez l’une des options dans la liste en bas de page ou lancez un d6.\n\nFaites un test de Coordination contre la Coordination de votre cible pour la toucher.\n\nUne réussite soumet la cible à l’effet du pouvoir d’Altération choisi.\n\nReportez-vous à la description de chaque pouvoir pour le détail de ses effets.",
       table: {
         "dice": "1d6",
         "label": "Type",
@@ -2383,7 +2383,7 @@ let pouvoirs = {
       page: 99,
       kind: "variant",
       variantOf: "Élasticité",
-      value: "Vous pouvez ricocher sur le sol ou d’autres surfaces. Reportez-vous à l’extra Rebond du pouvoir Élasticité (page 70), peut-être avec la limite Gonflage si vous êtes uniquement capable de rebondir. Certains personnages bénéficient de Rebond sous la forme d’extra d’un Champ de Force (page 38) : leur champ les protège des dégâts en redirigeant l’impact, provoquant un rebond ou un ricochet loin du danger.",
+      value: "Vous pouvez ricocher sur le sol ou d’autres surfaces.\n\nReportez-vous à l’extra Rebond du pouvoir Élasticité (page 70), peut-être avec la limite Gonflage si vous êtes uniquement capable de rebondir.\n\nCertains personnages bénéficient de Rebond sous la forme d’extra d’un Champ de Force (page 38) : leur champ les protège des dégâts en redirigeant l’impact, provoquant un rebond ou un ricochet loin du danger.",
       extras: [],
       limites: [],
     },
@@ -2393,7 +2393,7 @@ let pouvoirs = {
       page: 99,
       kind: "power",
       variantOf: null,
-      value: "Régénération vous permet de récupérer un nombre de points d’Endurance égal à votre niveau de pouvoir toutes les dix planches. La récupération est répartie équitablement sur ce laps de temps de 10 planches : avec une Régénération de niveau 2, ce sera 2 points d’Endurance toutes les 5 planches ; avec une régénération de niveau de 3, ce sera 1 point d’Endurance sur les planches 3, 6 et 9, et ainsi de suite. Avec une Régénération 10, vous récupérez un point d’Endurance par planche. De plus, si vous utilisez un avantage pour récupérer, vous regagnez en Endurance l’équivalent du plus haut de votre Force, Volonté ou Régénération. Vous récupérez aussi un nombre de niveau de Force par semaine égal à votre niveau de pouvoir. Ainsi, si vous avez Régénération au niveau 7, par exemple, vous récupérez un niveau de Force perdu par jour.",
+      value: "Régénération vous permet de récupérer un nombre de points d’Endurance égal à votre niveau de pouvoir toutes les dix planches.\n\nLa récupération est répartie équitablement sur ce laps de temps de 10 planches : avec une Régénération de niveau 2, ce sera 2 points d’Endurance toutes les 5 planches ; avec une régénération de niveau de 3, ce sera 1 point d’Endurance sur les planches 3, 6 et 9, et ainsi de suite.\n\nAvec une Régénération 10, vous récupérez un point d’Endurance par planche.\n\nDe plus, si vous utilisez un avantage pour récupérer, vous regagnez en Endurance l’équivalent du plus haut de votre Force, Volonté ou Régénération.\n\nVous récupérez aussi un nombre de niveau de Force par semaine égal à votre niveau de pouvoir.\n\nAinsi, si vous avez Régénération au niveau 7, par exemple, vous récupérez un niveau de Force perdu par jour.",
       extras: [
         { name: "Repousse", value: "vous pouvez faire repousser les parties perdues de votre corps (ou les réattacher, si elles sont toujours disponibles)." },
       ],
@@ -2405,7 +2405,7 @@ let pouvoirs = {
       page: 99,
       kind: "group",
       variantOf: null,
-      value: "Ce pouvoir augmente définitivement le niveau de l’une de vos capacités (attribut ou pouvoir), au niveau auquel il a été tiré sur la table de détermination ou de +2, selon ce qui est le plus avantageux, avec un maximum de 10. Renforcement de capacité ne compte pas comme un pouvoir dans le calcul de votre Ténacité, mais un attribut renforcé le peut, si son niveau final est égal ou supérieur à 7. Choisissez un attribut ou lancez un dé sur la table suivante : 1d6 Capacité 1 Vaillance 2 Coordination 3 Force 4 Intellect 5 Eveil 6 Volonté",
+      value: "Ce pouvoir augmente définitivement le niveau de l’une de vos capacités (attribut ou pouvoir), au niveau auquel il a été tiré sur la table de détermination ou de +2, selon ce qui est le plus avantageux, avec un maximum de 10.\n\nRenforcement de capacité ne compte pas comme un pouvoir dans le calcul de votre Ténacité, mais un attribut renforcé le peut, si son niveau final est égal ou supérieur à 7.\n\nChoisissez un attribut ou lancez un dé sur la table suivante :",
       table: {
         "dice": "1d6",
         "label": "Capacité",
@@ -2459,7 +2459,7 @@ let pouvoirs = {
       page: 100,
       kind: "group",
       variantOf: null,
-      value: "Vous pouvez résister à type particulier d’effet. Choisissez l’un des effets suivants : il peut s’agir d’une Résistance à une capacité (Affliction, Drain d’énergie ou effets apparentés), à l’Altération, à l’Immobilisation, aux Dégâts, à la Détection ou bien encore d’une Résistance Mentale ou Sensorielle… Ou bien, vous pouvez développer votre propre type de résistance avec la permission du MJ. Soustrayez votre Résistance du niveau qu’ont de tels effets contre vous. Si l’effet est réduit à 0 ou moins, il ne vous affecte pas du tout. Si vous avez une Résistance de niveau 10, vous êtes globalement immunisé à l’effet concerné, même si une attaque de niveau 10 peut encore potentiellement vous projeter, vous étourdir ou vous tuer. Avec une Résistance de 10, vous pouvez même ignorer ces possibilités au prix d’un point de Ténacité.",
+      value: "Vous pouvez résister à type particulier d’effet.\n\nChoisissez l’un des effets suivants : il peut s’agir d’une Résistance à une capacité (Affliction, Drain d’énergie ou effets apparentés), à l’Altération, à l’Immobilisation, aux Dégâts, à la Détection ou bien encore d’une Résistance Mentale ou Sensorielle…\n\nOu bien, vous pouvez développer votre propre type de résistance avec la permission du MJ.\n\nSoustrayez votre Résistance du niveau qu’ont de tels effets contre vous.\n\nSi l’effet est réduit à 0 ou moins, il ne vous affecte pas du tout.\n\nSi vous avez une Résistance de niveau 10, vous êtes globalement immunisé à l’effet concerné, même si une attaque de niveau 10 peut encore potentiellement vous projeter, vous étourdir ou vous tuer.\n\nAvec une Résistance de 10, vous pouvez même ignorer ces possibilités au prix d’un point de Ténacité.",
       table: {
         "dice": null,
         "label": "Type",
@@ -2519,7 +2519,7 @@ let pouvoirs = {
       page: 100,
       kind: "power",
       variantOf: null,
-      value: "Grâce à cette sorte de « sixième sens », vous sentez les dangers imminents. Vous pouvez substituer votre niveau de pouvoir aux capacités testées en réaction lors d’une attaque, ou à l’Eveil pour éviter les embuscades (en fait, votre niveau de Sens du danger devient la Difficulté à vous toucher en combat). Si le niveau de votre Sens du danger est inférieur à la capacité associée, vous obtenez à la place un bonus de +1 à ladite capacité.",
+      value: "Grâce à cette sorte de « sixième sens », vous sentez les dangers imminents.\n\nVous pouvez substituer votre niveau de pouvoir aux capacités testées en réaction lors d’une attaque, ou à l’Eveil pour éviter les embuscades (en fait, votre niveau de Sens du danger devient la Difficulté à vous toucher en combat).\n\nSi le niveau de votre Sens du danger est inférieur à la capacité associée, vous obtenez à la place un bonus de +1 à ladite capacité.",
       extras: [],
       limites: [],
     },
@@ -2529,7 +2529,7 @@ let pouvoirs = {
       page: 101,
       kind: "variant",
       variantOf: "Duplication",
-      value: "Vous pouvez séparer des parties de votre corps sans dommages et les contrôler alors qu’elles sont séparées du reste. Voir la limite Séparation anatomique du pouvoir Duplication (page 68).",
+      value: "Vous pouvez séparer des parties de votre corps sans dommages et les contrôler alors qu’elles sont séparées du reste.\n\nVoir la limite Séparation anatomique du pouvoir Duplication (page 68).",
       extras: [],
       limites: [],
     },
@@ -2539,7 +2539,7 @@ let pouvoirs = {
       page: 101,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez créer ou invoquer un serviteur ou un sbire. Il vous faut une planche de préparation pour invoquer votre serviteur, qui apparaîtra à portée proche. Vous devez vous concentrer pour donner des ordres à votre serviteur. Vous disposez d’une réserve de points égale à 4 fois votre niveau dans le pouvoir Serviteur, avec lequel vous achetez les capacités du serviteur : sa Vaillance, sa Force, sa Coordination et ses pouvoirs coûtent chacun 1 point par niveau. Des pouvoirs d’attaque, de défense ou de mouvement sont fréquents chez les serviteurs, mais ils peuvent être dotés de tout type de pouvoirs, avec l’accord du MJ. Les serviteurs n’ont aucune capacité mentale et ne peuvent que suivre vos ordres. Ils n’ont pas de Ténacité et il est impossible de leur en octroyer grâce au Commandement. Notez que vous créez ce serviteur lorsque vous obtenez ce pouvoir et que vous invoquerez toujours le même : si vous souhaitez changer les capacités de votre serviteur à chaque invocation, il vous faudra l’extra Variable. Le MJ doit approuver chaque serviteur et peut opposer son veto à un concept inapproprié. Les vilains ont souvent ce pouvoir à un niveau hors-échelle, leur permettant d’appeler à eux des légions de serviteurs ou de sbires puissants Exemple : L’héroïne Tesla peut invoquer des « Teslabots » au travers d’un trou de ver dimensionnel. Son niveau de Serviteur à 6 lui offre 24 points à diviser et un Teslabot peut donc avoir une Vaillance à 3, une Coordination à 3, une Force à 6 et les pouvoirs Résistance aux dégâts à 3, Vol à 4 et Paralysie 5. Serviteurs multiples Vous pouvez dépenser un des points de la réserve de votre serviteur pour lui adjoindre un second serviteur avec les mêmes caractéristiques (ce qui réduit les points à dépenser dans les capacités). Vous ne pouvez toujours invoquer qu’un seul serviteur par planche, sauf si vous bénéficiez de l’extra Multiple (ci-dessous). Les serviteurs qui collaborent ensemble à la même action utilisent la règle d’effort combiné (voir effort combiné dans les bases). Exemple : souhaitant disposer de plusieurs Teslabots, Tesla applique l’extra Augmenté (voir ci-dessous) à son serviteur et utilise ces 6 points supplémentaires pour obtenir un total de six robots à invoquer. Si elle veut les invoquer tous en même temps, il lui faudra toutefois également l’extra Multiple,. Autrement, elle ne pourra en faire venir qu’un seul par planche.",
+      value: "Vous pouvez créer ou invoquer un serviteur ou un sbire.\n\nIl vous faut une planche de préparation pour invoquer votre serviteur, qui apparaîtra à portée proche.\n\nVous devez vous concentrer pour donner des ordres à votre serviteur.\n\nVous disposez d’une réserve de points égale à 4 fois votre niveau dans le pouvoir Serviteur, avec lequel vous achetez les capacités du serviteur : sa Vaillance, sa Force, sa Coordination et ses pouvoirs coûtent chacun 1 point par niveau.\n\nDes pouvoirs d’attaque, de défense ou de mouvement sont fréquents chez les serviteurs, mais ils peuvent être dotés de tout type de pouvoirs, avec l’accord du MJ.\n\nLes serviteurs n’ont aucune capacité mentale et ne peuvent que suivre vos ordres.\n\nIls n’ont pas de Ténacité et il est impossible de leur en octroyer grâce au Commandement.\n\nNotez que vous créez ce serviteur lorsque vous obtenez ce pouvoir et que vous invoquerez toujours le même : si vous souhaitez changer les capacités de votre serviteur à chaque invocation, il vous faudra l’extra Variable.\n\nLe MJ doit approuver chaque serviteur et peut opposer son veto à un concept inapproprié.\n\nLes vilains ont souvent ce pouvoir à un niveau hors-échelle, leur permettant d’appeler à eux des légions de serviteurs ou de sbires puissants Exemple : L’héroïne Tesla peut invoquer des « Teslabots » au travers d’un trou de ver dimensionnel.\n\nSon niveau de Serviteur à 6 lui offre 24 points à diviser et un Teslabot peut donc avoir une Vaillance à 3, une Coordination à 3, une Force à 6 et les pouvoirs Résistance aux dégâts à 3, Vol à 4 et Paralysie 5.\n\nServiteurs multiples Vous pouvez dépenser un des points de la réserve de votre serviteur pour lui adjoindre un second serviteur avec les mêmes caractéristiques (ce qui réduit les points à dépenser dans les capacités).\n\nVous ne pouvez toujours invoquer qu’un seul serviteur par planche, sauf si vous bénéficiez de l’extra Multiple (ci-dessous).\n\nLes serviteurs qui collaborent ensemble à la même action utilisent la règle d’effort combiné (voir effort combiné dans les bases).\n\nExemple : souhaitant disposer de plusieurs Teslabots, Tesla applique l’extra Augmenté (voir ci-dessous) à son serviteur et utilise ces 6 points supplémentaires pour obtenir un total de six robots à invoquer.\n\nSi elle veut les invoquer tous en même temps, il lui faudra toutefois également l’extra Multiple,.\n\nAutrement, elle ne pourra en faire venir qu’un seul par planche.",
       extras: [
         { name: "Augmenté", value: "chaque application de cet extra vous donne des points additionnels pour créer votre serviteur, égal à votre niveau de pouvoir." },
         { name: "Multiple", value: "si vous invoquez des serviteurs multiples, vous pouvez les faire apparaître tous en même temps plutôt qu’un par planche." },
@@ -2559,7 +2559,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Arcanes",
-      value: "Sorcellerie vous permet de lancer des sortilèges dupliquant les effets des autres pouvoirs. Ce pouvoir a la limite Performance (voir Limites) : si vous êtes contraint, bâillonné ou d’une autre manière incapable de faire des gestes ou de parler, vous ne pouvez lancer de sort. Préparer un sort vous demande une planche de préparation : choisissez le pouvoir que vous souhaitez dupliquer et faites un test avec une Difficulté égale au niveau de pouvoir désiré, limité par votre propre niveau de Sorcellerie. Choisissez la capacité que vous testez pour jeter vos sorts au moment de l’acquisition de ce pouvoir : soit votre niveau dans le pouvoir Sorcellerie, soit un attribut, peut-être augmenté d’une spécialité (typiquement Occultisme). Un succès vous octroie le pouvoir voulu au niveau souhaité, un échec signifie que vous devrez recourir à un effort tenace pour essayer à nouveau. Vous pouvez aussi jeter un sort automatiquement en dépensant un point de Ténacité (aucun test n’est alors requis).",
+      value: "Sorcellerie vous permet de lancer des sortilèges dupliquant les effets des autres pouvoirs.\n\nCe pouvoir a la limite Performance (voir Limites) : si vous êtes contraint, bâillonné ou d’une autre manière incapable de faire des gestes ou de parler, vous ne pouvez lancer de sort.\n\nPréparer un sort vous demande une planche de préparation : choisissez le pouvoir que vous souhaitez dupliquer et faites un test avec une Difficulté égale au niveau de pouvoir désiré, limité par votre propre niveau de Sorcellerie.\n\nChoisissez la capacité que vous testez pour jeter vos sorts au moment de l’acquisition de ce pouvoir : soit votre niveau dans le pouvoir Sorcellerie, soit un attribut, peut-être augmenté d’une spécialité (typiquement Occultisme).\n\nUn succès vous octroie le pouvoir voulu au niveau souhaité, un échec signifie que vous devrez recourir à un effort tenace pour essayer à nouveau.\n\nVous pouvez aussi jeter un sort automatiquement en dépensant un point de Ténacité (aucun test n’est alors requis).",
       extras: [
         { name: "Instantané", value: "vous n’avez pas besoin de prendre une planche de préparation pour lancer un sort, il peut lancer le sort et utiliser le pouvoir ainsi octroyé dans la même action." },
         { name: "Maîtrise", value: "vous avez la maitrise d’un sortilège particulier. Choisissez un pouvoir que vous pouvez dupliquer avec votre Sorcellerie sans qu’une préparation ou un test ne soit nécessaire. Vous dupliquez ce pouvoir au niveau de votre Sorcellerie." },
@@ -2577,7 +2577,7 @@ let pouvoirs = {
       page: 103,
       kind: "variant",
       variantOf: "Renforcement de capacité",
-      value: "Vous avez une capacité innée considérable dans une spécialité donnée, sans besoin d’entrainement ou d’expérience. Vois la limite Renforcement de spécialité du pouvoir Renforcement de capacité (page 99).",
+      value: "Vous avez une capacité innée considérable dans une spécialité donnée, sans besoin d’entrainement ou d’expérience.\n\nVois la limite Renforcement de spécialité du pouvoir Renforcement de capacité (page 99).",
       extras: [],
       limites: [],
     },
@@ -2587,7 +2587,7 @@ let pouvoirs = {
       page: 103,
       kind: "variant",
       variantOf: "Augmentation de capacité",
-      value: "La force surhumaine, dans ICONS, est tout simplement un niveau de Force supérieur à 6, qui est le niveau maximal pour les plus puissants des athlètes et des haltérophiles. Reportez-vous aux pouvoirs Augmentation de capacité (page 36) et Renforcement de capacité (page 99) pour les possibilités d’augmenter votre niveau de Force.",
+      value: "La force surhumaine, dans ICONS, est tout simplement un niveau de Force supérieur à 6, qui est le niveau maximal pour les plus puissants des athlètes et des haltérophiles.\n\nReportez-vous aux pouvoirs Augmentation de capacité (page 36) et Renforcement de capacité (page 99) pour les possibilités d’augmenter votre niveau de Force.",
       extras: [],
       limites: [],
     },
@@ -2597,7 +2597,7 @@ let pouvoirs = {
       page: 103,
       kind: "group",
       variantOf: null,
-      value: "Vous avez des capacités sensorielles supplémentaires, améliorées ou étendues. Chaque niveau dans ce pouvoir vous donne l’une des options suivantes : choisissez ou lancez 1D6 par niveau sur la table qui suit. Vous pouvez choisir certaines options plusieurs fois, dans le cas où leurs bénéfices sont cumulables. Sens additionnels Pour chaque niveau en sens additionnel, choisissez l’une des options suivantes ou créez votre propre capacité sensorielle supplémentaire avec l’accord du MJ. Un test d’Eveil peut être requis pour certaines utilisations de ces sens additionnels, à la discrétion du MJ. • Vision circulaire : vous pouvez voir autour de vous à 360 degrés, rendant difficile toute tentative de vous surprendre. • Communication : vous pouvez communiquer par un medium autre que la parole, comme les ondesradio, le « super-ventriloquisme » ou la transmission télépathique. • Compréhension des langages : vous pouvez comprendre et communiquer dans n’importe quelle langue. Le MJ peut toutefois demander un test d’Intellect pour comprendre des langues particulièrement obscures ou extraterrestres. • Sens des dimensions : vous pouvez détecter l’énergie ou la signature vibratoire de chaque dimension, et savoir lorsque vous vous retrouvez dans un plan méconnu. • Sens de la direction : vous ne vous perdez jamais et vous pouvez retrouver votre chemin vers tout endroit où vous vous êtes déjà rendu. • Sens du temps : comme une horloge particulièrement précise, vous savez toujours quelle heure il est et combien de temps s’est écoulé. • Sens de la chasse : vous pouvez suivre les traces ou la piste d’un sujet, ce qui peut requérir un test d’Eveil sur un terrain ou des conditions difficiles, à la discrétion du MJ. • Vision infrarouge : vous pouvez voir les sources de chaleur, vous permettant de voir dans le noir en détectant les différences de température. • Vision microscopique : vous pouvez voir les objets trop petits pour qu’on puisse normalement les distinguer à l’oeil nu. Vous pouvez lire un microfilm sans lecteur mécanique ou jeter un oeil dans le monde des cellules et des molécules, voir dans le monde subatomique. • Vision pénétrante : vous pouvez voir au travers des objets solides, comme un rayon X. Choisissez au mois une substance que votre vision ne peut traverser. 1D6 Type Effet 1-2 Additionnel Vous avez plus de sens que les cinq communs : chaque niveau vous offre une nouvelle capacité sensorielle dans la liste des sens additionnels. 3-4 Amélioré Chaque niveau vous donne un bonus de +1 aux tests d’Eveil lié à un sens particulier, un peu comme une spécialité : vision améliorée, ouïe améliorée… 5-6 Etendu Chaque niveau vous permet d’améliorer la portée utile du sens utilisé, en décalant d’un rang les effets de la table des portées. Par exemple, avec une vision étendue à 1, vous pouvez voir les choses à portée visuelle comme si elles étaient simplement à portée proche. • Sens de l’espace : grâce à l’utilisation d’un radar, d’un sonar, d’un éveil mystique ou d’une capacité similaire, vous gagnez une vision tridimensionnelle de l’environnement qui vous entoure jusqu’à portée visuelle. • Télé-localisation : vous pouvez localiser un ou plusieurs individus connus, où qu’ils soient, avec un test d’Eveil réussi. Le MJ choisit la Difficulté en fonction de la distance et de votre lien avec le sujet : 3 à 4 pour un sujet bien connu, et jusqu’à 6 pour un sujet que vous ne connaissez que peu. • Vision véritable : vous pouvez voir la véritable apparence d’un objet ou d’une personne, faisant fi des déguisements ou des camouflages. Ce pouvoir passe outre tous les moyens de camoufler la véritable nature de quelque chose, qu’ils soient physiques, psychiques, liés ou à l’illusion ou à la sorcellerie. Dans certains cas, un test d’Eveil contre le niveau de l’effet de camouflage sera nécessaire. • Vision de l’ultraviolet : vous pouvez discerner les radiations ultraviolettes, vous permettant de voir dans le noir tant qu’il y a au minium une source de lumière UV (comme les étoiles, la nuit, par exemple).",
+      value: "Vous avez des capacités sensorielles supplémentaires, améliorées ou étendues.\n\nChaque niveau dans ce pouvoir vous donne l’une des options suivantes : choisissez ou lancez 1D6 par niveau sur la table qui suit.\n\nVous pouvez choisir certaines options plusieurs fois, dans le cas où leurs bénéfices sont cumulables.",
       table: {
         "dice": "1d6",
         "label": "Type",
@@ -2638,11 +2638,11 @@ let pouvoirs = {
           },
           {
             "name": "Compréhension des langages",
-            "value": "Vous pouvez comprendre et communiquer dans n’importe quelle langue."
+            "value": "Vous pouvez comprendre et communiquer dans n’importe quelle langue. Le MJ peut toutefois demander un test d’Intellect pour comprendre des langues particulièrement obscures ou extraterrestres."
           },
           {
             "name": "Sens des dimensions",
-            "value": "Vous pouvez détecter l’énergie ou la signature vibratoire de chaque dimension."
+            "value": "Vous pouvez détecter l’énergie ou la signature vibratoire de chaque dimension, et savoir lorsque vous vous retrouvez dans un plan méconnu."
           },
           {
             "name": "Sens de la direction",
@@ -2654,11 +2654,11 @@ let pouvoirs = {
           },
           {
             "name": "Sens de la chasse",
-            "value": "Vous pouvez suivre les traces ou la piste d’un sujet."
+            "value": "Vous pouvez suivre les traces ou la piste d’un sujet, ce qui peut requérir un test d’Éveil sur un terrain ou des conditions difficiles."
           },
           {
             "name": "Vision infrarouge",
-            "value": "Vous pouvez voir les sources de chaleur, vous permettant de voir dans le noir."
+            "value": "Vous pouvez voir les sources de chaleur, vous permettant de voir dans le noir en détectant les différences de température."
           },
           {
             "name": "Vision microscopique",
@@ -2670,7 +2670,19 @@ let pouvoirs = {
           },
           {
             "name": "Sens de l’espace",
-            "value": "Grâce à un radar, un sonar ou une capacité similaire, vous gagnez une vision tridimensionnelle de votre environnement."
+            "value": "Grâce à un radar, un sonar ou une capacité similaire, vous gagnez une vision tridimensionnelle de l’environnement jusqu’à portée visuelle."
+          },
+          {
+            "name": "Télé-localisation",
+            "value": "Vous pouvez localiser un ou plusieurs individus connus, où qu’ils soient, avec un test d’Éveil réussi."
+          },
+          {
+            "name": "Vision véritable",
+            "value": "Vous pouvez voir la véritable apparence d’un objet ou d’une personne, faisant fi des déguisements ou des camouflages."
+          },
+          {
+            "name": "Vision de l’ultraviolet",
+            "value": "Vous pouvez discerner les radiations ultraviolettes, vous permettant de voir dans le noir tant qu’il y a au minimum une source de lumière UV."
           }
         ]
       },
@@ -2685,7 +2697,7 @@ let pouvoirs = {
       page: 105,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez vous déplacer à une vitesse surhumaine. Reportez-vous à la Table des références pour déterminer à quel point. Une supervitesse de niveau 5 est suffisante pour rejoindre un lieu à portée visuelle en une seule case. Une super-vitesse de niveau 7 correspond à la vitesse du son, les niveaux suivants permettant d’aller encore plus vite. Une super-vitesse de niveau 10 permet de rejoindre n’importe quel point du globe en une seule case ! Vous pouvez aussi utiliser votre pouvoir pour accomplir plus vite certaines tâches (lire, assembler ou démonter un mécanisme).",
+      value: "Vous pouvez vous déplacer à une vitesse surhumaine.\n\nReportez-vous à la Table des références pour déterminer à quel point.\n\nUne supervitesse de niveau 5 est suffisante pour rejoindre un lieu à portée visuelle en une seule case.\n\nUne super-vitesse de niveau 7 correspond à la vitesse du son, les niveaux suivants permettant d’aller encore plus vite.\n\nUne super-vitesse de niveau 10 permet de rejoindre n’importe quel point du globe en une seule case !\n\nVous pouvez aussi utiliser votre pouvoir pour accomplir plus vite certaines tâches (lire, assembler ou démonter un mécanisme).",
       extras: [
         { name: "Pouvoirs", value: "Attaque rapide, Contrôle de l’air, Contrôle des vibrations, Immatérialité (en faisant vibrer vos molécules), Régénération, Toupie." },
         { name: "Standard", value: "Affecte les autres" },
@@ -2701,7 +2713,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Contrôle de la matière",
-      value: "Vous avez la capacité de bouger des objets à portée visuelle sans les toucher. Votre niveau de pouvoir remplace la Force pour déterminer si vous pouvez les soulever et les déplacer (reportez-vous à la table des références dans le livre de base d’ICONS). Utilisez votre Volonté en lieu et place de votre « Coordination » télékinétique.",
+      value: "Vous avez la capacité de bouger des objets à portée visuelle sans les toucher.\n\nVotre niveau de pouvoir remplace la Force pour déterminer si vous pouvez les soulever et les déplacer (reportez-vous à la table des références dans le livre de base d’ICONS).\n\nUtilisez votre Volonté en lieu et place de votre « Coordination » télékinétique.",
       extras: [
         { name: "Pouvoirs", value: "Champ de force, Contrôle de la force, Décharge, Vol." },
       ],
@@ -2713,7 +2725,7 @@ let pouvoirs = {
       page: 106,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez lire les esprits et transmettre vos pensées. Effectuez un test de Télépathie avec la Volonté de la cible en Difficulté si le sujet est rétif ou ne sait pas qu’il est pris pour cible. Si le sujet est volontaire, aucun test n’est requis. Un test raté indique que vous ne pouvez pas essayer de lire à nouveau l’esprit de cette cible sans recourir à un effort tenace, et ce pour tout le reste du chapitre. Dénicher des souvenirs anciens, profonds ou occultés peut nécessiter de hauts degrés de réussite, à la discrétion du MJ. Vous pouvez lier ensemble un nombre d’esprits égal à votre niveau de pouvoir pour créer une sorte de « standard mental » et ainsi communiquer à plusieurs. Si quelqu’un tente de lire votre esprit, faites un test d’Eveil ou de Télépathie contre une Difficulté égale au niveau de pouvoir de l’autre télépathe pour vous en rendre compte. Lire votre esprit aura pour ce télépathe une Difficulté égale au plus élevé de votre Télépathie ou de votre Volonté.",
+      value: "Vous pouvez lire les esprits et transmettre vos pensées.\n\nEffectuez un test de Télépathie avec la Volonté de la cible en Difficulté si le sujet est rétif ou ne sait pas qu’il est pris pour cible.\n\nSi le sujet est volontaire, aucun test n’est requis.\n\nUn test raté indique que vous ne pouvez pas essayer de lire à nouveau l’esprit de cette cible sans recourir à un effort tenace, et ce pour tout le reste du chapitre.\n\nDénicher des souvenirs anciens, profonds ou occultés peut nécessiter de hauts degrés de réussite, à la discrétion du MJ.\n\nVous pouvez lier ensemble un nombre d’esprits égal à votre niveau de pouvoir pour créer une sorte de « standard mental » et ainsi communiquer à plusieurs.\n\nSi quelqu’un tente de lire votre esprit, faites un test d’Eveil ou de Télépathie contre une Difficulté égale au niveau de pouvoir de l’autre télépathe pour vous en rendre compte.\n\nLire votre esprit aura pour ce télépathe une Difficulté égale au plus élevé de votre Télépathie ou de votre Volonté.",
       extras: [
         { name: "Pouvoirs", value: "Décharge mentale, Détection des émotions, Détection de pouvoir (pouvoirs mentaux seulement), Domination (tous extras), Illusion, Invisibilité (esprits seulement), Perception extrasensorielle (proxy), Super-sens (télé-localisation)." },
         { name: "Standard", value: "sans limite de distance." },
@@ -2732,7 +2744,7 @@ let pouvoirs = {
       page: 107,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez disparaître d’un endroit et réapparaître instantanément à quelques distances de là. Reportez-vous à la Table des références du livre de base d’ICONS pour déterminer à quelle distance, en fonction de votre niveau de Téléportation. Une Téléportation de niveau 5 est suffisante pour aller n’importe où à portée visuelle, alors que les niveaux supérieurs ont des portées mesurées en dizaines, centaines ou même milliers de kilomètres. Une Téléportation de niveau 10 est suffisante pour se rendre virtuellement n’importe où. Vous devez soit voir votre destination, soit être capable de la visualiser (si elle est par exemple familière). Faites un test de pouvoir de difficulté 2. Un échec indique que vous arrivez à destination en état d’étourdissement et devez passer la prochaine case à récupérer (et donc sans pouvoir agir sur cette planche). Avec un niveau de Téléportation égal ou supérieur à 7, ce test n’est plus nécessaire, vous réussissez automatiquement. Si vous vous téléportez accidentellement dans un objet solide – ce qui peut inclure le sol, vous rebondissez immédiatement à votre point d’origine. Faites un test de Téléportation contre un niveau de Paralysie équivalent à la Solidité du matériau rencontré (voir Paralysie p. 93).",
+      value: "Vous pouvez disparaître d’un endroit et réapparaître instantanément à quelques distances de là.\n\nReportez-vous à la Table des références du livre de base d’ICONS pour déterminer à quelle distance, en fonction de votre niveau de Téléportation.\n\nUne Téléportation de niveau 5 est suffisante pour aller n’importe où à portée visuelle, alors que les niveaux supérieurs ont des portées mesurées en dizaines, centaines ou même milliers de kilomètres.\n\nUne Téléportation de niveau 10 est suffisante pour se rendre virtuellement n’importe où.\n\nVous devez soit voir votre destination, soit être capable de la visualiser (si elle est par exemple familière).\n\nFaites un test de pouvoir de difficulté 2.\n\nUn échec indique que vous arrivez à destination en état d’étourdissement et devez passer la prochaine case à récupérer (et donc sans pouvoir agir sur cette planche).\n\nAvec un niveau de Téléportation égal ou supérieur à 7, ce test n’est plus nécessaire, vous réussissez automatiquement.\n\nSi vous vous téléportez accidentellement dans un objet solide – ce qui peut inclure le sol, vous rebondissez immédiatement à votre point d’origine.\n\nFaites un test de Téléportation contre un niveau de Paralysie équivalent à la Solidité du matériau rencontré (voir Paralysie p. 93).",
       extras: [
         { name: "Standard", value: "Affecte les autres, Passagers." },
         { name: "Défensif", value: "vous pouvez utiliser votre Téléportation à la place de votre Coordination pour esquiver." },
@@ -2765,7 +2777,7 @@ let pouvoirs = {
       page: 108,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez tourner sur vous-même à une vitesse surhumaine tout en restant capable de parler, entendre et voir normalement. Ce pouvoir vous prodigue trois bénéfices. Premièrement, votre rotation rapide vous offre une Résistance à l’Immobilisation (incluant les attaques de Lutte). En second lieu, la toupie génère un écran de vent qui substitue votre niveau de pouvoir à votre Coordination pour vous défendre contre les attaques physiques ou basées sur l’élément air. Enfin, vous pouvez utiliser votre niveau de pouvoir à la place de votre Force pour déterminer les dégâts, ou infliger une prise, en combat rapproché.",
+      value: "Vous pouvez tourner sur vous-même à une vitesse surhumaine tout en restant capable de parler, entendre et voir normalement.\n\nCe pouvoir vous prodigue trois bénéfices.\n\nPremièrement, votre rotation rapide vous offre une Résistance à l’Immobilisation (incluant les attaques de Lutte).\n\nEn second lieu, la toupie génère un écran de vent qui substitue votre niveau de pouvoir à votre Coordination pour vous défendre contre les attaques physiques ou basées sur l’élément air.\n\nEnfin, vous pouvez utiliser votre niveau de pouvoir à la place de votre Force pour déterminer les dégâts, ou infliger une prise, en combat rapproché.",
       extras: [
         { name: "Pouvoirs", value: "Attaque rapide, Contrôle de l’air, Super-sens (vision circulaire), Super-vitesse, Vol." },
         { name: "Bélier d’air", value: "vous pouvez générer une charge d’air concentré capable de renverser les gens. Faites un jet de Toupie contre Force et lisez le résultat comme une possible projection." },
@@ -2784,7 +2796,7 @@ let pouvoirs = {
       page: 109,
       kind: "variant",
       variantOf: null,
-      value: "Vous vous téléportez à l’aide d’un médium spécifique, comme le réseau électrique, les réseaux de communication, les systèmes racinaires, les voies d’eau… Vous devez entrer et sortir de ce medium. Voyez la limite Transmission dans le pouvoir Téléportation, page 107.",
+      value: "Vous vous téléportez à l’aide d’un médium spécifique, comme le réseau électrique, les réseaux de communication, les systèmes racinaires, les voies d’eau…\n\nVous devez entrer et sortir de ce medium.\n\nVoyez la limite Transmission dans le pouvoir Téléportation, page 107.",
       extras: [],
       limites: [],
     },
@@ -2795,7 +2807,7 @@ let pouvoirs = {
       kind: "power",
       variantOf: null,
       groupOf: "Contrôle de la matière",
-      value: "Vous pouvez, par le toucher, transformer les éléments et composés chimiques, changeant un matériau inerte en un autre matériau inerte. La transmutation n’affecte pas les êtres vivants et ne peut créer d’êtres animés à partir de matière brute (voir les pouvoirs Rayon altérant ou Serviteur pour ce genre d’effets). Vous ne pouvez affecter que des objets dans leur ensemble, avec une masse maximum basée sur votre niveau de pouvoir (voir la colonne poids dans la Table des références). Il sera peut-être nécessaire de réussir un test de Coordination pour toucher un objet mouvant ou tenu par quelqu’un.",
+      value: "Vous pouvez, par le toucher, transformer les éléments et composés chimiques, changeant un matériau inerte en un autre matériau inerte.\n\nLa transmutation n’affecte pas les êtres vivants et ne peut créer d’êtres animés à partir de matière brute (voir les pouvoirs Rayon altérant ou Serviteur pour ce genre d’effets).\n\nVous ne pouvez affecter que des objets dans leur ensemble, avec une masse maximum basée sur votre niveau de pouvoir (voir la colonne poids dans la Table des références).\n\nIl sera peut-être nécessaire de réussir un test de Coordination pour toucher un objet mouvant ou tenu par quelqu’un.",
       extras: [
         { name: "Standard", value: "A distance, Visuel." },
         { name: "Pouvoirs", value: "Serviteur, Rayon altérant." },
@@ -2815,7 +2827,7 @@ let pouvoirs = {
       page: 110,
       kind: "variant",
       variantOf: null,
-      value: "Vous possédez un véhicule spécialisé. Reportez-vous aux accessoires de mouvement, dans le chapitre Accessoires.",
+      value: "Vous possédez un véhicule spécialisé.\n\nReportez-vous aux accessoires de mouvement, dans le chapitre Accessoires.",
       extras: [],
       limites: [],
     },
@@ -2825,7 +2837,7 @@ let pouvoirs = {
       page: 110,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez ignorer certains besoins physiques (comme respirer, manger, dormir) ou supporter des environnements dangereux. Pour chaque niveau de Vitalité, choisissez l’un de ces besoins ou environnements, dont vous ne subirez pas les effets. Au niveau 10, vous bénéficiez d’une Vitalité totale et vous les ignorez alors tous. • Respirer : vous n’avez aucun besoin de respirer. • Froid : les températures basses, atmosphériques ou environnementales. • Se nourrir : ce qui inclue la soif et la nécessité d’évacuer les déchets. • Chaleur : les températures élevées, atmosphériques ou environnementales. • Pathogènes : les maladies atmosphériques ou environnementales. • Pression : vous pouvez survivre à des pressions écrasantes. • Radiation : les niveaux de radiation atmosphériques ou environnementaux. • Sommeil : vous n’avez plus besoin de dormir, mais vous pouvez néanmoins avoir besoin de vous reposer. • Toxines : les toxines atmosphériques ou environnementales. • Vide : vous pouvez survivre à des pressions extrêmement basses. Survivre sans protection dans le vide spatial requiert donc un niveau de Vitalité 4 afin de résister au froid, à l’absence d’air respirable, aux radiations et au vide. Quand vous obtenez ce pouvoir, vous pouvez décider de supprimer un autre des pouvoirs obtenus pour augmenter la Vitalité à 10. Vitalité ne produit pas de protection contre les dégâts des attaques, pour cela reportez-vous aux pouvoirs Adaptation ou Résistance.",
+      value: "Vous pouvez ignorer certains besoins physiques (comme respirer, manger, dormir) ou supporter des environnements dangereux.\n\nPour chaque niveau de Vitalité, choisissez l’un de ces besoins ou environnements, dont vous ne subirez pas les effets.\n\nAu niveau 10, vous bénéficiez d’une Vitalité totale et vous les ignorez alors tous.\n• Respirer : vous n’avez aucun besoin de respirer.\n• Froid : les températures basses, atmosphériques ou environnementales.\n• Se nourrir : ce qui inclue la soif et la nécessité d’évacuer les déchets.\n• Chaleur : les températures élevées, atmosphériques ou environnementales.\n• Pathogènes : les maladies atmosphériques ou environnementales.\n• Pression : vous pouvez survivre à des pressions écrasantes.\n• Radiation : les niveaux de radiation atmosphériques ou environnementaux.\n• Sommeil : vous n’avez plus besoin de dormir, mais vous pouvez néanmoins avoir besoin de vous reposer.\n• Toxines : les toxines atmosphériques ou environnementales.\n• Vide : vous pouvez survivre à des pressions extrêmement basses.\n\nSurvivre sans protection dans le vide spatial requiert donc un niveau de Vitalité 4 afin de résister au froid, à l’absence d’air respirable, aux radiations et au vide.\n\nQuand vous obtenez ce pouvoir, vous pouvez décider de supprimer un autre des pouvoirs obtenus pour augmenter la Vitalité à 10.\n\nVitalité ne produit pas de protection contre les dégâts des attaques, pour cela reportez-vous aux pouvoirs Adaptation ou Résistance.",
       extras: [],
       limites: [],
     },
@@ -2835,7 +2847,7 @@ let pouvoirs = {
       page: 111,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez voler. Reportez-vous à la Table des références du livre de base d’ICONS pour déterminer à quelle vitesse. Vol 5 vous permet de voler aussi vite qu’un hélicoptère. Vol 7 est grosso modo la vitesse du son. Vol 10 est suffisant pour vous rendre n’importe où dans le monde en une seule case.",
+      value: "Vous pouvez voler.\n\nReportez-vous à la Table des références du livre de base d’ICONS pour déterminer à quelle vitesse.\n\nVol 5 vous permet de voler aussi vite qu’un hélicoptère.\n\nVol 7 est grosso modo la vitesse du son.\n\nVol 10 est suffisant pour vous rendre n’importe où dans le monde en une seule case.",
       extras: [
         { name: "Vol spatial", value: "dans l’espace, vous êtes capable de voyager plus vite que la lumière pour franchir les incroyables distances entre les planètes et les étoiles." },
       ],
@@ -2847,7 +2859,7 @@ let pouvoirs = {
       page: 111,
       kind: "variant",
       variantOf: null,
-      value: "Vous pouvez voler les pouvoirs de quelqu’un et les utiliser à votre propre compte. Reportez-vous à l’extra Vol de pouvoir de Mimétisme de pouvoir (page 88).",
+      value: "Vous pouvez voler les pouvoirs de quelqu’un et les utiliser à votre propre compte.\n\nReportez-vous à l’extra Vol de pouvoir de Mimétisme de pouvoir (page 88).",
       extras: [],
       limites: [],
     },
@@ -2857,7 +2869,7 @@ let pouvoirs = {
       page: 111,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez vous balancer au bout d’un corde ou d’un câble, qu’il s’agisse de lignes de force, de fils arachnéens que vous générez ou grâce à un accessoire comme un pistolet-grappin ou un lasso. Vos lignes possèdent une Solidité égale au niveau de votre pouvoir. Utilisez votre Voltige à la place de votre Coordination, si elle est plus haute, pour toutes les manoeuvres accomplies alors que vous êtes suspendu (ce qui inclue éviter des attaques). Vous pouvez aussi utiliser votre sustente pour attraper des choses et les attirer à vous – plutôt que l’inverse, vous amener à elles – en réussissant un test de Coordination. Il vous sera peut-être demandé de réussir un jet opposé de Force contre Force si vous essayez d’arracher ledit objet à quelqu’un.",
+      value: "Vous pouvez vous balancer au bout d’un corde ou d’un câble, qu’il s’agisse de lignes de force, de fils arachnéens que vous générez ou grâce à un accessoire comme un pistolet-grappin ou un lasso.\n\nVos lignes possèdent une Solidité égale au niveau de votre pouvoir.\n\nUtilisez votre Voltige à la place de votre Coordination, si elle est plus haute, pour toutes les manoeuvres accomplies alors que vous êtes suspendu (ce qui inclue éviter des attaques).\n\nVous pouvez aussi utiliser votre sustente pour attraper des choses et les attirer à vous – plutôt que l’inverse, vous amener à elles – en réussissant un test de Coordination.\n\nIl vous sera peut-être demandé de réussir un jet opposé de Force contre Force si vous essayez d’arracher ledit objet à quelqu’un.",
       extras: [],
       limites: [],
     },
@@ -2867,7 +2879,7 @@ let pouvoirs = {
       page: 112,
       kind: "power",
       variantOf: null,
-      value: "Vous pouvez vous déplacer à volonté entre les dimensions. Vous pouvez vous rendre librement dans toute dimension que vous avez déjà visitée, mais aller dans une nouvelle dimension demande un test de pouvoir de Difficulté 3. Un échec indique soit que vous n’allez nulle part, et qu’il faudra avoir recours à un effort tenace pour tenter à nouveau de rejoindre cette dimension, soit que vous éprouvez des difficultés à atteindre votre destination (généralement en perdant une planche d’action à votre arrivée, à la discrétion du MJ). Un succès indique que vous atteignez la dimension souhaitée sans soucis. Un niveau de Voyage dimensionnel de 8 ou supérieur permet de réussir automatiquement tous les passages, sans faire de test. Vous revenez généralement dans une dimension à l’endroit où vous étiez en la quittant, sauf si vous disposez de l’extra Téléportation ou si le Meneur de Jeu vous indique le contraire pour des raisons narratives.",
+      value: "Vous pouvez vous déplacer à volonté entre les dimensions.\n\nVous pouvez vous rendre librement dans toute dimension que vous avez déjà visitée, mais aller dans une nouvelle dimension demande un test de pouvoir de Difficulté 3.\n\nUn échec indique soit que vous n’allez nulle part, et qu’il faudra avoir recours à un effort tenace pour tenter à nouveau de rejoindre cette dimension, soit que vous éprouvez des difficultés à atteindre votre destination (généralement en perdant une planche d’action à votre arrivée, à la discrétion du MJ).\n\nUn succès indique que vous atteignez la dimension souhaitée sans soucis.\n\nUn niveau de Voyage dimensionnel de 8 ou supérieur permet de réussir automatiquement tous les passages, sans faire de test.\n\nVous revenez généralement dans une dimension à l’endroit où vous étiez en la quittant, sauf si vous disposez de l’extra Téléportation ou si le Meneur de Jeu vous indique le contraire pour des raisons narratives.",
       extras: [
         { name: "Pouvoirs", value: "Téléportation." },
         { name: "Fiable", value: "vous n’avez jamais besoin d’effectuer de test de votre pouvoir pour atteindre une nouvelle dimension." },
@@ -2893,7 +2905,7 @@ let pouvoirs = {
       page: 113,
       kind: "variant",
       variantOf: "Vol",
-      value: "Reportez-vous à l’extra Vol spatial du pouvoir Vol, page 111. Le Meneur de Jeu peut décider de déterminer les temps de trajets interstellaires en se basant sur le niveau de Vol, selon le contexte et l’histoire.",
+      value: "Reportez-vous à l’extra Vol spatial du pouvoir Vol, page 111.\n\nLe Meneur de Jeu peut décider de déterminer les temps de trajets interstellaires en se basant sur le niveau de Vol, selon le contexte et l’histoire.",
       extras: [],
       limites: [],
     },
@@ -2903,7 +2915,7 @@ let pouvoirs = {
       page: 113,
       kind: "variant",
       variantOf: "Contrôle temporel",
-      value: "Vous pouvez voyager à travers le temps. Reportez-vous à l’extra Voyage temporel du pouvoir Contrôle temporel (avec éventuellement la limite Extra seulement). Comme indiqué dans la description de ce pouvoir, page 60, les mécaniques et les règles du voyage temporel dans ICONS sont largement laissées à la discrétion du Meneur de jeu qui peut tout à fait décider qu’il s’agit d’une capacité hors-échelle uniquement accessible à certains de ses PNJ, qu’il s’agisse de vilains ou d’alliés des héros. Cela empêche les joueurs de se projeter à volonté dans le temps, en changeant frénétiquement l’histoire. Selon une règle générale de bon sens, toute utilisation du voyage temporel impactant le présent peut être considérée comme une retcon et requérir un avantage pour être amenée en jeu, par exemple en utilisant comme manoeuvre le pouvoir de Voyage temporel ou son niveau.",
+      value: "Vous pouvez voyager à travers le temps.\n\nReportez-vous à l’extra Voyage temporel du pouvoir Contrôle temporel (avec éventuellement la limite Extra seulement).\n\nComme indiqué dans la description de ce pouvoir, page 60, les mécaniques et les règles du voyage temporel dans ICONS sont largement laissées à la discrétion du Meneur de jeu qui peut tout à fait décider qu’il s’agit d’une capacité hors-échelle uniquement accessible à certains de ses PNJ, qu’il s’agisse de vilains ou d’alliés des héros.\n\nCela empêche les joueurs de se projeter à volonté dans le temps, en changeant frénétiquement l’histoire.\n\nSelon une règle générale de bon sens, toute utilisation du voyage temporel impactant le présent peut être considérée comme une retcon et requérir un avantage pour être amenée en jeu, par exemple en utilisant comme manoeuvre le pouvoir de Voyage temporel ou son niveau.",
       extras: [],
       limites: [],
     }
@@ -2915,12 +2927,28 @@ pouvoirs.list.forEach((entry) => {
   pouvoirs.byName[entry.name] = entry;
 });
 
+pouvoirs.normalizeName = function normalizeName(name) {
+  return (name || "")
+    .trim()
+    .replace(/\s*\(groupe\)\s*$/i, "")
+    .replace(/['’]/g, "'")
+    .replace(/\s+/g, " ")
+    .toLowerCase();
+};
+
 pouvoirs.definitionOf = function definitionOf(name) {
   const key = (name || "").trim();
+  if (!key) return null;
   if (pouvoirs.byName[key]) return pouvoirs.byName[key];
-  const lower = key.toLowerCase();
+
+  const stripped = key.replace(/\s*\(groupe\)\s*$/i, "").trim();
+  if (stripped !== key && pouvoirs.byName[stripped]) {
+    return pouvoirs.byName[stripped];
+  }
+
+  const needle = pouvoirs.normalizeName(key);
   for (const entry of pouvoirs.list) {
-    if (entry.name.toLowerCase() === lower) return entry;
+    if (pouvoirs.normalizeName(entry.name) === needle) return entry;
   }
   return null;
 };

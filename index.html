@@ -154,7 +154,10 @@
                     <div class="powers-list">
                         <div v-for="(value, key) in brouillonData.powers" :key="key">
                             <p>
-                                <span class="name">{{ value.name }}:</span>
+                                <span
+                                    class="name catalog-clickable"
+                                    @click="togglePowerPopover($event, value)"
+                                >{{ value.name }}:</span>
                                 <span class="value">{{ value.level }}</span>
                                 <span class="page" v-if="value.page"> (p. {{ value.page }})</span>
                             </p>
@@ -425,7 +428,10 @@
                         <div v-for="(value, key) in heroView.powers" :key="key" class="power-row power-card">
                             <div class="power-main">
                                 <p>
-                                    <span class="name">{{ value.name }}:</span>
+                                    <span
+                                        class="name catalog-clickable"
+                                        @click="togglePowerPopover($event, value)"
+                                    >{{ value.name }}:</span>
                                     <span class="value">
                                         {{ value.level }}
                                         <small v-if="value.bonus">(+{{ value.bonus }})</small>
@@ -858,24 +864,82 @@
         </div>
 
         <div
-            v-if="specialtyPopover"
+            v-if="detailPopover"
             class="specialty-popover-backdrop"
-            @click="closeSpecialtyPopover()"
+            @click="closeDetailPopover()"
         ></div>
         <div
-            v-if="specialtyPopover"
+            v-if="detailPopover"
             class="specialty-popover"
-            :style="{ top: specialtyPopover.top + 'px', left: specialtyPopover.left + 'px' }"
+            :class="{ 'power-popover': detailPopover.kind === 'power' }"
+            :style="{ top: detailPopover.top + 'px', left: detailPopover.left + 'px' }"
             @click.stop
         >
             <div class="specialty-popover-header">
-                <strong>{{ specialtyPopover.title }}</strong>
-                <button type="button" class="specialty-popover-close" @click="closeSpecialtyPopover()">×</button>
+                <strong>{{ detailPopover.title }}</strong>
+                <button type="button" class="specialty-popover-close" @click="closeDetailPopover()">×</button>
             </div>
-            <p class="specialty-popover-text">{{ specialtyPopover.text }}</p>
-            <p class="mods-hint" v-if="specialtyPopover.focus">
-                Focus : {{ specialtyPopover.focus }}
+            <p class="mods-hint" v-if="detailPopover.meta">{{ detailPopover.meta }}</p>
+            <div class="specialty-popover-body" v-if="detailPopover.blocks && detailPopover.blocks.length">
+                <template v-for="(block, idx) in detailPopover.blocks" :key="'b-' + idx">
+                    <p v-if="block.type === 'p'" class="specialty-popover-text">{{ block.text }}</p>
+                    <ul v-else-if="block.type === 'ul'" class="specialty-popover-list">
+                        <li v-for="(item, j) in block.items" :key="'bi-' + idx + '-' + j">
+                            <strong v-if="item.name">{{ item.name }}</strong>
+                            <template v-if="item.name && item.value"> — </template>
+                            <template v-if="item.value">{{ item.value }}</template>
+                            <template v-if="!item.name && !item.value">{{ item }}</template>
+                        </li>
+                    </ul>
+                </template>
+            </div>
+            <p class="specialty-popover-text" v-else-if="detailPopover.text">{{ detailPopover.text }}</p>
+            <p class="mods-hint" v-if="detailPopover.focus">
+                Focus : {{ detailPopover.focus }}
             </p>
+            <div class="specialty-popover-section" v-if="detailPopover.tableRows && detailPopover.tableRows.length">
+                <p class="mods-hint">{{ detailPopover.tableLabel || 'Table de tirage' }}</p>
+                <table class="power-roll-table">
+                    <thead>
+                        <tr>
+                            <th v-if="detailPopover.tableHasRoll">Jet</th>
+                            <th>{{ detailPopover.tableColName || 'Résultat' }}</th>
+                            <th v-if="detailPopover.tableHasValues">Effet</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(row, idx) in detailPopover.tableRows" :key="'tr-' + idx">
+                            <td v-if="detailPopover.tableHasRoll" class="roll-cell">{{ row.roll }}</td>
+                            <td>{{ row.name }}</td>
+                            <td v-if="detailPopover.tableHasValues">{{ row.value || '—' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="specialty-popover-section" v-if="detailPopover.senses && detailPopover.senses.length">
+                <p class="mods-hint">Sens additionnels</p>
+                <ul class="specialty-popover-list">
+                    <li v-for="(item, idx) in detailPopover.senses" :key="'s-' + idx">
+                        <strong>{{ item.name }}</strong><template v-if="item.value"> — {{ item.value }}</template>
+                    </li>
+                </ul>
+            </div>
+            <div class="specialty-popover-section" v-if="detailPopover.extras && detailPopover.extras.length">
+                <p class="mods-hint">Extras</p>
+                <ul class="specialty-popover-list">
+                    <li v-for="(item, idx) in detailPopover.extras" :key="'e-' + idx">
+                        <strong>{{ item.name }}</strong><template v-if="item.value"> — {{ item.value }}</template>
+                    </li>
+                </ul>
+            </div>
+            <div class="specialty-popover-section" v-if="detailPopover.limites && detailPopover.limites.length">
+                <p class="mods-hint">Limites</p>
+                <ul class="specialty-popover-list">
+                    <li v-for="(item, idx) in detailPopover.limites" :key="'l-' + idx">
+                        <strong>{{ item.name }}</strong><template v-if="item.value"> — {{ item.value }}</template>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </body>
@@ -926,7 +990,7 @@
                 undoStack: [],
                 maxUndo: 40,
                 libraryExpanded: false,
-                specialtyPopover: null,
+                detailPopover: null,
             };
         },
         computed: {
@@ -1124,12 +1188,12 @@
         },
         mounted() {
             app = this;
-            this._onSpecialtyEscape = (event) => {
+            this._onDetailEscape = (event) => {
                 if (event.key === "Escape") {
-                    this.closeSpecialtyPopover();
+                    this.closeDetailPopover();
                 }
             };
-            window.addEventListener("keydown", this._onSpecialtyEscape);
+            window.addEventListener("keydown", this._onDetailEscape);
             IconsStorage.load();
             this.refreshLibrary();
             const working = IconsStorage.getWorking();
@@ -1142,8 +1206,8 @@
             }
         },
         beforeUnmount() {
-            if (this._onSpecialtyEscape) {
-                window.removeEventListener("keydown", this._onSpecialtyEscape);
+            if (this._onDetailEscape) {
+                window.removeEventListener("keydown", this._onDetailEscape);
             }
         },
         methods: {
@@ -1153,36 +1217,231 @@
             specialityRankLabel(rank) {
                 return HeroSheet.specialityRankLabel(rank);
             },
+            popoverPosition(event) {
+                const rect = event.currentTarget.getBoundingClientRect();
+                const left = Math.min(rect.left, window.innerWidth - 320);
+                const top = Math.min(rect.bottom + 8, window.innerHeight - 160);
+                return {
+                    top: Math.max(8, top),
+                    left: Math.max(8, left),
+                };
+            },
+            formatRollRange(values) {
+                if (!values || !values.length) {
+                    return "";
+                }
+                const sorted = [...values].sort((a, b) => a - b);
+                if (sorted.length === 1) {
+                    return String(sorted[0]);
+                }
+                // collapse contiguous runs: [1,2,3,4] → 1-4 ; [1,2,4,5] → 1-2, 4-5
+                const parts = [];
+                let start = sorted[0];
+                let prev = sorted[0];
+                for (let i = 1; i < sorted.length; i += 1) {
+                    if (sorted[i] === prev + 1) {
+                        prev = sorted[i];
+                        continue;
+                    }
+                    parts.push(start === prev ? String(start) : `${start}-${prev}`);
+                    start = sorted[i];
+                    prev = sorted[i];
+                }
+                parts.push(start === prev ? String(start) : `${start}-${prev}`);
+                return parts.join(", ");
+            },
+            formatPowerTableLines(table) {
+                if (!table || !table.entries || !table.entries.length) {
+                    return [];
+                }
+                return table.entries.map((entry) => {
+                    let prefix = "";
+                    if (table.dice === "d6xd6") {
+                        const a = this.formatRollRange(entry.first);
+                        const b = this.formatRollRange(entry.second);
+                        prefix = a && b ? `${a} / ${b} ` : "";
+                    } else if (entry.roll && entry.roll.length) {
+                        prefix = `${this.formatRollRange(entry.roll)} `;
+                    }
+                    return `${prefix}${entry.name}`.trim();
+                });
+            },
+            formatPowerTableRows(table) {
+                if (!table || !table.entries || !table.entries.length) {
+                    return [];
+                }
+                return table.entries.map((entry) => {
+                    let roll = "";
+                    if (table.dice === "d6xd6") {
+                        const a = this.formatRollRange(entry.first);
+                        const b = this.formatRollRange(entry.second);
+                        roll = a && b ? `${a} / ${b}` : "";
+                    } else if (entry.roll && entry.roll.length) {
+                        roll = this.formatRollRange(entry.roll);
+                    }
+                    return {
+                        roll,
+                        name: entry.name,
+                        value: entry.value || "",
+                    };
+                });
+            },
+            parseCatalogBlocks(text) {
+                const source = (text || "").trim();
+                if (!source) {
+                    return [];
+                }
+                const blocks = [];
+                let listItems = null;
+                const flushList = () => {
+                    if (listItems && listItems.length) {
+                        blocks.push({ type: "ul", items: listItems });
+                    }
+                    listItems = null;
+                };
+                const chunks = source.split(/\n+/);
+                for (const raw of chunks) {
+                    const chunk = raw.trim();
+                    if (!chunk) {
+                        continue;
+                    }
+                    if (chunk.startsWith("• ")) {
+                        if (!listItems) {
+                            listItems = [];
+                        }
+                        const body = chunk.slice(2).trim();
+                        const sep = body.includes(" : ")
+                            ? " : "
+                            : body.includes(": ")
+                              ? ": "
+                              : null;
+                        if (sep) {
+                            const [name, ...rest] = body.split(sep);
+                            listItems.push({
+                                name: name.trim(),
+                                value: rest.join(sep).trim(),
+                            });
+                        } else {
+                            listItems.push({ name: "", value: body });
+                        }
+                        continue;
+                    }
+                    flushList();
+                    blocks.push({ type: "p", text: chunk });
+                }
+                flushList();
+                return blocks;
+            },
             toggleSpecialtyPopover(event, entry) {
                 const name = entry && entry.name;
                 if (!name) {
                     return;
                 }
                 if (
-                    this.specialtyPopover &&
-                    this.specialtyPopover.name === name &&
-                    this.specialtyPopover.focus === (entry.focus || null)
+                    this.detailPopover &&
+                    this.detailPopover.kind === "specialty" &&
+                    this.detailPopover.name === name &&
+                    this.detailPopover.focus === (entry.focus || null)
                 ) {
-                    this.closeSpecialtyPopover();
+                    this.closeDetailPopover();
                     return;
                 }
                 const def = specialites.definitionOf(name);
-                const rect = event.currentTarget.getBoundingClientRect();
-                const left = Math.min(rect.left, window.innerWidth - 320);
-                const top = Math.min(rect.bottom + 8, window.innerHeight - 160);
-                this.specialtyPopover = {
+                const pos = this.popoverPosition(event);
+                const text =
+                    (def && def.value) ||
+                    "Aucune description disponible pour cette spécialité.";
+                this.detailPopover = {
+                    kind: "specialty",
                     name,
                     focus: entry.focus || null,
                     title: entry.display || name,
-                    text:
-                        (def && def.value) ||
-                        "Aucune description disponible pour cette spécialité.",
-                    top: Math.max(8, top),
-                    left: Math.max(8, left),
+                    meta: null,
+                    text,
+                    blocks: this.parseCatalogBlocks(text),
+                    tableRows: null,
+                    tableLabel: null,
+                    tableHasRoll: false,
+                    tableHasValues: false,
+                    tableColName: null,
+                    senses: null,
+                    extras: null,
+                    limites: null,
+                    top: pos.top,
+                    left: pos.left,
                 };
             },
+            togglePowerPopover(event, power) {
+                const name = power && power.name;
+                if (!name) {
+                    return;
+                }
+                if (
+                    this.detailPopover &&
+                    this.detailPopover.kind === "power" &&
+                    this.detailPopover.name === name
+                ) {
+                    this.closeDetailPopover();
+                    return;
+                }
+                const def =
+                    typeof pouvoirs !== "undefined" && pouvoirs
+                        ? pouvoirs.definitionOf(name)
+                        : null;
+                const pos = this.popoverPosition(event);
+                const metaParts = [];
+                if (def && def.category) {
+                    metaParts.push(def.category);
+                }
+                if (def && def.kind === "group") {
+                    metaParts.push("groupe");
+                } else if (def && def.kind === "variant") {
+                    metaParts.push(
+                        def.variantOf
+                            ? `variante de ${def.variantOf}`
+                            : "variante"
+                    );
+                }
+                const page = (def && def.page) || power.page;
+                if (page) {
+                    metaParts.push(`p. ${page}`);
+                }
+                const text =
+                    (def && def.value) ||
+                    "Aucune description disponible pour ce pouvoir.";
+                const table = def && def.table ? def.table : null;
+                const tableRows = table ? this.formatPowerTableRows(table) : [];
+                const tableHasRoll = tableRows.some((row) => row.roll);
+                const tableHasValues = tableRows.some((row) => row.value);
+                this.detailPopover = {
+                    kind: "power",
+                    name,
+                    focus: null,
+                    title: name,
+                    meta: metaParts.length ? metaParts.join(" · ") : null,
+                    text,
+                    blocks: this.parseCatalogBlocks(text),
+                    tableRows: tableRows.length ? tableRows : null,
+                    tableLabel: table
+                        ? `Table${table.dice ? ` (${table.dice})` : ""}${
+                              table.label ? ` — ${table.label}` : ""
+                          }`
+                        : null,
+                    tableHasRoll,
+                    tableHasValues,
+                    tableColName: (table && table.label) || "Résultat",
+                    senses: table && table.senses && table.senses.length ? table.senses : null,
+                    extras: def && def.extras && def.extras.length ? def.extras : null,
+                    limites: def && def.limites && def.limites.length ? def.limites : null,
+                    top: pos.top,
+                    left: pos.left,
+                };
+            },
+            closeDetailPopover() {
+                this.detailPopover = null;
+            },
             closeSpecialtyPopover() {
-                this.specialtyPopover = null;
+                this.closeDetailPopover();
             },
             limitBenefitLabel(benefit) {
                 if (benefit === "tenacity") {
@@ -1361,7 +1620,7 @@
                 this.removalExtraDetail[rewardId] = "";
             },
             display(tab) {
-                this.closeSpecialtyPopover();
+                this.closeDetailPopover();
                 this.currentTab = tab;
             },
             addPersonnageLanguage() {
