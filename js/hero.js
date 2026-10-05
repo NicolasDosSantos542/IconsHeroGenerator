@@ -49,6 +49,7 @@ const HeroSheet = (() => {
     return {
       swap: null,
       removedPowers: [],
+      pendingRemovalRewards: [],
       pendingBySource: {
         [SOURCE_REMOVAL]: 0,
         [SOURCE_ORIGIN]: 0,
@@ -98,6 +99,12 @@ const HeroSheet = (() => {
           name: power.name,
           level: power.level,
           page: power.page ?? null,
+        }))
+      : [];
+    base.pendingRemovalRewards = Array.isArray(mods.pendingRemovalRewards)
+      ? mods.pendingRemovalRewards.map((reward) => ({
+          id: reward.id || createId(),
+          removedName: reward.removedName || "",
         }))
       : [];
     base.originExtraSpecialitySlots = Math.max(
@@ -168,7 +175,7 @@ const HeroSheet = (() => {
     return {
       base: {
         attributes: clone(character.attributes || []),
-        powers: clone(character.powers || []),
+        powers: normalizePowerList(character.powers || []),
         origin: clone(character.origin || null),
         specialities: normalizeSpecialityList(character.specialities || []),
         languages: normalizeLanguageList(character.languages || []),
@@ -183,6 +190,7 @@ const HeroSheet = (() => {
       return null;
     }
     const base = clone(data.base);
+    base.powers = normalizePowerList(base.powers);
     base.specialities = normalizeSpecialityList(base.specialities);
     base.languages = normalizeLanguageList(base.languages);
     return {
@@ -257,6 +265,190 @@ const HeroSheet = (() => {
     return !!(power && (power.innateFromOrigin || power.freeFromOrigin));
   }
 
+  const LIMIT_BENEFITS = {
+    extra: "extra",
+    tenacity: "tenacity",
+    level: "level",
+  };
+
+  function modifierNeedsDetail(name) {
+    return /\bX\b/.test((name || "").trim());
+  }
+
+  function formatModifierLabel(entry) {
+    if (!entry || !entry.name) {
+      return "";
+    }
+    const detail = (entry.detail || "").trim();
+    if (detail && modifierNeedsDetail(entry.name)) {
+      return entry.name.replace(/\bX\b/g, detail);
+    }
+    if (detail) {
+      return `${entry.name} (${detail})`;
+    }
+    return entry.name;
+  }
+
+  function normalizeModifierEntry(raw, kind) {
+    if (!raw) {
+      return null;
+    }
+    if (typeof raw === "string") {
+      const name = raw.trim();
+      if (!name) {
+        return null;
+      }
+      if (kind === "limit") {
+        return {
+          id: createId(),
+          name,
+          detail: null,
+          benefit: LIMIT_BENEFITS.extra,
+        };
+      }
+      return {
+        id: createId(),
+        name,
+        detail: null,
+        source: "limit",
+        removalId: null,
+        limitId: null,
+      };
+    }
+    const name = (raw.name || "").trim();
+    if (!name) {
+      return null;
+    }
+    const detail =
+      raw.detail == null || String(raw.detail).trim() === ""
+        ? null
+        : String(raw.detail).trim();
+    if (kind === "limit") {
+      const benefit = LIMIT_BENEFITS[raw.benefit] || LIMIT_BENEFITS.extra;
+      return {
+        id: raw.id || createId(),
+        name,
+        detail,
+        benefit,
+      };
+    }
+    return {
+      id: raw.id || createId(),
+      name,
+      detail,
+      source: raw.source === "removal" ? "removal" : "limit",
+      removalId: raw.removalId || null,
+      limitId: raw.limitId || null,
+    };
+  }
+
+  function normalizePowerEntry(raw) {
+    if (!raw || typeof raw !== "object") {
+      return null;
+    }
+    const name = (raw.name || "").trim();
+    if (!name) {
+      return null;
+    }
+    const comment =
+      typeof raw.comment === "string" ? raw.comment.trim() : "";
+    const choice =
+      typeof raw.choice === "string" ? raw.choice.trim() : "";
+    const choiceSource =
+      choice && (raw.choiceSource === "roll" || raw.choiceSource === "pick")
+        ? raw.choiceSource
+        : choice
+          ? "pick"
+          : null;
+    const pendingRemovalExtraIds = (
+      Array.isArray(raw.pendingRemovalExtraIds) ? raw.pendingRemovalExtraIds : []
+    )
+      .map((id) => (id == null ? "" : String(id).trim()))
+      .filter(Boolean);
+    return {
+      name,
+      level: Number(raw.level) || 0,
+      page: raw.page ?? null,
+      comment,
+      choice,
+      choiceSource,
+      innateFromOrigin: !!raw.innateFromOrigin,
+      freeFromOrigin: !!raw.freeFromOrigin,
+      pendingRemovalExtraIds,
+      extras: (Array.isArray(raw.extras) ? raw.extras : [])
+        .map((entry) => normalizeModifierEntry(entry, "extra"))
+        .filter(Boolean),
+      limites: (Array.isArray(raw.limites) ? raw.limites : [])
+        .map((entry) => normalizeModifierEntry(entry, "limit"))
+        .filter(Boolean),
+    };
+  }
+
+  function normalizePowerList(list) {
+    return (list || []).map(normalizePowerEntry).filter(Boolean);
+  }
+
+  function limitLevelBonus(power) {
+    return (power.limites || [])
+      .filter((limit) => limit.benefit === LIMIT_BENEFITS.level)
+      .reduce((sum) => sum + 2, 0);
+  }
+
+  function tenacityLimitCredits(powers) {
+    return (powers || []).reduce((sum, power) => {
+      const credits = (power.limites || []).filter(
+        (limit) => limit.benefit === LIMIT_BENEFITS.tenacity
+      ).length;
+      return sum + credits;
+    }, 0);
+  }
+
+  function availableLimitExtraSlots(power) {
+    const granted = (power.limites || []).filter(
+      (limit) => limit.benefit === LIMIT_BENEFITS.extra
+    ).length;
+    const used = (power.extras || []).filter(
+      (extra) => extra.source === "limit"
+    ).length;
+    return Math.max(0, granted - used);
+  }
+
+  function availableRemovalExtraSlots(power) {
+    return (power.pendingRemovalExtraIds || []).length;
+  }
+
+  function refundPendingRemovalExtraIds(mods, ids) {
+    (ids || []).forEach((removalId) => {
+      if (!removalId) {
+        return;
+      }
+      const alreadyPending = (mods.pendingRemovalRewards || []).some(
+        (reward) => reward.id === removalId
+      );
+      if (alreadyPending) {
+        return;
+      }
+      const stillRemoved = (mods.removedPowers || []).some(
+        (removed) => removed.id === removalId
+      );
+      if (!stillRemoved) {
+        return;
+      }
+      const removed =
+        (mods.removedPowers || []).find((entry) => entry.id === removalId) ||
+        {};
+      mods.pendingRemovalRewards = mods.pendingRemovalRewards || [];
+      mods.pendingRemovalRewards.push({
+        id: removalId,
+        removedName: removed.name || "",
+      });
+    });
+  }
+
+  function findPower(data, powerName) {
+    return (data.base.powers || []).find((power) => power.name === powerName);
+  }
+
   function resolvedPowers(data) {
     const mods = normalizeMods(data.mods);
     const removedNames = new Set(
@@ -265,18 +457,106 @@ const HeroSheet = (() => {
     return clone(data.base.powers || [])
       .filter((power) => !removedNames.has(power.name))
       .map((power) => {
-        const bonus = bonusTotalFor(mods, "power", power.name);
-        const fromOrigin = isOriginGrantedPower(power);
+        const normalized = normalizePowerEntry(power);
+        const bonus = bonusTotalFor(mods, "power", normalized.name);
+        const fromLimitLevel = limitLevelBonus(normalized);
+        const fromOrigin = isOriginGrantedPower(normalized);
+        const level = Math.min(10, normalized.level + bonus + fromLimitLevel);
         return {
-          ...power,
-          level: power.level + bonus,
-          bonus,
-          innateFromOrigin: !!power.innateFromOrigin,
-          freeFromOrigin: !!power.freeFromOrigin,
+          ...normalized,
+          level,
+          bonus: bonus + fromLimitLevel,
+          limitLevelBonus: fromLimitLevel,
+          innateFromOrigin: !!normalized.innateFromOrigin,
+          freeFromOrigin: !!normalized.freeFromOrigin,
           fromOrigin,
           canRemoveForBonus: !fromOrigin,
+          availableLimitExtraSlots: availableLimitExtraSlots(normalized),
+          availableRemovalExtraSlots: availableRemovalExtraSlots(normalized),
+          canAddLimitExtra: availableLimitExtraSlots(normalized) > 0,
+          canAddRemovalExtra: availableRemovalExtraSlots(normalized) > 0,
+          canAddExtra:
+            availableLimitExtraSlots(normalized) > 0 ||
+            availableRemovalExtraSlots(normalized) > 0,
+          isGroup: isGroupPowerName(normalized.name),
+          groupOptions: groupOptionsFor(normalized.name),
+          needsGroupChoice:
+            isGroupPowerName(normalized.name) && !normalized.choice,
+          ...groupChoicePresentation(normalized),
         };
       });
+  }
+
+  function groupChoicePresentation(power) {
+    const empty = {
+      displayName: power.name,
+      viaGroup: null,
+      choicePower: null,
+      resolvesToPower: false,
+    };
+    if (!power || !power.choice || !isGroupPowerName(power.name)) {
+      return empty;
+    }
+    const choiceDef = resolveGroupChoicePower(power.name, power.choice);
+    if (!choiceDef) {
+      return {
+        displayName: power.name,
+        viaGroup: null,
+        choicePower: null,
+        resolvesToPower: false,
+      };
+    }
+    const groupLabel =
+      typeof pouvoirs !== "undefined" &&
+      pouvoirs &&
+      typeof pouvoirs.definitionOf === "function"
+        ? (pouvoirs.definitionOf(power.name) || {}).name || power.name
+        : power.name;
+    return {
+      displayName: choiceDef.name,
+      viaGroup: groupLabel,
+      choicePower: {
+        name: choiceDef.name,
+        page: choiceDef.page ?? null,
+        value: choiceDef.value || "",
+        extras: choiceDef.extras || [],
+        limites: choiceDef.limites || [],
+        kind: choiceDef.kind || "power",
+        category: choiceDef.category || null,
+      },
+      resolvesToPower: true,
+    };
+  }
+
+  function resolveGroupChoicePower(groupName, choice) {
+    if (
+      typeof pouvoirs === "undefined" ||
+      !pouvoirs ||
+      typeof pouvoirs.definitionOf !== "function"
+    ) {
+      return null;
+    }
+    const trimmed = (choice || "").trim();
+    if (!trimmed) {
+      return null;
+    }
+    const choiceDef = pouvoirs.definitionOf(trimmed);
+    if (!choiceDef) {
+      return null;
+    }
+    const groupDef = pouvoirs.definitionOf(groupName);
+    if (!groupDef || groupDef.kind !== "group") {
+      return null;
+    }
+    const same =
+      typeof pouvoirs.normalizeName === "function"
+        ? pouvoirs.normalizeName(choiceDef.name) ===
+          pouvoirs.normalizeName(groupDef.name)
+        : choiceDef.name === groupDef.name;
+    if (same) {
+      return null;
+    }
+    return choiceDef;
   }
 
   function specialityRankLabel(rank) {
@@ -473,7 +753,8 @@ const HeroSheet = (() => {
     const powers = resolvedPowers(data);
     const attributes = resolvedAttributes(data);
     const highAttributes = attributes.filter((attr) => attr.level > 6).length;
-    return powers.length + highAttributes;
+    const credits = tenacityLimitCredits(powers);
+    return Math.max(0, powers.length + highAttributes - credits);
   }
 
   function tenacity(data) {
@@ -632,12 +913,15 @@ const HeroSheet = (() => {
       canRemovePower: !finished && resolvedPowers(normalized).length > 0,
       canRestorePower: !finished && mods.removedPowers.length > 0,
       removedPowers: mods.removedPowers,
+      pendingRemovalRewards: mods.pendingRemovalRewards || [],
       pendingBonuses: pending,
       pendingBySource: mods.pendingBySource,
       originBonusNext: originBonus,
       canAddSpeciality: !finished && mods.addedSpecialities.length < maxSpecs,
       maxExtraSpecialities: maxSpecs,
       hasOpenOriginSteps: hasOpenOriginSteps(mods),
+      hasPendingRemovalRewards:
+        !finished && (mods.pendingRemovalRewards || []).length > 0,
     };
   }
 
@@ -683,15 +967,19 @@ const HeroSheet = (() => {
     if (already) {
       return { ok: false, reason: "already" };
     }
-    const power = (next.base.powers || []).find(
-      (entry) => entry.name === powerName
-    );
+    const power = findPower(next, powerName);
     if (!power) {
       return { ok: false, reason: "missing" };
     }
     if (isOriginGrantedPower(power)) {
       return { ok: false, reason: "locked_origin_roll" };
     }
+    // Credits parked on this power become unspendable while removed: refund them.
+    refundPendingRemovalExtraIds(
+      next.mods,
+      power.pendingRemovalExtraIds || []
+    );
+    power.pendingRemovalExtraIds = [];
     const removalId = createId();
     next.mods.removedPowers.push({
       id: removalId,
@@ -699,8 +987,401 @@ const HeroSheet = (() => {
       level: power.level,
       page: power.page ?? null,
     });
-    next.mods.pendingBySource[SOURCE_REMOVAL] += 1;
+    next.mods.pendingRemovalRewards.push({
+      id: removalId,
+      removedName: power.name,
+    });
     return { ok: true, data: next, removalId };
+  }
+
+  function spendRemovalAsBonus(data, rewardId) {
+    const locked = guardEditable(data);
+    if (locked) {
+      return locked;
+    }
+    const next = nextClone(data);
+    const index = next.mods.pendingRemovalRewards.findIndex(
+      (reward) => reward.id === rewardId
+    );
+    if (index === -1) {
+      return { ok: false, reason: "missing_reward" };
+    }
+    next.mods.pendingRemovalRewards.splice(index, 1);
+    next.mods.pendingBySource[SOURCE_REMOVAL] += 1;
+    return { ok: true, data: next };
+  }
+
+  function spendRemovalAsExtra(data, rewardId, powerName) {
+    const locked = guardEditable(data);
+    if (locked) {
+      return locked;
+    }
+    const next = nextClone(data);
+    const index = next.mods.pendingRemovalRewards.findIndex(
+      (reward) => reward.id === rewardId
+    );
+    if (index === -1) {
+      return { ok: false, reason: "missing_reward" };
+    }
+    const power = findPower(next, powerName);
+    if (!power) {
+      return { ok: false, reason: "missing_power" };
+    }
+    const reward = next.mods.pendingRemovalRewards[index];
+    next.mods.pendingRemovalRewards.splice(index, 1);
+    power.pendingRemovalExtraIds = power.pendingRemovalExtraIds || [];
+    power.pendingRemovalExtraIds.push(reward.id);
+    return { ok: true, data: next };
+  }
+
+  function spendNextRemovalAsExtra(data, powerName) {
+    const locked = guardEditable(data);
+    if (locked) {
+      return locked;
+    }
+    const rewards = (data.mods && data.mods.pendingRemovalRewards) || [];
+    if (!rewards.length) {
+      return { ok: false, reason: "missing_reward" };
+    }
+    return spendRemovalAsExtra(data, rewards[0].id, powerName);
+  }
+
+  function cancelPendingRemovalExtra(data, powerName) {
+    const locked = guardEditable(data);
+    if (locked) {
+      return locked;
+    }
+    const next = nextClone(data);
+    const power = findPower(next, powerName);
+    if (!power) {
+      return { ok: false, reason: "missing_power" };
+    }
+    const pending = power.pendingRemovalExtraIds || [];
+    if (!pending.length) {
+      return { ok: false, reason: "no_slot" };
+    }
+    const removalId = pending.pop();
+    power.pendingRemovalExtraIds = pending;
+    refundPendingRemovalExtraIds(next.mods, [removalId]);
+    return { ok: true, data: next };
+  }
+
+  function addPowerExtraFromRemoval(data, powerName, extraName, detail) {
+    const locked = guardEditable(data);
+    if (locked) {
+      return locked;
+    }
+    const next = nextClone(data);
+    const power = findPower(next, powerName);
+    if (!power) {
+      return { ok: false, reason: "missing_power" };
+    }
+    if (availableRemovalExtraSlots(power) <= 0) {
+      return { ok: false, reason: "no_slot" };
+    }
+    const trimmed = (extraName || "").trim();
+    if (!trimmed) {
+      return { ok: false, reason: "name" };
+    }
+    const trimmedDetail = (detail || "").trim();
+    if (modifierNeedsDetail(trimmed) && !trimmedDetail) {
+      return { ok: false, reason: "need_detail" };
+    }
+    if (
+      (power.extras || []).some(
+        (extra) =>
+          extra.name === trimmed &&
+          (extra.detail || "") === (trimmedDetail || "")
+      )
+    ) {
+      return { ok: false, reason: "duplicate" };
+    }
+    const removalId = (power.pendingRemovalExtraIds || []).shift();
+    power.extras = power.extras || [];
+    power.extras.push({
+      id: createId(),
+      name: trimmed,
+      detail: trimmedDetail || null,
+      source: "removal",
+      removalId: removalId || null,
+      limitId: null,
+    });
+    return { ok: true, data: next };
+  }
+
+  function addPowerExtra(data, powerName, extraName, detail) {
+    const locked = guardEditable(data);
+    if (locked) {
+      return locked;
+    }
+    const power = findPower(data, powerName);
+    if (!power) {
+      return { ok: false, reason: "missing_power" };
+    }
+    if (availableLimitExtraSlots(power) > 0) {
+      return addPowerExtraFromLimit(data, powerName, extraName, detail);
+    }
+    if (availableRemovalExtraSlots(power) > 0) {
+      return addPowerExtraFromRemoval(data, powerName, extraName, detail);
+    }
+    return { ok: false, reason: "no_slot" };
+  }
+
+  function addPowerLimit(data, powerName, limitName, benefit, detail) {
+    const locked = guardEditable(data);
+    if (locked) {
+      return locked;
+    }
+    const next = nextClone(data);
+    const power = findPower(next, powerName);
+    if (!power) {
+      return { ok: false, reason: "missing_power" };
+    }
+    const trimmed = (limitName || "").trim();
+    if (!trimmed) {
+      return { ok: false, reason: "name" };
+    }
+    const trimmedDetail = (detail || "").trim();
+    if (modifierNeedsDetail(trimmed) && !trimmedDetail) {
+      return { ok: false, reason: "need_detail" };
+    }
+    const resolvedBenefit = LIMIT_BENEFITS[benefit] || LIMIT_BENEFITS.extra;
+    if (resolvedBenefit === LIMIT_BENEFITS.level) {
+      const current =
+        power.level +
+        bonusTotalFor(next.mods, "power", power.name) +
+        limitLevelBonus(power);
+      if (current + 2 > 10) {
+        return { ok: false, reason: "max" };
+      }
+    }
+    if (
+      (power.limites || []).some(
+        (limit) =>
+          limit.name === trimmed &&
+          (limit.detail || "") === (trimmedDetail || "")
+      )
+    ) {
+      return { ok: false, reason: "duplicate" };
+    }
+    power.limites = power.limites || [];
+    power.limites.push({
+      id: createId(),
+      name: trimmed,
+      detail: trimmedDetail || null,
+      benefit: resolvedBenefit,
+    });
+    return { ok: true, data: next };
+  }
+
+  function addPowerExtraFromLimit(data, powerName, extraName, detail) {
+    const locked = guardEditable(data);
+    if (locked) {
+      return locked;
+    }
+    const next = nextClone(data);
+    const power = findPower(next, powerName);
+    if (!power) {
+      return { ok: false, reason: "missing_power" };
+    }
+    if (availableLimitExtraSlots(power) <= 0) {
+      return { ok: false, reason: "no_slot" };
+    }
+    const trimmed = (extraName || "").trim();
+    if (!trimmed) {
+      return { ok: false, reason: "name" };
+    }
+    const trimmedDetail = (detail || "").trim();
+    if (modifierNeedsDetail(trimmed) && !trimmedDetail) {
+      return { ok: false, reason: "need_detail" };
+    }
+    if (
+      (power.extras || []).some(
+        (extra) =>
+          extra.name === trimmed &&
+          (extra.detail || "") === (trimmedDetail || "")
+      )
+    ) {
+      return { ok: false, reason: "duplicate" };
+    }
+    const unusedLimit = (power.limites || []).find(
+      (limit) =>
+        limit.benefit === LIMIT_BENEFITS.extra &&
+        !(power.extras || []).some((extra) => extra.limitId === limit.id)
+    );
+    power.extras = power.extras || [];
+    power.extras.push({
+      id: createId(),
+      name: trimmed,
+      detail: trimmedDetail || null,
+      source: "limit",
+      removalId: null,
+      limitId: unusedLimit ? unusedLimit.id : null,
+    });
+    return { ok: true, data: next };
+  }
+
+  function removePowerLimit(data, powerName, limitId) {
+    const locked = guardEditable(data);
+    if (locked) {
+      return locked;
+    }
+    const next = nextClone(data);
+    const power = findPower(next, powerName);
+    if (!power) {
+      return { ok: false, reason: "missing_power" };
+    }
+    const before = (power.limites || []).length;
+    power.limites = (power.limites || []).filter(
+      (limit) => limit.id !== limitId
+    );
+    if (power.limites.length === before) {
+      return { ok: false, reason: "missing" };
+    }
+    // Drop extras that were unlocked by this limit.
+    power.extras = (power.extras || []).filter(
+      (extra) => extra.limitId !== limitId
+    );
+    // If slots are now exceeded, drop oldest unlinked limit-sourced extras.
+    while (availableLimitExtraSlots(power) < 0) {
+      const idx = power.extras.findIndex((extra) => extra.source === "limit");
+      if (idx === -1) {
+        break;
+      }
+      power.extras.splice(idx, 1);
+    }
+    return { ok: true, data: next };
+  }
+
+  function removePowerExtra(data, powerName, extraId) {
+    const locked = guardEditable(data);
+    if (locked) {
+      return locked;
+    }
+    const next = nextClone(data);
+    const power = findPower(next, powerName);
+    if (!power) {
+      return { ok: false, reason: "missing_power" };
+    }
+    const extra = (power.extras || []).find((entry) => entry.id === extraId);
+    if (!extra) {
+      return { ok: false, reason: "missing" };
+    }
+    power.extras = power.extras.filter((entry) => entry.id !== extraId);
+    if (extra.source === "removal" && extra.removalId) {
+      // Give the removal reward back if the removed power is still gone.
+      const stillRemoved = next.mods.removedPowers.some(
+        (removed) => removed.id === extra.removalId
+      );
+      const alreadyPending = next.mods.pendingRemovalRewards.some(
+        (reward) => reward.id === extra.removalId
+      );
+      if (stillRemoved && !alreadyPending) {
+        next.mods.pendingRemovalRewards.push({
+          id: extra.removalId,
+          removedName:
+            (
+              next.mods.removedPowers.find(
+                (removed) => removed.id === extra.removalId
+              ) || {}
+            ).name || "",
+        });
+      }
+    }
+    return { ok: true, data: next };
+  }
+
+  function isGroupPowerName(name) {
+    const trimmed = (name || "").trim();
+    if (
+      typeof pouvoirs !== "undefined" &&
+      pouvoirs &&
+      typeof pouvoirs.isGroup === "function"
+    ) {
+      return pouvoirs.isGroup(trimmed);
+    }
+    return false;
+  }
+
+  function groupOptionsFor(powerName) {
+    if (
+      typeof pouvoirs === "undefined" ||
+      !pouvoirs ||
+      typeof pouvoirs.definitionOf !== "function"
+    ) {
+      return [];
+    }
+    const def = pouvoirs.definitionOf(powerName);
+    if (!def || def.kind !== "group" || !def.table) {
+      return [];
+    }
+    return (def.table.entries || [])
+      .filter((entry) => entry && entry.name && entry.special !== "reroll")
+      .map((entry) => entry.name);
+  }
+
+  function setPowerGroupChoice(data, powerName, choice, source) {
+    const locked = guardEditable(data);
+    if (locked) {
+      return locked;
+    }
+    const next = nextClone(data);
+    const power = findPower(next, powerName);
+    if (!power) {
+      return { ok: false, reason: "missing_power" };
+    }
+    if (!isGroupPowerName(power.name)) {
+      return { ok: false, reason: "not_group" };
+    }
+    const trimmed = (choice || "").trim();
+    if (!trimmed) {
+      power.choice = "";
+      power.choiceSource = null;
+      return { ok: true, data: next };
+    }
+    const options = groupOptionsFor(power.name);
+    if (options.length && !options.includes(trimmed)) {
+      return { ok: false, reason: "invalid_choice" };
+    }
+    power.choice = trimmed;
+    power.choiceSource = source === "roll" ? "roll" : "pick";
+    return { ok: true, data: next };
+  }
+
+  function rollPowerGroupChoice(data, powerName) {
+    const locked = guardEditable(data);
+    if (locked) {
+      return locked;
+    }
+    if (!isGroupPowerName(powerName)) {
+      return { ok: false, reason: "not_group" };
+    }
+    if (
+      typeof pouvoirs === "undefined" ||
+      !pouvoirs ||
+      typeof pouvoirs.rollGroup !== "function"
+    ) {
+      return { ok: false, reason: "roll" };
+    }
+    const rolled = pouvoirs.rollGroup(powerName);
+    if (!rolled || !rolled.name) {
+      return { ok: false, reason: "roll" };
+    }
+    return setPowerGroupChoice(data, powerName, rolled.name, "roll");
+  }
+
+  function setPowerComment(data, powerName, comment) {
+    const locked = guardEditable(data);
+    if (locked) {
+      return locked;
+    }
+    const next = nextClone(data);
+    const power = findPower(next, powerName);
+    if (!power) {
+      return { ok: false, reason: "missing_power" };
+    }
+    power.comment = (comment || "").trim();
+    return { ok: true, data: next };
   }
 
   function restorePower(data, removalIdOrName) {
@@ -718,6 +1399,21 @@ const HeroSheet = (() => {
     }
     const removed = next.mods.removedPowers[index];
     next.mods.removedPowers.splice(index, 1);
+
+    // Cancel unspent reward for this removal.
+    next.mods.pendingRemovalRewards = (
+      next.mods.pendingRemovalRewards || []
+    ).filter((reward) => reward.id !== removed.id);
+
+    // Remove extras and pending extra credits granted by this removal.
+    (next.base.powers || []).forEach((power) => {
+      power.extras = (power.extras || []).filter(
+        (extra) => extra.removalId !== removed.id
+      );
+      power.pendingRemovalExtraIds = (
+        power.pendingRemovalExtraIds || []
+      ).filter((id) => id !== removed.id);
+    });
 
     const appliedIndex = next.mods.appliedBonuses.findIndex(
       (bonus) =>
@@ -850,6 +1546,9 @@ const HeroSheet = (() => {
     if (pendingTotal(next.mods) > 0) {
       return { ok: false, reason: "pending_bonuses" };
     }
+    if ((next.mods.pendingRemovalRewards || []).length > 0) {
+      return { ok: false, reason: "removal_reward" };
+    }
     if (hasOpenOriginSteps(next.mods)) {
       return { ok: false, reason: "origin_pending" };
     }
@@ -904,6 +1603,22 @@ const HeroSheet = (() => {
     clearSwap,
     removePower,
     restorePower,
+    spendRemovalAsBonus,
+    spendRemovalAsExtra,
+    spendNextRemovalAsExtra,
+    cancelPendingRemovalExtra,
+    addPowerLimit,
+    addPowerExtra,
+    addPowerExtraFromLimit,
+    addPowerExtraFromRemoval,
+    removePowerLimit,
+    removePowerExtra,
+    setPowerComment,
+    setPowerGroupChoice,
+    rollPowerGroupChoice,
+    isGroupPowerName,
+    groupOptionsFor,
+    resolveGroupChoicePower,
     applyBonus,
     addSpeciality,
     setSpecialityFocus,
@@ -925,5 +1640,9 @@ const HeroSheet = (() => {
     pendingSpecialityFocusSlots,
     applyFocusToSpecialityList,
     isOriginGrantedPower,
+    normalizePowerList,
+    LIMIT_BENEFITS,
+    modifierNeedsDetail,
+    formatModifierLabel,
   };
 })();

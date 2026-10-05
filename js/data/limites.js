@@ -135,3 +135,12 @@ let limites = {
     },
   ]
 };
+
+limites.byName = {};
+limites.list.forEach((entry) => {
+  limites.byName[entry.name] = entry;
+});
+
+limites.definitionOf = function definitionOf(name) {
+  return limites.byName[(name || "").trim()] || null;
+};

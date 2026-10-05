@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="icons.css">
     <script src="js/data/specialites.js"></script>
+    <script src="js/data/pouvoirs.js"></script>
     <script src="js/character.js"></script>
     <script src="js/hero.js"></script>
     <script src="js/origin-effects.js"></script>
@@ -151,12 +152,22 @@
 
                     <h3>Pouvoirs</h3>
                     <div class="powers-list">
-                        <div v-for="(value, key) in brouillonData.powers" :key="key">
+                        <div v-for="(value, key) in brouillonData.powers" :key="key" class="power-row">
                             <p>
-                                <span class="name">{{ value.name }}:</span>
+                                <span
+                                    class="name catalog-clickable"
+                                    @click="togglePowerPopover($event, value)"
+                                >{{ value.name }}:</span>
                                 <span class="value">{{ value.level }}</span>
                                 <span class="page" v-if="value.page"> (p. {{ value.page }})</span>
                             </p>
+                            <textarea
+                                class="power-comment-input"
+                                :value="value.comment || ''"
+                                rows="2"
+                                placeholder="Précisions (manifestation, objet, type choisi…)"
+                                @change="setBrouillonPowerComment(value, $event.target.value)"
+                            ></textarea>
                         </div>
                     </div>
 
@@ -421,24 +432,231 @@
 
                     <h3>Pouvoirs</h3>
                     <div class="powers-list">
-                        <div v-for="(value, key) in heroView.powers" :key="key" class="power-row">
-                            <p>
-                                <span class="name">{{ value.name }}:</span>
-                                <span class="value">
-                                    {{ value.level }}
-                                    <small v-if="value.bonus">(+{{ value.bonus }})</small>
+                        <div v-for="(value, key) in heroView.powers" :key="key" class="power-row power-card">
+                            <div class="power-main">
+                                <p>
+                                    <span
+                                        class="name catalog-clickable"
+                                        @click="togglePowerPopover($event, value)"
+                                    >{{ value.displayName || value.name }}:</span>
+                                    <span class="value">
+                                        {{ value.level }}
+                                        <small v-if="value.bonus">(+{{ value.bonus }})</small>
+                                    </span>
+                                    <span class="page" v-if="(value.choicePower && value.choicePower.page) || value.page">
+                                        (p. {{ (value.choicePower && value.choicePower.page) || value.page }})
+                                    </span>
+                                </p>
+                                <input
+                                    v-if="heroView.canRemovePower && value.canRemoveForBonus"
+                                    type="button"
+                                    value="Supprimer"
+                                    @click="doRemovePower(value.name)"
+                                >
+                                <span class="mods-hint" v-else-if="value.fromOrigin">
+                                    (pouvoir d’origine — non retirable)
                                 </span>
-                                <span class="page" v-if="value.page"> (p. {{ value.page }})</span>
+                            </div>
+                            <p class="mods-hint power-via-group" v-if="value.resolvesToPower && value.viaGroup">
+                                via {{ value.viaGroup }}
+                                <small v-if="value.choiceSource === 'roll'">(tirage)</small>
+                                <small v-else-if="value.choiceSource === 'pick'">(choix)</small>
                             </p>
-                            <input
-                                v-if="heroView.canRemovePower && value.canRemoveForBonus"
-                                type="button"
-                                value="Supprimer (+2)"
-                                @click="doRemovePower(value.name)"
-                            >
-                            <span class="mods-hint" v-else-if="value.fromOrigin">
-                                (pouvoir d’origine — non retirable)
-                            </span>
+
+                            <div class="power-group-choice" v-if="value.isGroup">
+                                <template v-if="heroView.isEditable">
+                                    <div class="mods-row">
+                                        <select
+                                            :value="value.choice || ''"
+                                            @change="doSetPowerGroupChoice(value.name, $event.target.value)"
+                                        >
+                                            <option value="">Pouvoir du groupe…</option>
+                                            <option
+                                                v-for="opt in value.groupOptions"
+                                                :key="opt"
+                                                :value="opt"
+                                            >{{ opt }}</option>
+                                        </select>
+                                        <input
+                                            type="button"
+                                            value="Tirer"
+                                            @click="doRollPowerGroupChoice(value.name)"
+                                        >
+                                    </div>
+                                    <p
+                                        class="mods-hint"
+                                        v-if="value.choice && !value.resolvesToPower"
+                                    >
+                                        → {{ value.choice }}
+                                        <small v-if="value.choiceSource === 'roll'">(tirage)</small>
+                                        <small v-else-if="value.choiceSource === 'pick'">(choix)</small>
+                                    </p>
+                                </template>
+                                <p
+                                    class="mods-hint"
+                                    v-else-if="value.choice && !value.resolvesToPower"
+                                >
+                                    → {{ value.choice }}
+                                </p>
+                                <p class="mods-hint warn-hint" v-else-if="!value.choice">
+                                    Pouvoir du groupe non choisi
+                                </p>
+                            </div>
+
+                            <div class="power-comment-block">
+                                <textarea
+                                    v-if="heroView.isEditable"
+                                    class="power-comment-input"
+                                    :value="value.comment || ''"
+                                    rows="2"
+                                    placeholder="Précisions (manifestation, objet, type choisi…)"
+                                    @change="doSetPowerComment(value.name, $event.target.value)"
+                                ></textarea>
+                                <p class="power-comment" v-else-if="value.comment">{{ value.comment }}</p>
+                            </div>
+
+                            <div class="power-modifiers" v-if="(value.limites && value.limites.length) || (value.extras && value.extras.length) || value.availableRemovalExtraSlots">
+                                <div class="modifier-tags" v-if="value.limites && value.limites.length">
+                                    <span class="mods-hint">Limites :</span>
+                                    <span
+                                        class="modifier-tag limit-tag"
+                                        v-for="limit in value.limites"
+                                        :key="limit.id"
+                                    >
+                                        {{ formatModifierLabel(limit) }}
+                                        <small>({{ limitBenefitLabel(limit.benefit) }})</small>
+                                        <button
+                                            v-if="heroView.isEditable"
+                                            type="button"
+                                            class="language-tag-remove"
+                                            @click="doRemovePowerLimit(value.name, limit.id)"
+                                        >×</button>
+                                    </span>
+                                </div>
+                                <div class="modifier-tags" v-if="value.extras && value.extras.length">
+                                    <span class="mods-hint">Extras :</span>
+                                    <span
+                                        class="modifier-tag extra-tag"
+                                        v-for="extra in value.extras"
+                                        :key="extra.id"
+                                    >
+                                        {{ formatModifierLabel(extra) }}
+                                        <button
+                                            v-if="heroView.isEditable"
+                                            type="button"
+                                            class="language-tag-remove"
+                                            @click="doRemovePowerExtra(value.name, extra.id)"
+                                        >×</button>
+                                    </span>
+                                </div>
+                                <div
+                                    class="mods-row"
+                                    v-if="value.availableRemovalExtraSlots"
+                                >
+                                    <span class="mods-hint">
+                                        Extra de suppression à choisir
+                                        <template v-if="value.availableRemovalExtraSlots > 1">
+                                            (×{{ value.availableRemovalExtraSlots }})
+                                        </template>
+                                    </span>
+                                    <input
+                                        v-if="heroView.isEditable"
+                                        type="button"
+                                        value="Annuler"
+                                        @click="cancelRemovalExtraCredit(value.name)"
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="mods-panel power-mod-panel" v-if="heroView.isEditable">
+                                <div class="mods-row">
+                                    <select v-model="limitDrafts[value.name]">
+                                        <option disabled value="">Limite…</option>
+                                        <option v-for="opt in limiteOptions" :key="opt" :value="opt">{{ opt }}</option>
+                                        <option value="__custom__">Autre…</option>
+                                    </select>
+                                    <select v-model="limitBenefitDrafts[value.name]">
+                                        <option value="extra">→ Extra</option>
+                                        <option value="tenacity">→ +1 Ténacité</option>
+                                        <option value="level">→ +2 niveau</option>
+                                    </select>
+                                    <input
+                                        v-if="limitDrafts[value.name] === '__custom__'"
+                                        type="text"
+                                        v-model="limitCustomDrafts[value.name]"
+                                        placeholder="Limite custom…"
+                                    >
+                                    <input
+                                        v-if="modifierNeedsDetail(resolveModifierName(limitDrafts[value.name], limitCustomDrafts[value.name]))"
+                                        type="text"
+                                        v-model="limitDetailDrafts[value.name]"
+                                        placeholder="Préciser X…"
+                                    >
+                                    <input type="button" value="Ajouter limite" @click="doAddPowerLimit(value.name)">
+                                </div>
+                                <div class="mods-row" v-if="heroView.hasPendingRemovalRewards">
+                                    <input
+                                        type="button"
+                                        :value="removalExtraClaimLabel"
+                                        @click="claimRemovalExtraOnPower(value.name)"
+                                    >
+                                </div>
+                                <div class="mods-row" v-if="value.canAddExtra">
+                                    <select v-model="extraDrafts[value.name]">
+                                        <option disabled value="">{{ extraDraftPlaceholder(value) }}</option>
+                                        <optgroup
+                                            v-if="powerExtraOptions(value).length"
+                                            label="Extras du pouvoir"
+                                        >
+                                            <option
+                                                v-for="opt in powerExtraOptions(value)"
+                                                :key="'p-' + opt"
+                                                :value="opt"
+                                            >{{ opt }}</option>
+                                        </optgroup>
+                                        <optgroup
+                                            v-if="extraOptions.length"
+                                            label="Extras standards"
+                                        >
+                                            <option
+                                                v-for="opt in extraOptions"
+                                                :key="'s-' + opt"
+                                                :value="opt"
+                                            >{{ opt }}</option>
+                                        </optgroup>
+                                        <option value="__custom__">Autre…</option>
+                                    </select>
+                                    <input
+                                        v-if="extraDrafts[value.name] === '__custom__'"
+                                        type="text"
+                                        v-model="extraCustomDrafts[value.name]"
+                                        placeholder="Extra custom…"
+                                    >
+                                    <input
+                                        v-if="modifierNeedsDetail(resolveModifierName(extraDrafts[value.name], extraCustomDrafts[value.name]))"
+                                        type="text"
+                                        v-model="extraDetailDrafts[value.name]"
+                                        placeholder="Préciser X…"
+                                    >
+                                    <input type="button" value="Ajouter extra" @click="doAddPowerExtra(value.name)">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mods-panel" v-if="heroView.hasPendingRemovalRewards">
+                        <h4>Récompense de suppression</h4>
+                        <div
+                            class="origin-step"
+                            v-for="reward in heroView.pendingRemovalRewards"
+                            :key="reward.id"
+                        >
+                            <p class="mods-hint">
+                                À la place de « {{ reward.removedName }} » : +2 ici, ou Extra via le bouton sur un pouvoir restant.
+                            </p>
+                            <div class="mods-row">
+                                <input type="button" value="Prendre +2" @click="spendRemovalBonus(reward.id)">
+                            </div>
                         </div>
                     </div>
 
@@ -450,7 +668,7 @@
                                 <input type="button" value="Restaurer" @click="doRestorePower(power.id)">
                             </li>
                         </ul>
-                        <p class="mods-hint">Restaurer un pouvoir retire aussi le +2 associé (placé ou en attente).</p>
+                        <p class="mods-hint">Restaurer annule aussi le +2 ou l’Extra obtenu via cette suppression.</p>
                     </div>
 
                     <div class="mods-panel" v-if="heroView.isEditable && heroView.pendingBonuses > 0">
@@ -727,24 +945,91 @@
         </div>
 
         <div
-            v-if="specialtyPopover"
+            v-if="detailPopover"
             class="specialty-popover-backdrop"
-            @click="closeSpecialtyPopover()"
+            @click="closeDetailPopover()"
         ></div>
         <div
-            v-if="specialtyPopover"
+            v-if="detailPopover"
             class="specialty-popover"
-            :style="{ top: specialtyPopover.top + 'px', left: specialtyPopover.left + 'px' }"
+            :class="{ 'power-popover': detailPopover.kind === 'power' }"
+            :style="{ top: detailPopover.top + 'px', left: detailPopover.left + 'px' }"
             @click.stop
         >
             <div class="specialty-popover-header">
-                <strong>{{ specialtyPopover.title }}</strong>
-                <button type="button" class="specialty-popover-close" @click="closeSpecialtyPopover()">×</button>
+                <strong>{{ detailPopover.title }}</strong>
+                <button type="button" class="specialty-popover-close" @click="closeDetailPopover()">×</button>
             </div>
-            <p class="specialty-popover-text">{{ specialtyPopover.text }}</p>
-            <p class="mods-hint" v-if="specialtyPopover.focus">
-                Focus : {{ specialtyPopover.focus }}
+            <p class="mods-hint" v-if="detailPopover.meta">{{ detailPopover.meta }}</p>
+            <p class="power-comment popover-comment" v-if="detailPopover.groupChoice">
+                <span class="mods-hint">Choix du groupe :</span> {{ detailPopover.groupChoice }}
             </p>
+            <p class="power-comment popover-comment" v-if="detailPopover.groupOrigin">
+                <span class="mods-hint">Groupe d’origine :</span> {{ detailPopover.groupOrigin.name }}
+            </p>
+            <p class="power-comment popover-comment" v-if="detailPopover.comment">
+                <span class="mods-hint">Précision :</span> {{ detailPopover.comment }}
+            </p>
+            <div class="specialty-popover-body" v-if="detailPopover.blocks && detailPopover.blocks.length">
+                <template v-for="(block, idx) in detailPopover.blocks" :key="'b-' + idx">
+                    <p v-if="block.type === 'p'" class="specialty-popover-text">{{ block.text }}</p>
+                    <ul v-else-if="block.type === 'ul'" class="specialty-popover-list">
+                        <li v-for="(item, j) in block.items" :key="'bi-' + idx + '-' + j">
+                            <strong v-if="item.name">{{ item.name }}</strong>
+                            <template v-if="item.name && item.value"> — </template>
+                            <template v-if="item.value">{{ item.value }}</template>
+                            <template v-if="!item.name && !item.value">{{ item }}</template>
+                        </li>
+                    </ul>
+                </template>
+            </div>
+            <p class="specialty-popover-text" v-else-if="detailPopover.text">{{ detailPopover.text }}</p>
+            <p class="mods-hint" v-if="detailPopover.focus">
+                Focus : {{ detailPopover.focus }}
+            </p>
+            <div class="specialty-popover-section" v-if="detailPopover.tableRows && detailPopover.tableRows.length">
+                <p class="mods-hint">{{ detailPopover.tableLabel || 'Table de tirage' }}</p>
+                <table class="power-roll-table">
+                    <thead>
+                        <tr>
+                            <th v-if="detailPopover.tableHasRoll">Jet</th>
+                            <th>{{ detailPopover.tableColName || 'Résultat' }}</th>
+                            <th v-if="detailPopover.tableHasValues">Effet</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(row, idx) in detailPopover.tableRows" :key="'tr-' + idx">
+                            <td v-if="detailPopover.tableHasRoll" class="roll-cell">{{ row.roll }}</td>
+                            <td>{{ row.name }}</td>
+                            <td v-if="detailPopover.tableHasValues">{{ row.value || '—' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="specialty-popover-section" v-if="detailPopover.senses && detailPopover.senses.length">
+                <p class="mods-hint">Sens additionnels</p>
+                <ul class="specialty-popover-list">
+                    <li v-for="(item, idx) in detailPopover.senses" :key="'s-' + idx">
+                        <strong>{{ item.name }}</strong><template v-if="item.value"> — {{ item.value }}</template>
+                    </li>
+                </ul>
+            </div>
+            <div class="specialty-popover-section" v-if="detailPopover.extras && detailPopover.extras.length">
+                <p class="mods-hint">Extras</p>
+                <ul class="specialty-popover-list">
+                    <li v-for="(item, idx) in detailPopover.extras" :key="'e-' + idx">
+                        <strong>{{ item.name }}</strong><template v-if="item.value"> — {{ item.value }}</template>
+                    </li>
+                </ul>
+            </div>
+            <div class="specialty-popover-section" v-if="detailPopover.limites && detailPopover.limites.length">
+                <p class="mods-hint">Limites</p>
+                <ul class="specialty-popover-list">
+                    <li v-for="(item, idx) in detailPopover.limites" :key="'l-' + idx">
+                        <strong>{{ item.name }}</strong><template v-if="item.value"> — {{ item.value }}</template>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </body>
@@ -779,12 +1064,19 @@
                 newLanguage: "",
                 focusDrafts: {},
                 focusCustoms: {},
+                limitDrafts: {},
+                limitBenefitDrafts: {},
+                limitCustomDrafts: {},
+                limitDetailDrafts: {},
+                extraDrafts: {},
+                extraCustomDrafts: {},
+                extraDetailDrafts: {},
                 sacrificePower: "",
                 originDecisions: {},
                 undoStack: [],
                 maxUndo: 40,
                 libraryExpanded: false,
-                specialtyPopover: null,
+                detailPopover: null,
             };
         },
         computed: {
@@ -815,6 +1107,21 @@
                 }
                 return `Annuler (${this.undoStack.length})`;
             },
+            removalExtraClaimLabel() {
+                const rewards =
+                    (this.heroView && this.heroView.pendingRemovalRewards) || [];
+                if (!rewards.length) {
+                    return "Extra (suppression)";
+                }
+                const name = rewards[0].removedName || "";
+                if (rewards.length === 1 && name) {
+                    return `Extra ← ${name}`;
+                }
+                if (name) {
+                    return `Extra ← ${name} (+${rewards.length - 1})`;
+                }
+                return `Extra (suppression ×${rewards.length})`;
+            },
             brouillonPendingFocuses() {
                 if (!this.brouillonData) {
                     return [];
@@ -839,6 +1146,16 @@
             },
             newSpecialityIsGroup() {
                 return HeroSheet.isGroupSpecialityName(this.newSpeciality);
+            },
+            limiteOptions() {
+                return (limites.list || [])
+                    .map((item) => (item.name || "").trim())
+                    .filter(Boolean);
+            },
+            extraOptions() {
+                return (extras.list || [])
+                    .map((item) => (item.name || "").trim())
+                    .filter(Boolean);
             },
             brouillonLanguages() {
                 if (!this.brouillonData) {
@@ -972,12 +1289,12 @@
         },
         mounted() {
             app = this;
-            this._onSpecialtyEscape = (event) => {
+            this._onDetailEscape = (event) => {
                 if (event.key === "Escape") {
-                    this.closeSpecialtyPopover();
+                    this.closeDetailPopover();
                 }
             };
-            window.addEventListener("keydown", this._onSpecialtyEscape);
+            window.addEventListener("keydown", this._onDetailEscape);
             IconsStorage.load();
             this.refreshLibrary();
             const working = IconsStorage.getWorking();
@@ -990,16 +1307,194 @@
             }
         },
         beforeUnmount() {
-            if (this._onSpecialtyEscape) {
-                window.removeEventListener("keydown", this._onSpecialtyEscape);
+            if (this._onDetailEscape) {
+                window.removeEventListener("keydown", this._onDetailEscape);
             }
         },
         methods: {
             formatSpecialities(list) {
                 return HeroSheet.specializeEntries(list || []);
             },
+            expandCatalogExtraNames(catalogExtras) {
+                const names = [];
+                const list = Array.isArray(catalogExtras) ? catalogExtras : [];
+                list.forEach((entry) => {
+                    const name = (entry && entry.name ? entry.name : "").trim();
+                    const value = (entry && entry.value ? entry.value : "").trim();
+                    if (!name) {
+                        return;
+                    }
+                    if (/^(standard|pouvoirs?)$/i.test(name) && value) {
+                        value.split(/[,;]/).forEach((part) => {
+                            const cleaned = part
+                                .replace(/\([^)]*\)/g, "")
+                                .replace(/\.$/, "")
+                                .trim();
+                            if (
+                                cleaned &&
+                                !/^(tous|toutes)\b/i.test(cleaned)
+                            ) {
+                                names.push(cleaned);
+                            }
+                        });
+                        return;
+                    }
+                    names.push(name);
+                });
+                const seen = new Set();
+                return names.filter((item) => {
+                    const key = item.toLowerCase();
+                    if (seen.has(key)) {
+                        return false;
+                    }
+                    seen.add(key);
+                    return true;
+                });
+            },
+            powerExtraOptions(power) {
+                if (!power) {
+                    return [];
+                }
+                let catalogExtras = [];
+                if (power.resolvesToPower && power.choicePower) {
+                    catalogExtras = power.choicePower.extras;
+                } else if (
+                    typeof pouvoirs !== "undefined" &&
+                    pouvoirs &&
+                    typeof pouvoirs.definitionOf === "function"
+                ) {
+                    const def = pouvoirs.definitionOf(
+                        power.displayName && power.resolvesToPower
+                            ? power.displayName
+                            : power.name
+                    );
+                    catalogExtras = def && def.extras;
+                }
+                const powerNames = this.expandCatalogExtraNames(catalogExtras);
+                const standard = new Set(
+                    (this.extraOptions || []).map((name) => name.toLowerCase())
+                );
+                return powerNames.filter(
+                    (name) => !standard.has(name.toLowerCase())
+                );
+            },
             specialityRankLabel(rank) {
                 return HeroSheet.specialityRankLabel(rank);
+            },
+            popoverPosition(event) {
+                const rect = event.currentTarget.getBoundingClientRect();
+                const left = Math.min(rect.left, window.innerWidth - 320);
+                const top = Math.min(rect.bottom + 8, window.innerHeight - 160);
+                return {
+                    top: Math.max(8, top),
+                    left: Math.max(8, left),
+                };
+            },
+            formatRollRange(values) {
+                if (!values || !values.length) {
+                    return "";
+                }
+                const sorted = [...values].sort((a, b) => a - b);
+                if (sorted.length === 1) {
+                    return String(sorted[0]);
+                }
+                // collapse contiguous runs: [1,2,3,4] → 1-4 ; [1,2,4,5] → 1-2, 4-5
+                const parts = [];
+                let start = sorted[0];
+                let prev = sorted[0];
+                for (let i = 1; i < sorted.length; i += 1) {
+                    if (sorted[i] === prev + 1) {
+                        prev = sorted[i];
+                        continue;
+                    }
+                    parts.push(start === prev ? String(start) : `${start}-${prev}`);
+                    start = sorted[i];
+                    prev = sorted[i];
+                }
+                parts.push(start === prev ? String(start) : `${start}-${prev}`);
+                return parts.join(", ");
+            },
+            formatPowerTableLines(table) {
+                if (!table || !table.entries || !table.entries.length) {
+                    return [];
+                }
+                return table.entries.map((entry) => {
+                    let prefix = "";
+                    if (table.dice === "d6xd6") {
+                        const a = this.formatRollRange(entry.first);
+                        const b = this.formatRollRange(entry.second);
+                        prefix = a && b ? `${a} / ${b} ` : "";
+                    } else if (entry.roll && entry.roll.length) {
+                        prefix = `${this.formatRollRange(entry.roll)} `;
+                    }
+                    return `${prefix}${entry.name}`.trim();
+                });
+            },
+            formatPowerTableRows(table) {
+                if (!table || !table.entries || !table.entries.length) {
+                    return [];
+                }
+                return table.entries.map((entry) => {
+                    let roll = "";
+                    if (table.dice === "d6xd6") {
+                        const a = this.formatRollRange(entry.first);
+                        const b = this.formatRollRange(entry.second);
+                        roll = a && b ? `${a} / ${b}` : "";
+                    } else if (entry.roll && entry.roll.length) {
+                        roll = this.formatRollRange(entry.roll);
+                    }
+                    return {
+                        roll,
+                        name: entry.name,
+                        value: entry.value || "",
+                    };
+                });
+            },
+            parseCatalogBlocks(text) {
+                const source = (text || "").trim();
+                if (!source) {
+                    return [];
+                }
+                const blocks = [];
+                let listItems = null;
+                const flushList = () => {
+                    if (listItems && listItems.length) {
+                        blocks.push({ type: "ul", items: listItems });
+                    }
+                    listItems = null;
+                };
+                const chunks = source.split(/\n+/);
+                for (const raw of chunks) {
+                    const chunk = raw.trim();
+                    if (!chunk) {
+                        continue;
+                    }
+                    if (chunk.startsWith("• ")) {
+                        if (!listItems) {
+                            listItems = [];
+                        }
+                        const body = chunk.slice(2).trim();
+                        const sep = body.includes(" : ")
+                            ? " : "
+                            : body.includes(": ")
+                              ? ": "
+                              : null;
+                        if (sep) {
+                            const [name, ...rest] = body.split(sep);
+                            listItems.push({
+                                name: name.trim(),
+                                value: rest.join(sep).trim(),
+                            });
+                        } else {
+                            listItems.push({ name: "", value: body });
+                        }
+                        continue;
+                    }
+                    flushList();
+                    blocks.push({ type: "p", text: chunk });
+                }
+                flushList();
+                return blocks;
             },
             toggleSpecialtyPopover(event, entry) {
                 const name = entry && entry.name;
@@ -1007,33 +1502,390 @@
                     return;
                 }
                 if (
-                    this.specialtyPopover &&
-                    this.specialtyPopover.name === name &&
-                    this.specialtyPopover.focus === (entry.focus || null)
+                    this.detailPopover &&
+                    this.detailPopover.kind === "specialty" &&
+                    this.detailPopover.name === name &&
+                    this.detailPopover.focus === (entry.focus || null)
                 ) {
-                    this.closeSpecialtyPopover();
+                    this.closeDetailPopover();
                     return;
                 }
                 const def = specialites.definitionOf(name);
-                const rect = event.currentTarget.getBoundingClientRect();
-                const left = Math.min(rect.left, window.innerWidth - 320);
-                const top = Math.min(rect.bottom + 8, window.innerHeight - 160);
-                this.specialtyPopover = {
+                const pos = this.popoverPosition(event);
+                const text =
+                    (def && def.value) ||
+                    "Aucune description disponible pour cette spécialité.";
+                this.detailPopover = {
+                    kind: "specialty",
                     name,
                     focus: entry.focus || null,
                     title: entry.display || name,
-                    text:
-                        (def && def.value) ||
-                        "Aucune description disponible pour cette spécialité.",
-                    top: Math.max(8, top),
-                    left: Math.max(8, left),
+                    meta: null,
+                    text,
+                    blocks: this.parseCatalogBlocks(text),
+                    tableRows: null,
+                    tableLabel: null,
+                    tableHasRoll: false,
+                    tableHasValues: false,
+                    tableColName: null,
+                    senses: null,
+                    extras: null,
+                    limites: null,
+                    top: pos.top,
+                    left: pos.left,
                 };
             },
+            togglePowerPopover(event, power) {
+                const sheetName = power && power.name;
+                if (!sheetName) {
+                    return;
+                }
+                const viewName =
+                    power.resolvesToPower && power.choicePower
+                        ? power.choicePower.name
+                        : sheetName;
+                const popoverKey = `${sheetName}::${viewName}`;
+                if (
+                    this.detailPopover &&
+                    this.detailPopover.kind === "power" &&
+                    this.detailPopover.popoverKey === popoverKey
+                ) {
+                    this.closeDetailPopover();
+                    return;
+                }
+                const def =
+                    typeof pouvoirs !== "undefined" && pouvoirs
+                        ? pouvoirs.definitionOf(viewName)
+                        : null;
+                const groupDef =
+                    power.resolvesToPower &&
+                    typeof pouvoirs !== "undefined" &&
+                    pouvoirs
+                        ? pouvoirs.definitionOf(sheetName)
+                        : null;
+                const pos = this.popoverPosition(event);
+                const metaParts = [];
+                if (def && def.category) {
+                    metaParts.push(def.category);
+                }
+                if (power.resolvesToPower && power.viaGroup) {
+                    metaParts.push(`via ${power.viaGroup}`);
+                } else if (def && def.kind === "group") {
+                    metaParts.push("groupe");
+                } else if (def && def.kind === "variant") {
+                    metaParts.push(
+                        def.variantOf
+                            ? `variante de ${def.variantOf}`
+                            : "variante"
+                    );
+                }
+                const page = (def && def.page) || power.page;
+                if (page) {
+                    metaParts.push(`p. ${page}`);
+                }
+                const text =
+                    (def && def.value) ||
+                    "Aucune description disponible pour ce pouvoir.";
+                const table =
+                    !power.resolvesToPower && def && def.table ? def.table : null;
+                const tableRows = table ? this.formatPowerTableRows(table) : [];
+                const tableHasRoll = tableRows.some((row) => row.roll);
+                const tableHasValues = tableRows.some((row) => row.value);
+                this.detailPopover = {
+                    kind: "power",
+                    name: viewName,
+                    popoverKey,
+                    focus: null,
+                    title: power.displayName || viewName,
+                    meta: metaParts.length ? metaParts.join(" · ") : null,
+                    comment: (power.comment || "").trim() || null,
+                    groupChoice:
+                        power.resolvesToPower
+                            ? null
+                            : (power.choice || "").trim() || null,
+                    groupOrigin:
+                        power.resolvesToPower && groupDef
+                            ? {
+                                  name: groupDef.name,
+                                  value: groupDef.value || "",
+                              }
+                            : null,
+                    text,
+                    blocks: this.parseCatalogBlocks(text),
+                    tableRows: tableRows.length ? tableRows : null,
+                    tableLabel: table
+                        ? `Table${table.dice ? ` (${table.dice})` : ""}${
+                              table.label ? ` — ${table.label}` : ""
+                          }`
+                        : null,
+                    tableHasRoll,
+                    tableHasValues,
+                    tableColName: (table && table.label) || "Résultat",
+                    senses: table && table.senses && table.senses.length ? table.senses : null,
+                    extras: def && def.extras && def.extras.length ? def.extras : null,
+                    limites: def && def.limites && def.limites.length ? def.limites : null,
+                    top: pos.top,
+                    left: pos.left,
+                };
+            },
+            closeDetailPopover() {
+                this.detailPopover = null;
+            },
             closeSpecialtyPopover() {
-                this.specialtyPopover = null;
+                this.closeDetailPopover();
+            },
+            limitBenefitLabel(benefit) {
+                if (benefit === "tenacity") {
+                    return "+1 Ténacité";
+                }
+                if (benefit === "level") {
+                    return "+2 niv.";
+                }
+                return "Extra";
+            },
+            resolveModifierName(selectValue, customValue) {
+                if (selectValue === "__custom__") {
+                    return (customValue || "").trim();
+                }
+                return (selectValue || "").trim();
+            },
+            modifierNeedsDetail(name) {
+                return HeroSheet.modifierNeedsDetail(name);
+            },
+            formatModifierLabel(entry) {
+                return HeroSheet.formatModifierLabel(entry);
+            },
+            doAddPowerLimit(powerName) {
+                if (!this.limitBenefitDrafts[powerName]) {
+                    this.limitBenefitDrafts[powerName] = "extra";
+                }
+                const name = this.resolveModifierName(
+                    this.limitDrafts[powerName],
+                    this.limitCustomDrafts[powerName]
+                );
+                const detail = (this.limitDetailDrafts[powerName] || "").trim();
+                if (this.modifierNeedsDetail(name) && !detail) {
+                    window.alert("Précisez la valeur de X pour cette limite.");
+                    return;
+                }
+                const result = HeroSheet.addPowerLimit(
+                    this.personnageData,
+                    powerName,
+                    name,
+                    this.limitBenefitDrafts[powerName],
+                    detail
+                );
+                if (!result.ok) {
+                    window.alert(
+                        result.reason === "max"
+                            ? "Niveau maximum (10) atteint pour ce +2."
+                            : result.reason === "duplicate"
+                              ? "Cette limite est déjà sur ce pouvoir."
+                              : result.reason === "need_detail"
+                                ? "Précisez la valeur de X pour cette limite."
+                                : "Ajout de limite impossible."
+                    );
+                    return;
+                }
+                this.persistPersonnage(result.data, {
+                    undoLabel: `Limite ${HeroSheet.formatModifierLabel({ name, detail })} sur ${powerName}`,
+                });
+                this.limitDrafts[powerName] = "";
+                this.limitCustomDrafts[powerName] = "";
+                this.limitDetailDrafts[powerName] = "";
+            },
+            doAddPowerExtraFromLimit(powerName) {
+                this.doAddPowerExtra(powerName);
+            },
+            doAddPowerExtra(powerName) {
+                const name = this.resolveModifierName(
+                    this.extraDrafts[powerName],
+                    this.extraCustomDrafts[powerName]
+                );
+                const detail = (this.extraDetailDrafts[powerName] || "").trim();
+                if (!name) {
+                    window.alert("Choisissez un extra.");
+                    return;
+                }
+                if (this.modifierNeedsDetail(name) && !detail) {
+                    window.alert("Précisez la valeur de X pour cet extra.");
+                    return;
+                }
+                const result = HeroSheet.addPowerExtra(
+                    this.personnageData,
+                    powerName,
+                    name,
+                    detail
+                );
+                if (!result.ok) {
+                    window.alert(
+                        result.reason === "no_slot"
+                            ? "Aucun crédit d’extra disponible sur ce pouvoir."
+                            : result.reason === "duplicate"
+                              ? "Cet extra est déjà sur ce pouvoir."
+                              : result.reason === "need_detail"
+                                ? "Précisez la valeur de X pour cet extra."
+                                : "Ajout d’extra impossible."
+                    );
+                    return;
+                }
+                this.persistPersonnage(result.data, {
+                    undoLabel: `Extra ${HeroSheet.formatModifierLabel({ name, detail })} sur ${powerName}`,
+                });
+                this.extraDrafts[powerName] = "";
+                this.extraCustomDrafts[powerName] = "";
+                this.extraDetailDrafts[powerName] = "";
+            },
+            extraDraftPlaceholder(power) {
+                if (power.canAddLimitExtra && power.canAddRemovalExtra) {
+                    return "Extra…";
+                }
+                if (power.canAddRemovalExtra) {
+                    return "Extra (via suppression)…";
+                }
+                return "Extra (via limite)…";
+            },
+            doRemovePowerLimit(powerName, limitId) {
+                const result = HeroSheet.removePowerLimit(
+                    this.personnageData,
+                    powerName,
+                    limitId
+                );
+                if (!result.ok) {
+                    window.alert("Suppression de limite impossible.");
+                    return;
+                }
+                this.persistPersonnage(result.data, {
+                    undoLabel: `Retrait limite sur ${powerName}`,
+                });
+            },
+            doRemovePowerExtra(powerName, extraId) {
+                const result = HeroSheet.removePowerExtra(
+                    this.personnageData,
+                    powerName,
+                    extraId
+                );
+                if (!result.ok) {
+                    window.alert("Suppression d’extra impossible.");
+                    return;
+                }
+                this.persistPersonnage(result.data, {
+                    undoLabel: `Retrait extra sur ${powerName}`,
+                });
+            },
+            doSetPowerComment(powerName, comment) {
+                const result = HeroSheet.setPowerComment(
+                    this.personnageData,
+                    powerName,
+                    comment
+                );
+                if (!result.ok) {
+                    window.alert(
+                        result.reason === "finished"
+                            ? "Personnage terminé : modifications verrouillées."
+                            : "Impossible d’enregistrer le commentaire."
+                    );
+                    return;
+                }
+                this.persistPersonnage(result.data, {
+                    undoLabel: `Commentaire sur ${powerName}`,
+                });
+            },
+            doSetPowerGroupChoice(powerName, choice) {
+                const result = HeroSheet.setPowerGroupChoice(
+                    this.personnageData,
+                    powerName,
+                    choice,
+                    "pick"
+                );
+                if (!result.ok) {
+                    window.alert(
+                        result.reason === "finished"
+                            ? "Personnage terminé : modifications verrouillées."
+                            : result.reason === "invalid_choice"
+                              ? "Choix invalide pour ce groupe."
+                              : "Impossible d’enregistrer le choix du groupe."
+                    );
+                    return;
+                }
+                this.persistPersonnage(result.data, {
+                    undoLabel: choice
+                        ? `Groupe ${powerName} → ${choice}`
+                        : `Groupe ${powerName} (choix effacé)`,
+                });
+            },
+            doRollPowerGroupChoice(powerName) {
+                const result = HeroSheet.rollPowerGroupChoice(
+                    this.personnageData,
+                    powerName
+                );
+                if (!result.ok) {
+                    window.alert(
+                        result.reason === "finished"
+                            ? "Personnage terminé : modifications verrouillées."
+                            : "Tirage impossible pour ce groupe."
+                    );
+                    return;
+                }
+                const power = (result.data.base.powers || []).find(
+                    (entry) => entry.name === powerName
+                );
+                this.persistPersonnage(result.data, {
+                    undoLabel: power && power.choice
+                        ? `Tirage ${powerName} → ${power.choice}`
+                        : `Tirage ${powerName}`,
+                });
+            },
+            setBrouillonPowerComment(power, comment) {
+                if (!power) {
+                    return;
+                }
+                power.comment = (comment || "").trim();
+                this.persistBrouillon(this.brouillonData, {
+                    undoLabel: `Commentaire sur ${power.name}`,
+                });
+            },
+            spendRemovalBonus(rewardId) {
+                const result = HeroSheet.spendRemovalAsBonus(
+                    this.personnageData,
+                    rewardId
+                );
+                if (!result.ok) {
+                    window.alert("Impossible d’appliquer le +2.");
+                    return;
+                }
+                this.persistPersonnage(result.data, {
+                    undoLabel: "Suppression → +2",
+                });
+            },
+            claimRemovalExtraOnPower(powerName) {
+                const result = HeroSheet.spendNextRemovalAsExtra(
+                    this.personnageData,
+                    powerName
+                );
+                if (!result.ok) {
+                    window.alert("Impossible de placer l’extra sur ce pouvoir.");
+                    return;
+                }
+                this.persistPersonnage(result.data, {
+                    undoLabel: `Suppression → Extra sur ${powerName}`,
+                });
+            },
+            cancelRemovalExtraCredit(powerName) {
+                const result = HeroSheet.cancelPendingRemovalExtra(
+                    this.personnageData,
+                    powerName
+                );
+                if (!result.ok) {
+                    window.alert("Impossible d’annuler ce crédit d’extra.");
+                    return;
+                }
+                this.persistPersonnage(result.data, {
+                    undoLabel: `Annuler Extra suppression sur ${powerName}`,
+                });
             },
             display(tab) {
-                this.closeSpecialtyPopover();
+                this.closeDetailPopover();
                 this.currentTab = tab;
             },
             addPersonnageLanguage() {
@@ -1660,6 +2512,8 @@
                 if (!result.ok) {
                     const messages = {
                         pending_bonuses: "Placez d’abord tous les bonus +2 en attente.",
+                        removal_reward:
+                            "Choisissez d’abord la récompense des pouvoirs supprimés (+2 ou Extra).",
                         origin_pending: "Terminez d’abord les effets d’origine.",
                         speciality_focus:
                             "Choisissez d’abord le focus de chaque spécialité de groupe.",

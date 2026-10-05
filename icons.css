@@ -486,11 +486,7 @@ html {
 }
 
 .power-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.45rem;
+  display: block;
   border-bottom: 1.5px solid var(--icons-line);
   padding: 0.35rem 0.1rem;
 }
@@ -611,6 +607,14 @@ html {
   color: var(--icons-blue);
 }
 
+.catalog-clickable {
+  cursor: pointer;
+}
+
+.catalog-clickable:hover {
+  color: var(--icons-blue);
+}
+
 .specialty-popover-backdrop {
   position: fixed;
   inset: 0;
@@ -629,6 +633,11 @@ html {
   border-radius: 0.4rem;
   background: #fffef8;
   box-shadow: 4px 4px 0 rgba(17, 17, 17, 0.18);
+}
+
+.specialty-popover.power-popover {
+  width: min(28rem, calc(100vw - 1.5rem));
+  max-height: min(70vh, 32rem);
 }
 
 .specialty-popover-header {
@@ -667,14 +676,180 @@ html {
 }
 
 .specialty-popover-text {
-  margin: 0;
+  margin: 0 0 0.55rem;
   font-size: 0.95rem;
   line-height: 1.45;
   color: var(--icons-ink);
 }
 
-.powers-list p {
-  margin: 0;
+.specialty-popover-body .specialty-popover-text:last-child {
+  margin-bottom: 0;
+}
+
+.specialty-popover-section {
+  margin-top: 0.65rem;
+  padding-top: 0.45rem;
+  border-top: 1px solid rgba(17, 17, 17, 0.12);
+}
+
+.specialty-popover-list {
+  margin: 0.25rem 0 0;
+  padding-left: 1.1rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.specialty-popover-list li + li {
+  margin-top: 0.35rem;
+}
+
+.power-roll-table {
+  width: 100%;
+  margin-top: 0.35rem;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.power-roll-table th,
+.power-roll-table td {
+  padding: 0.28rem 0.4rem;
+  border-bottom: 1px solid rgba(17, 17, 17, 0.12);
+  text-align: left;
+  vertical-align: top;
+}
+
+.power-roll-table th {
+  font-family: "Oswald", Impact, sans-serif;
+  font-weight: 500;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--icons-muted, #555);
+}
+
+.power-roll-table .roll-cell {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  width: 4.5rem;
+}
+
+.power-via-group {
+  margin: 0.15rem 0 0.25rem;
+}
+
+.power-group-choice {
+  margin: 0.35rem 0 0.1rem;
+}
+
+.power-group-choice .mods-row {
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.power-group-choice select {
+  min-width: min(16rem, 100%);
+  flex: 1 1 12rem;
+}
+
+.power-group-choice .warn-hint {
+  color: var(--icons-red);
+}
+
+.power-comment-block {
+  margin: 0.35rem 0 0.15rem;
+}
+
+.power-comment-input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0.25rem 0 0;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid rgba(17, 17, 17, 0.25);
+  border-radius: 0.3rem;
+  background: #fff;
+  color: var(--icons-ink);
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.35;
+  resize: vertical;
+  min-height: 2.4rem;
+}
+
+.power-comment-input:focus {
+  outline: 2px solid var(--icons-blue);
+  outline-offset: 1px;
+}
+
+.power-comment {
+  margin: 0.2rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--icons-ink);
+  font-style: italic;
+}
+
+.popover-comment {
+  margin: 0 0 0.55rem;
+  padding: 0.35rem 0.45rem;
+  border-left: 3px solid var(--icons-blue);
+  background: rgba(17, 17, 17, 0.04);
+  font-style: italic;
+}
+
+.power-modifiers {
+  margin-top: 0.35rem;
+}
+
+.modifier-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.3rem;
+}
+
+.modifier-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.15rem 0.4rem 0.15rem 0.5rem;
+  border: 1.5px solid var(--icons-ink);
+  border-radius: 999px;
+  font-family: "Oswald", Impact, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  background: #fff;
+}
+
+.modifier-tag small {
+  font-family: inherit;
+  font-weight: 500;
+  opacity: 0.75;
+}
+
+.limit-tag {
+  background: #fff4e8;
+}
+
+.extra-tag {
+  background: #eef6ff;
+}
+
+.power-mod-panel {
+  margin-top: 0.45rem;
+  margin-bottom: 0.25rem;
+  padding: 0.55rem;
+}
+
+.power-mod-panel .mods-row {
+  margin-bottom: 0.35rem;
+}
+
+.power-mod-panel .mods-row:last-child {
+  margin-bottom: 0;
 }
 
 .languages-block {
