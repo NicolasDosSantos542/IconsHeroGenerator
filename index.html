@@ -456,6 +456,40 @@
                                 </span>
                             </div>
 
+                            <div class="power-group-choice" v-if="value.isGroup">
+                                <template v-if="heroView.isEditable">
+                                    <div class="mods-row">
+                                        <select
+                                            :value="value.choice || ''"
+                                            @change="doSetPowerGroupChoice(value.name, $event.target.value)"
+                                        >
+                                            <option value="">Pouvoir du groupe…</option>
+                                            <option
+                                                v-for="opt in value.groupOptions"
+                                                :key="opt"
+                                                :value="opt"
+                                            >{{ opt }}</option>
+                                        </select>
+                                        <input
+                                            type="button"
+                                            value="Tirer"
+                                            @click="doRollPowerGroupChoice(value.name)"
+                                        >
+                                    </div>
+                                    <p class="mods-hint" v-if="value.choice">
+                                        → {{ value.choice }}
+                                        <small v-if="value.choiceSource === 'roll'">(tirage)</small>
+                                        <small v-else-if="value.choiceSource === 'pick'">(choix)</small>
+                                    </p>
+                                </template>
+                                <p class="mods-hint" v-else-if="value.choice">
+                                    → {{ value.choice }}
+                                </p>
+                                <p class="mods-hint warn-hint" v-else>
+                                    Pouvoir du groupe non choisi
+                                </p>
+                            </div>
+
                             <div class="power-comment-block">
                                 <textarea
                                     v-if="heroView.isEditable"
@@ -899,6 +933,9 @@
                 <button type="button" class="specialty-popover-close" @click="closeDetailPopover()">×</button>
             </div>
             <p class="mods-hint" v-if="detailPopover.meta">{{ detailPopover.meta }}</p>
+            <p class="power-comment popover-comment" v-if="detailPopover.groupChoice">
+                <span class="mods-hint">Choix du groupe :</span> {{ detailPopover.groupChoice }}
+            </p>
             <p class="power-comment popover-comment" v-if="detailPopover.comment">
                 <span class="mods-hint">Précision :</span> {{ detailPopover.comment }}
             </p>
@@ -1442,6 +1479,7 @@
                     title: name,
                     meta: metaParts.length ? metaParts.join(" · ") : null,
                     comment: (power.comment || "").trim() || null,
+                    groupChoice: (power.choice || "").trim() || null,
                     text,
                     blocks: this.parseCatalogBlocks(text),
                     tableRows: tableRows.length ? tableRows : null,
@@ -1605,6 +1643,51 @@
                 }
                 this.persistPersonnage(result.data, {
                     undoLabel: `Commentaire sur ${powerName}`,
+                });
+            },
+            doSetPowerGroupChoice(powerName, choice) {
+                const result = HeroSheet.setPowerGroupChoice(
+                    this.personnageData,
+                    powerName,
+                    choice,
+                    "pick"
+                );
+                if (!result.ok) {
+                    window.alert(
+                        result.reason === "finished"
+                            ? "Personnage terminé : modifications verrouillées."
+                            : result.reason === "invalid_choice"
+                              ? "Choix invalide pour ce groupe."
+                              : "Impossible d’enregistrer le choix du groupe."
+                    );
+                    return;
+                }
+                this.persistPersonnage(result.data, {
+                    undoLabel: choice
+                        ? `Groupe ${powerName} → ${choice}`
+                        : `Groupe ${powerName} (choix effacé)`,
+                });
+            },
+            doRollPowerGroupChoice(powerName) {
+                const result = HeroSheet.rollPowerGroupChoice(
+                    this.personnageData,
+                    powerName
+                );
+                if (!result.ok) {
+                    window.alert(
+                        result.reason === "finished"
+                            ? "Personnage terminé : modifications verrouillées."
+                            : "Tirage impossible pour ce groupe."
+                    );
+                    return;
+                }
+                const power = (result.data.base.powers || []).find(
+                    (entry) => entry.name === powerName
+                );
+                this.persistPersonnage(result.data, {
+                    undoLabel: power && power.choice
+                        ? `Tirage ${powerName} → ${power.choice}`
+                        : `Tirage ${powerName}`,
                 });
             },
             setBrouillonPowerComment(power, comment) {

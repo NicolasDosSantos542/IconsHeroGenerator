@@ -735,6 +735,24 @@ html {
   width: 4.5rem;
 }
 
+.power-group-choice {
+  margin: 0.35rem 0 0.1rem;
+}
+
+.power-group-choice .mods-row {
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.power-group-choice select {
+  min-width: min(16rem, 100%);
+  flex: 1 1 12rem;
+}
+
+.power-group-choice .warn-hint {
+  color: var(--icons-red);
+}
+
 .power-comment-block {
   margin: 0.35rem 0 0.15rem;
 }

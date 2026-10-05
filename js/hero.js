@@ -352,11 +352,21 @@ const HeroSheet = (() => {
     }
     const comment =
       typeof raw.comment === "string" ? raw.comment.trim() : "";
+    const choice =
+      typeof raw.choice === "string" ? raw.choice.trim() : "";
+    const choiceSource =
+      choice && (raw.choiceSource === "roll" || raw.choiceSource === "pick")
+        ? raw.choiceSource
+        : choice
+          ? "pick"
+          : null;
     return {
       name,
       level: Number(raw.level) || 0,
       page: raw.page ?? null,
       comment,
+      choice,
+      choiceSource,
       innateFromOrigin: !!raw.innateFromOrigin,
       freeFromOrigin: !!raw.freeFromOrigin,
       extras: (Array.isArray(raw.extras) ? raw.extras : [])
@@ -425,6 +435,10 @@ const HeroSheet = (() => {
           canRemoveForBonus: !fromOrigin,
           availableLimitExtraSlots: availableLimitExtraSlots(normalized),
           canAddLimitExtra: availableLimitExtraSlots(normalized) > 0,
+          isGroup: isGroupPowerName(normalized.name),
+          groupOptions: groupOptionsFor(normalized.name),
+          needsGroupChoice:
+            isGroupPowerName(normalized.name) && !normalized.choice,
         };
       });
   }
@@ -1080,6 +1094,85 @@ const HeroSheet = (() => {
     return { ok: true, data: next };
   }
 
+  function isGroupPowerName(name) {
+    const trimmed = (name || "").trim();
+    if (
+      typeof pouvoirs !== "undefined" &&
+      pouvoirs &&
+      typeof pouvoirs.isGroup === "function"
+    ) {
+      return pouvoirs.isGroup(trimmed);
+    }
+    return false;
+  }
+
+  function groupOptionsFor(powerName) {
+    if (
+      typeof pouvoirs === "undefined" ||
+      !pouvoirs ||
+      typeof pouvoirs.definitionOf !== "function"
+    ) {
+      return [];
+    }
+    const def = pouvoirs.definitionOf(powerName);
+    if (!def || def.kind !== "group" || !def.table) {
+      return [];
+    }
+    return (def.table.entries || [])
+      .filter((entry) => entry && entry.name && entry.special !== "reroll")
+      .map((entry) => entry.name);
+  }
+
+  function setPowerGroupChoice(data, powerName, choice, source) {
+    const locked = guardEditable(data);
+    if (locked) {
+      return locked;
+    }
+    const next = nextClone(data);
+    const power = findPower(next, powerName);
+    if (!power) {
+      return { ok: false, reason: "missing_power" };
+    }
+    if (!isGroupPowerName(power.name)) {
+      return { ok: false, reason: "not_group" };
+    }
+    const trimmed = (choice || "").trim();
+    if (!trimmed) {
+      power.choice = "";
+      power.choiceSource = null;
+      return { ok: true, data: next };
+    }
+    const options = groupOptionsFor(power.name);
+    if (options.length && !options.includes(trimmed)) {
+      return { ok: false, reason: "invalid_choice" };
+    }
+    power.choice = trimmed;
+    power.choiceSource = source === "roll" ? "roll" : "pick";
+    return { ok: true, data: next };
+  }
+
+  function rollPowerGroupChoice(data, powerName) {
+    const locked = guardEditable(data);
+    if (locked) {
+      return locked;
+    }
+    if (!isGroupPowerName(powerName)) {
+      return { ok: false, reason: "not_group" };
+    }
+    if (
+      typeof pouvoirs === "undefined" ||
+      !pouvoirs ||
+      typeof pouvoirs.rollGroup !== "function"
+    ) {
+      return { ok: false, reason: "roll" };
+    }
+    const rolled = pouvoirs.rollGroup(powerName);
+    if (!rolled || !rolled.name) {
+      return { ok: false, reason: "roll" };
+    }
+    return setPowerGroupChoice(data, powerName, rolled.name, "roll");
+  }
+
   function setPowerComment(data, powerName, comment) {
     const locked = guardEditable(data);
     if (locked) {
@@ -1317,6 +1410,10 @@ const HeroSheet = (() => {
     removePowerLimit,
     removePowerExtra,
     setPowerComment,
+    setPowerGroupChoice,
+    rollPowerGroupChoice,
+    isGroupPowerName,
+    groupOptionsFor,
     applyBonus,
     addSpeciality,
     setSpecialityFocus,
