@@ -360,6 +360,11 @@ const HeroSheet = (() => {
         : choice
           ? "pick"
           : null;
+    const pendingRemovalExtraIds = (
+      Array.isArray(raw.pendingRemovalExtraIds) ? raw.pendingRemovalExtraIds : []
+    )
+      .map((id) => (id == null ? "" : String(id).trim()))
+      .filter(Boolean);
     return {
       name,
       level: Number(raw.level) || 0,
@@ -369,6 +374,7 @@ const HeroSheet = (() => {
       choiceSource,
       innateFromOrigin: !!raw.innateFromOrigin,
       freeFromOrigin: !!raw.freeFromOrigin,
+      pendingRemovalExtraIds,
       extras: (Array.isArray(raw.extras) ? raw.extras : [])
         .map((entry) => normalizeModifierEntry(entry, "extra"))
         .filter(Boolean),
@@ -407,6 +413,38 @@ const HeroSheet = (() => {
     return Math.max(0, granted - used);
   }
 
+  function availableRemovalExtraSlots(power) {
+    return (power.pendingRemovalExtraIds || []).length;
+  }
+
+  function refundPendingRemovalExtraIds(mods, ids) {
+    (ids || []).forEach((removalId) => {
+      if (!removalId) {
+        return;
+      }
+      const alreadyPending = (mods.pendingRemovalRewards || []).some(
+        (reward) => reward.id === removalId
+      );
+      if (alreadyPending) {
+        return;
+      }
+      const stillRemoved = (mods.removedPowers || []).some(
+        (removed) => removed.id === removalId
+      );
+      if (!stillRemoved) {
+        return;
+      }
+      const removed =
+        (mods.removedPowers || []).find((entry) => entry.id === removalId) ||
+        {};
+      mods.pendingRemovalRewards = mods.pendingRemovalRewards || [];
+      mods.pendingRemovalRewards.push({
+        id: removalId,
+        removedName: removed.name || "",
+      });
+    });
+  }
+
   function findPower(data, powerName) {
     return (data.base.powers || []).find((power) => power.name === powerName);
   }
@@ -434,7 +472,12 @@ const HeroSheet = (() => {
           fromOrigin,
           canRemoveForBonus: !fromOrigin,
           availableLimitExtraSlots: availableLimitExtraSlots(normalized),
+          availableRemovalExtraSlots: availableRemovalExtraSlots(normalized),
           canAddLimitExtra: availableLimitExtraSlots(normalized) > 0,
+          canAddRemovalExtra: availableRemovalExtraSlots(normalized) > 0,
+          canAddExtra:
+            availableLimitExtraSlots(normalized) > 0 ||
+            availableRemovalExtraSlots(normalized) > 0,
           isGroup: isGroupPowerName(normalized.name),
           groupOptions: groupOptionsFor(normalized.name),
           needsGroupChoice:
@@ -931,6 +974,12 @@ const HeroSheet = (() => {
     if (isOriginGrantedPower(power)) {
       return { ok: false, reason: "locked_origin_roll" };
     }
+    // Credits parked on this power become unspendable while removed: refund them.
+    refundPendingRemovalExtraIds(
+      next.mods,
+      power.pendingRemovalExtraIds || []
+    );
+    power.pendingRemovalExtraIds = [];
     const removalId = createId();
     next.mods.removedPowers.push({
       id: removalId,
@@ -962,7 +1011,7 @@ const HeroSheet = (() => {
     return { ok: true, data: next };
   }
 
-  function spendRemovalAsExtra(data, rewardId, powerName, extraName, detail) {
+  function spendRemovalAsExtra(data, rewardId, powerName) {
     const locked = guardEditable(data);
     if (locked) {
       return locked;
@@ -978,6 +1027,26 @@ const HeroSheet = (() => {
     if (!power) {
       return { ok: false, reason: "missing_power" };
     }
+    const reward = next.mods.pendingRemovalRewards[index];
+    next.mods.pendingRemovalRewards.splice(index, 1);
+    power.pendingRemovalExtraIds = power.pendingRemovalExtraIds || [];
+    power.pendingRemovalExtraIds.push(reward.id);
+    return { ok: true, data: next };
+  }
+
+  function addPowerExtraFromRemoval(data, powerName, extraName, detail) {
+    const locked = guardEditable(data);
+    if (locked) {
+      return locked;
+    }
+    const next = nextClone(data);
+    const power = findPower(next, powerName);
+    if (!power) {
+      return { ok: false, reason: "missing_power" };
+    }
+    if (availableRemovalExtraSlots(power) <= 0) {
+      return { ok: false, reason: "no_slot" };
+    }
     const trimmed = (extraName || "").trim();
     if (!trimmed) {
       return { ok: false, reason: "name" };
@@ -986,21 +1055,44 @@ const HeroSheet = (() => {
     if (modifierNeedsDetail(trimmed) && !trimmedDetail) {
       return { ok: false, reason: "need_detail" };
     }
-    if ((power.extras || []).some((extra) => extra.name === trimmed && (extra.detail || "") === (trimmedDetail || ""))) {
+    if (
+      (power.extras || []).some(
+        (extra) =>
+          extra.name === trimmed &&
+          (extra.detail || "") === (trimmedDetail || "")
+      )
+    ) {
       return { ok: false, reason: "duplicate" };
     }
-    const reward = next.mods.pendingRemovalRewards[index];
-    next.mods.pendingRemovalRewards.splice(index, 1);
+    const removalId = (power.pendingRemovalExtraIds || []).shift();
     power.extras = power.extras || [];
     power.extras.push({
       id: createId(),
       name: trimmed,
       detail: trimmedDetail || null,
       source: "removal",
-      removalId: reward.id,
+      removalId: removalId || null,
       limitId: null,
     });
     return { ok: true, data: next };
+  }
+
+  function addPowerExtra(data, powerName, extraName, detail) {
+    const locked = guardEditable(data);
+    if (locked) {
+      return locked;
+    }
+    const power = findPower(data, powerName);
+    if (!power) {
+      return { ok: false, reason: "missing_power" };
+    }
+    if (availableLimitExtraSlots(power) > 0) {
+      return addPowerExtraFromLimit(data, powerName, extraName, detail);
+    }
+    if (availableRemovalExtraSlots(power) > 0) {
+      return addPowerExtraFromRemoval(data, powerName, extraName, detail);
+    }
+    return { ok: false, reason: "no_slot" };
   }
 
   function addPowerLimit(data, powerName, limitName, benefit, detail) {
@@ -1281,11 +1373,14 @@ const HeroSheet = (() => {
       next.mods.pendingRemovalRewards || []
     ).filter((reward) => reward.id !== removed.id);
 
-    // Remove extras granted by this removal.
+    // Remove extras and pending extra credits granted by this removal.
     (next.base.powers || []).forEach((power) => {
       power.extras = (power.extras || []).filter(
         (extra) => extra.removalId !== removed.id
       );
+      power.pendingRemovalExtraIds = (
+        power.pendingRemovalExtraIds || []
+      ).filter((id) => id !== removed.id);
     });
 
     const appliedIndex = next.mods.appliedBonuses.findIndex(
@@ -1479,7 +1574,9 @@ const HeroSheet = (() => {
     spendRemovalAsBonus,
     spendRemovalAsExtra,
     addPowerLimit,
+    addPowerExtra,
     addPowerExtraFromLimit,
+    addPowerExtraFromRemoval,
     removePowerLimit,
     removePowerExtra,
     setPowerComment,
