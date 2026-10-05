@@ -532,7 +532,49 @@ html {
 .power-row {
   display: block;
   border-bottom: 1.5px solid var(--icons-line);
-  padding: 0.35rem 0.1rem;
+  padding: 0.45rem 0.1rem 0.55rem;
+}
+
+.power-card-attention {
+  border-left: 3px solid var(--icons-red);
+  padding-left: 0.45rem;
+}
+
+.power-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem;
+}
+
+.power-main-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.power-edit-toggle {
+  background: transparent !important;
+  color: var(--icons-ink) !important;
+  box-shadow: none !important;
+}
+
+.power-card-open .power-edit-toggle {
+  background: var(--icons-blue) !important;
+  color: #fff !important;
+  box-shadow: 2px 2px 0 var(--icons-ink) !important;
+}
+
+.power-editor {
+  margin-top: 0.45rem;
+  padding-top: 0.45rem;
+  border-top: 1px dashed rgba(26, 26, 26, 0.28);
+}
+
+.power-compact-actions {
+  margin-top: 0.35rem;
 }
 
 .power-row p {

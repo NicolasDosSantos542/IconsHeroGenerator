@@ -450,7 +450,16 @@
 
                     <h3 id="sheet-section-powers">Pouvoirs</h3>
                     <div class="powers-list">
-                        <div v-for="(value, key) in heroView.powers" :key="key" class="power-row power-card">
+                        <div
+                            v-for="(value, key) in heroView.powers"
+                            :key="key"
+                            class="power-row power-card"
+                            :class="{
+                                'power-card-open': isPowerEditorOpen(value),
+                                'power-card-attention': powerNeedsAttention(value),
+                            }"
+                            :data-power-name="value.name"
+                        >
                             <div class="power-main">
                                 <p>
                                     <span
@@ -465,24 +474,123 @@
                                         (p. {{ (value.choicePower && value.choicePower.page) || value.page }})
                                     </span>
                                 </p>
-                                <input
-                                    v-if="heroView.canRemovePower && value.canRemoveForBonus"
-                                    type="button"
-                                    value="Supprimer"
-                                    @click="doRemovePower(value.name)"
-                                >
-                                <span class="mods-hint" v-else-if="value.fromOrigin">
-                                    (pouvoir d’origine — non retirable)
-                                </span>
+                                <div class="power-main-actions" v-if="heroView.isEditable">
+                                    <input
+                                        type="button"
+                                        class="power-edit-toggle"
+                                        :value="isPowerEditorOpen(value) ? 'Réduire' : 'Modifier'"
+                                        @click="togglePowerEditor(value.name)"
+                                    >
+                                </div>
                             </div>
                             <p class="mods-hint power-via-group" v-if="value.resolvesToPower && value.viaGroup">
                                 via {{ value.viaGroup }}
                                 <small v-if="value.choiceSource === 'roll'">(tirage)</small>
                                 <small v-else-if="value.choiceSource === 'pick'">(choix)</small>
                             </p>
+                            <p
+                                class="mods-hint"
+                                v-else-if="value.isGroup && value.choice && !value.resolvesToPower"
+                            >
+                                → {{ value.choice }}
+                                <small v-if="value.choiceSource === 'roll'">(tirage)</small>
+                                <small v-else-if="value.choiceSource === 'pick'">(choix)</small>
+                            </p>
+                            <p class="mods-hint warn-hint" v-else-if="value.isGroup && !value.choice">
+                                Pouvoir du groupe non choisi
+                            </p>
 
-                            <div class="power-group-choice" v-if="value.isGroup">
-                                <template v-if="heroView.isEditable">
+                            <div
+                                class="mods-row power-compact-actions"
+                                v-if="heroView.isEditable && !isPowerEditorOpen(value) && (value.needsGroupChoice || heroView.hasPendingRemovalRewards)"
+                            >
+                                <input
+                                    v-if="value.needsGroupChoice"
+                                    type="button"
+                                    value="Choisir le pouvoir"
+                                    @click="openPowerEditor(value.name)"
+                                >
+                                <input
+                                    v-if="heroView.hasPendingRemovalRewards"
+                                    type="button"
+                                    :value="removalExtraClaimLabel"
+                                    @click="claimRemovalExtraOnPower(value.name)"
+                                >
+                            </div>
+
+                            <p class="power-comment" v-if="!isPowerEditorOpen(value) && value.comment">
+                                {{ value.comment }}
+                            </p>
+
+                            <div
+                                class="power-modifiers"
+                                v-if="(value.limites && value.limites.length) || (value.extras && value.extras.length) || value.availableRemovalExtraSlots"
+                            >
+                                <div class="modifier-tags" v-if="value.limites && value.limites.length">
+                                    <span class="mods-hint">Limites :</span>
+                                    <span
+                                        class="modifier-tag limit-tag"
+                                        v-for="limit in value.limites"
+                                        :key="limit.id"
+                                    >
+                                        {{ formatModifierLabel(limit) }}
+                                        <small>({{ limitBenefitLabel(limit.benefit) }})</small>
+                                        <button
+                                            v-if="isPowerEditorOpen(value)"
+                                            type="button"
+                                            class="language-tag-remove"
+                                            @click="doRemovePowerLimit(value.name, limit.id)"
+                                        >×</button>
+                                    </span>
+                                </div>
+                                <div class="modifier-tags" v-if="value.extras && value.extras.length">
+                                    <span class="mods-hint">Extras :</span>
+                                    <span
+                                        class="modifier-tag extra-tag"
+                                        v-for="extra in value.extras"
+                                        :key="extra.id"
+                                    >
+                                        {{ formatModifierLabel(extra) }}
+                                        <button
+                                            v-if="isPowerEditorOpen(value)"
+                                            type="button"
+                                            class="language-tag-remove"
+                                            @click="doRemovePowerExtra(value.name, extra.id)"
+                                        >×</button>
+                                    </span>
+                                </div>
+                                <div
+                                    class="mods-row"
+                                    v-if="value.availableRemovalExtraSlots"
+                                >
+                                    <span class="mods-hint warn-hint">
+                                        Extra de suppression à choisir
+                                        <template v-if="value.availableRemovalExtraSlots > 1">
+                                            (×{{ value.availableRemovalExtraSlots }})
+                                        </template>
+                                    </span>
+                                    <input
+                                        v-if="isPowerEditorOpen(value)"
+                                        type="button"
+                                        value="Annuler"
+                                        @click="cancelRemovalExtraCredit(value.name)"
+                                    >
+                                </div>
+                            </div>
+
+                            <div class="power-editor" v-if="isPowerEditorOpen(value)">
+                                <div class="mods-row" v-if="heroView.canRemovePower && value.canRemoveForBonus">
+                                    <input
+                                        type="button"
+                                        value="Supprimer"
+                                        @click="doRemovePower(value.name)"
+                                    >
+                                </div>
+                                <span class="mods-hint" v-else-if="value.fromOrigin">
+                                    (pouvoir d’origine — non retirable)
+                                </span>
+
+                                <div class="power-group-choice" v-if="value.isGroup">
                                     <div class="mods-row">
                                         <select
                                             :value="value.choice || ''"
@@ -501,162 +609,90 @@
                                             @click="doRollPowerGroupChoice(value.name)"
                                         >
                                     </div>
-                                    <p
-                                        class="mods-hint"
-                                        v-if="value.choice && !value.resolvesToPower"
-                                    >
-                                        → {{ value.choice }}
-                                        <small v-if="value.choiceSource === 'roll'">(tirage)</small>
-                                        <small v-else-if="value.choiceSource === 'pick'">(choix)</small>
-                                    </p>
-                                </template>
-                                <p
-                                    class="mods-hint"
-                                    v-else-if="value.choice && !value.resolvesToPower"
-                                >
-                                    → {{ value.choice }}
-                                </p>
-                                <p class="mods-hint warn-hint" v-else-if="!value.choice">
-                                    Pouvoir du groupe non choisi
-                                </p>
-                            </div>
+                                </div>
 
-                            <div class="power-comment-block">
-                                <textarea
-                                    v-if="heroView.isEditable"
-                                    class="power-comment-input"
-                                    :value="value.comment || ''"
-                                    rows="2"
-                                    placeholder="Précisions (manifestation, objet, type choisi…)"
-                                    @change="doSetPowerComment(value.name, $event.target.value)"
-                                ></textarea>
-                                <p class="power-comment" v-else-if="value.comment">{{ value.comment }}</p>
-                            </div>
+                                <div class="power-comment-block">
+                                    <textarea
+                                        class="power-comment-input"
+                                        :value="value.comment || ''"
+                                        rows="2"
+                                        placeholder="Précisions (manifestation, objet, type choisi…)"
+                                        @change="doSetPowerComment(value.name, $event.target.value)"
+                                    ></textarea>
+                                </div>
 
-                            <div class="power-modifiers" v-if="(value.limites && value.limites.length) || (value.extras && value.extras.length) || value.availableRemovalExtraSlots">
-                                <div class="modifier-tags" v-if="value.limites && value.limites.length">
-                                    <span class="mods-hint">Limites :</span>
-                                    <span
-                                        class="modifier-tag limit-tag"
-                                        v-for="limit in value.limites"
-                                        :key="limit.id"
-                                    >
-                                        {{ formatModifierLabel(limit) }}
-                                        <small>({{ limitBenefitLabel(limit.benefit) }})</small>
-                                        <button
-                                            v-if="heroView.isEditable"
-                                            type="button"
-                                            class="language-tag-remove"
-                                            @click="doRemovePowerLimit(value.name, limit.id)"
-                                        >×</button>
-                                    </span>
-                                </div>
-                                <div class="modifier-tags" v-if="value.extras && value.extras.length">
-                                    <span class="mods-hint">Extras :</span>
-                                    <span
-                                        class="modifier-tag extra-tag"
-                                        v-for="extra in value.extras"
-                                        :key="extra.id"
-                                    >
-                                        {{ formatModifierLabel(extra) }}
-                                        <button
-                                            v-if="heroView.isEditable"
-                                            type="button"
-                                            class="language-tag-remove"
-                                            @click="doRemovePowerExtra(value.name, extra.id)"
-                                        >×</button>
-                                    </span>
-                                </div>
-                                <div
-                                    class="mods-row"
-                                    v-if="value.availableRemovalExtraSlots"
-                                >
-                                    <span class="mods-hint">
-                                        Extra de suppression à choisir
-                                        <template v-if="value.availableRemovalExtraSlots > 1">
-                                            (×{{ value.availableRemovalExtraSlots }})
-                                        </template>
-                                    </span>
-                                    <input
-                                        v-if="heroView.isEditable"
-                                        type="button"
-                                        value="Annuler"
-                                        @click="cancelRemovalExtraCredit(value.name)"
-                                    >
-                                </div>
-                            </div>
-
-                            <div class="mods-panel power-mod-panel" v-if="heroView.isEditable">
-                                <div class="mods-row">
-                                    <select v-model="limitDrafts[value.name]">
-                                        <option disabled value="">Limite…</option>
-                                        <option v-for="opt in limiteOptions" :key="opt" :value="opt">{{ opt }}</option>
-                                        <option value="__custom__">Autre…</option>
-                                    </select>
-                                    <select v-model="limitBenefitDrafts[value.name]">
-                                        <option value="extra">→ Extra</option>
-                                        <option value="tenacity">→ +1 Ténacité</option>
-                                        <option value="level">→ +2 niveau</option>
-                                    </select>
-                                    <input
-                                        v-if="limitDrafts[value.name] === '__custom__'"
-                                        type="text"
-                                        v-model="limitCustomDrafts[value.name]"
-                                        placeholder="Limite custom…"
-                                    >
-                                    <input
-                                        v-if="modifierNeedsDetail(resolveModifierName(limitDrafts[value.name], limitCustomDrafts[value.name]))"
-                                        type="text"
-                                        v-model="limitDetailDrafts[value.name]"
-                                        placeholder="Préciser X…"
-                                    >
-                                    <input type="button" value="Ajouter limite" @click="doAddPowerLimit(value.name)">
-                                </div>
-                                <div class="mods-row" v-if="heroView.hasPendingRemovalRewards">
-                                    <input
-                                        type="button"
-                                        :value="removalExtraClaimLabel"
-                                        @click="claimRemovalExtraOnPower(value.name)"
-                                    >
-                                </div>
-                                <div class="mods-row" v-if="value.canAddExtra">
-                                    <select v-model="extraDrafts[value.name]">
-                                        <option disabled value="">{{ extraDraftPlaceholder(value) }}</option>
-                                        <optgroup
-                                            v-if="powerExtraOptions(value).length"
-                                            label="Extras du pouvoir"
+                                <div class="mods-panel power-mod-panel">
+                                    <div class="mods-row">
+                                        <select v-model="limitDrafts[value.name]">
+                                            <option disabled value="">Limite…</option>
+                                            <option v-for="opt in limiteOptions" :key="opt" :value="opt">{{ opt }}</option>
+                                            <option value="__custom__">Autre…</option>
+                                        </select>
+                                        <select v-model="limitBenefitDrafts[value.name]">
+                                            <option value="extra">→ Extra</option>
+                                            <option value="tenacity">→ +1 Ténacité</option>
+                                            <option value="level">→ +2 niveau</option>
+                                        </select>
+                                        <input
+                                            v-if="limitDrafts[value.name] === '__custom__'"
+                                            type="text"
+                                            v-model="limitCustomDrafts[value.name]"
+                                            placeholder="Limite custom…"
                                         >
-                                            <option
-                                                v-for="opt in powerExtraOptions(value)"
-                                                :key="'p-' + opt"
-                                                :value="opt"
-                                            >{{ opt }}</option>
-                                        </optgroup>
-                                        <optgroup
-                                            v-if="extraOptions.length"
-                                            label="Extras standards"
+                                        <input
+                                            v-if="modifierNeedsDetail(resolveModifierName(limitDrafts[value.name], limitCustomDrafts[value.name]))"
+                                            type="text"
+                                            v-model="limitDetailDrafts[value.name]"
+                                            placeholder="Préciser X…"
                                         >
-                                            <option
-                                                v-for="opt in extraOptions"
-                                                :key="'s-' + opt"
-                                                :value="opt"
-                                            >{{ opt }}</option>
-                                        </optgroup>
-                                        <option value="__custom__">Autre…</option>
-                                    </select>
-                                    <input
-                                        v-if="extraDrafts[value.name] === '__custom__'"
-                                        type="text"
-                                        v-model="extraCustomDrafts[value.name]"
-                                        placeholder="Extra custom…"
-                                    >
-                                    <input
-                                        v-if="modifierNeedsDetail(resolveModifierName(extraDrafts[value.name], extraCustomDrafts[value.name]))"
-                                        type="text"
-                                        v-model="extraDetailDrafts[value.name]"
-                                        placeholder="Préciser X…"
-                                    >
-                                    <input type="button" value="Ajouter extra" @click="doAddPowerExtra(value.name)">
+                                        <input type="button" value="Ajouter limite" @click="doAddPowerLimit(value.name)">
+                                    </div>
+                                    <div class="mods-row" v-if="heroView.hasPendingRemovalRewards">
+                                        <input
+                                            type="button"
+                                            :value="removalExtraClaimLabel"
+                                            @click="claimRemovalExtraOnPower(value.name)"
+                                        >
+                                    </div>
+                                    <div class="mods-row" v-if="value.canAddExtra">
+                                        <select v-model="extraDrafts[value.name]">
+                                            <option disabled value="">{{ extraDraftPlaceholder(value) }}</option>
+                                            <optgroup
+                                                v-if="powerExtraOptions(value).length"
+                                                label="Extras du pouvoir"
+                                            >
+                                                <option
+                                                    v-for="opt in powerExtraOptions(value)"
+                                                    :key="'p-' + opt"
+                                                    :value="opt"
+                                                >{{ opt }}</option>
+                                            </optgroup>
+                                            <optgroup
+                                                v-if="extraOptions.length"
+                                                label="Extras standards"
+                                            >
+                                                <option
+                                                    v-for="opt in extraOptions"
+                                                    :key="'s-' + opt"
+                                                    :value="opt"
+                                                >{{ opt }}</option>
+                                            </optgroup>
+                                            <option value="__custom__">Autre…</option>
+                                        </select>
+                                        <input
+                                            v-if="extraDrafts[value.name] === '__custom__'"
+                                            type="text"
+                                            v-model="extraCustomDrafts[value.name]"
+                                            placeholder="Extra custom…"
+                                        >
+                                        <input
+                                            v-if="modifierNeedsDetail(resolveModifierName(extraDrafts[value.name], extraCustomDrafts[value.name]))"
+                                            type="text"
+                                            v-model="extraDetailDrafts[value.name]"
+                                            placeholder="Préciser X…"
+                                        >
+                                        <input type="button" value="Ajouter extra" @click="doAddPowerExtra(value.name)">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1102,6 +1138,7 @@
                 undoStack: [],
                 maxUndo: 40,
                 libraryExpanded: false,
+                expandedPowerNames: {},
                 detailPopover: null,
             };
         },
@@ -1970,6 +2007,7 @@
                     window.alert("Impossible de placer l’extra sur ce pouvoir.");
                     return;
                 }
+                this.openPowerEditor(powerName);
                 this.persistPersonnage(result.data, {
                     undoLabel: `Suppression → Extra sur ${powerName}`,
                 });
@@ -1987,19 +2025,72 @@
                     undoLabel: `Annuler Extra suppression sur ${powerName}`,
                 });
             },
+            powerNeedsAttention(power) {
+                if (!power || !this.heroView || !this.heroView.isEditable) {
+                    return false;
+                }
+                return !!(
+                    power.needsGroupChoice ||
+                    power.availableRemovalExtraSlots
+                );
+            },
+            isPowerEditorOpen(power) {
+                if (!power || !this.heroView || !this.heroView.isEditable) {
+                    return false;
+                }
+                return !!this.expandedPowerNames[power.name];
+            },
+            openPowerEditor(powerName) {
+                if (!powerName) {
+                    return;
+                }
+                this.expandedPowerNames = {
+                    ...this.expandedPowerNames,
+                    [powerName]: true,
+                };
+            },
+            togglePowerEditor(powerName) {
+                if (!powerName) {
+                    return;
+                }
+                const next = !this.expandedPowerNames[powerName];
+                this.expandedPowerNames = {
+                    ...this.expandedPowerNames,
+                    [powerName]: next,
+                };
+            },
+            expandPowersNeedingAttention() {
+                const powers = (this.heroView && this.heroView.powers) || [];
+                const next = { ...this.expandedPowerNames };
+                let changed = false;
+                powers.forEach((power) => {
+                    if (this.powerNeedsAttention(power) && !next[power.name]) {
+                        next[power.name] = true;
+                        changed = true;
+                    }
+                });
+                if (changed) {
+                    this.expandedPowerNames = next;
+                }
+            },
             display(tab) {
                 this.closeDetailPopover();
                 this.currentTab = tab;
             },
             scrollToSheetSection(targetId) {
-                const el =
-                    typeof document !== "undefined" && targetId
-                        ? document.getElementById(targetId)
-                        : null;
-                if (!el || typeof el.scrollIntoView !== "function") {
-                    return;
+                if (targetId === "sheet-section-powers") {
+                    this.expandPowersNeedingAttention();
                 }
-                el.scrollIntoView({ behavior: "smooth", block: "start" });
+                this.$nextTick(() => {
+                    const el =
+                        typeof document !== "undefined" && targetId
+                            ? document.getElementById(targetId)
+                            : null;
+                    if (!el || typeof el.scrollIntoView !== "function") {
+                        return;
+                    }
+                    el.scrollIntoView({ behavior: "smooth", block: "start" });
+                });
             },
             addPersonnageLanguage() {
                 const result = HeroSheet.addKnownLanguage(
